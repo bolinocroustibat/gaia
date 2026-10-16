@@ -43,7 +43,7 @@ def write_catalog_totals(path: Path, totals: dict[str, int], *, source: str) -> 
             },
             {
                 "id": "strict_galaxies_nss",
-                "label": "Galaxies proches reconnues",
+                "label": "Étoiles doubles (position et spectre)",
                 "count": totals["strict_galaxies_nss"],
             },
         ],
@@ -67,9 +67,9 @@ def write_galaxy_funnel(path: Path, funnel: dict[str, int], *, source: str) -> N
         ("galaxy_candidates_total", "Candidats galaxie (liste large)"),
         ("galaxy_candidates_with_redshift", "Avec décalage vers le rouge (distance lointaine)"),
         ("galaxy_candidates_without_redshift", "Sans décalage vers le rouge"),
-        ("strict_galaxies_nss", "Galaxies proches confirmées (objet étendu)"),
-        ("strict_galaxies_nearby_parallax", "Galaxies proches avec distance fiable"),
-        ("strict_galaxies_with_redshift", "Galaxies confirmées avec redshift"),
+        ("strict_galaxies_nss", "Étoiles doubles (position et spectre)"),
+        ("strict_galaxies_nearby_parallax", "Étoiles doubles avec une distance fiable"),
+        ("strict_galaxies_with_redshift", "Étoiles doubles avec un décalage vers le rouge"),
     ]
     payload = {
         **_meta(source=source),

@@ -74,7 +74,7 @@
 </script>
 
 <div class="map">
-  <canvas bind:this={canvas} aria-label="Galaxies sur le ciel"></canvas>
+  <canvas bind:this={canvas} aria-label="Échantillon du disque galactique sur le ciel"></canvas>
   {#if tip}
     <p class="tip" style:left="{tip.x}px" style:top="{tip.y}px">
       {#each tip.lines as line}

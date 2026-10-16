@@ -9,10 +9,56 @@ export type CloudHover = {
   y: number;
 };
 
+/** Sun in the galactocentric frame used for x_gc, y_gc, z_gc.
+ * Matches DEFAULT_GALACTOCENTRIC_FRAME: 8.3 kpc from the Galactic center, 20.8 pc above the plane.
+ * Earth and Gaia coincide with the Sun at kiloparsec scale.
+ */
+const OBSERVER_KPC = new THREE.Vector3(-8.3, 0, 0.0208);
+const OBSERVER_RING_INNER_KPC = 0.9;
+const OBSERVER_RING_OUTER_KPC = 1.05;
+const ACCENT_HEX = 0xd6ff4a;
+const HALO_HEX = 0x0c0c0c;
+
+function ringMarker(inner: number, outer: number, color: number, order: number): THREE.Mesh {
+  const mesh = new THREE.Mesh(
+    new THREE.RingGeometry(inner, outer, 96),
+    new THREE.MeshBasicMaterial({
+      color,
+      side: THREE.DoubleSide,
+      depthTest: false,
+      depthWrite: false,
+      transparent: true,
+    }),
+  );
+  mesh.position.copy(OBSERVER_KPC);
+  mesh.renderOrder = order;
+  return mesh;
+}
+
+function dotMarker(size: number, color: number, order: number): THREE.Points {
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(new Float32Array(OBSERVER_KPC.toArray()), 3),
+  );
+  const material = new THREE.PointsMaterial({
+    color,
+    size,
+    sizeAttenuation: false,
+    depthTest: false,
+    depthWrite: false,
+    transparent: true,
+  });
+  const dot = new THREE.Points(geometry, material);
+  dot.renderOrder = order;
+  return dot;
+}
+
 export function mountGalaxyCloud(
   canvas: HTMLCanvasElement,
   table: ColumnarTable,
   onHover: (hover: CloudHover | null) => void,
+  marker: HTMLElement,
 ): () => void {
   const x = table.numbers.x_gc;
   const y = table.numbers.y_gc;
@@ -72,8 +118,23 @@ export function mountGalaxyCloud(
   });
   const points = new THREE.Points(geometry, material);
 
+  const haloWidth = 0.16;
+  const ringHalo = ringMarker(
+    OBSERVER_RING_INNER_KPC - haloWidth,
+    OBSERVER_RING_OUTER_KPC + haloWidth,
+    HALO_HEX,
+    1,
+  );
+  const ring = ringMarker(OBSERVER_RING_INNER_KPC, OBSERVER_RING_OUTER_KPC, ACCENT_HEX, 2);
+  const dotHalo = dotMarker(14, HALO_HEX, 3);
+  const dot = dotMarker(7, ACCENT_HEX, 4);
+
   const scene = new THREE.Scene();
   scene.add(points);
+  scene.add(ringHalo);
+  scene.add(ring);
+  scene.add(dotHalo);
+  scene.add(dot);
 
   const camera = new THREE.PerspectiveCamera(42, 1, span / 200, span * 20);
   camera.position.set(cx + span * 0.15, cy - span * 0.9, cz + span * 0.55);
@@ -95,11 +156,38 @@ export function mountGalaxyCloud(
   const raycaster = new THREE.Raycaster();
   raycaster.params.Points.threshold = span * 0.012;
   const pointer = new THREE.Vector2();
+  const projected = new THREE.Vector3();
+  let viewWidth = 1;
+  let viewHeight = 1;
+
+  const placeMarker = () => {
+    projected.copy(OBSERVER_KPC).project(camera);
+    const inView =
+      projected.z >= -1 &&
+      projected.z <= 1 &&
+      projected.x >= -1 &&
+      projected.x <= 1 &&
+      projected.y >= -1 &&
+      projected.y <= 1;
+    if (!inView) {
+      marker.hidden = true;
+      return;
+    }
+    const x = (projected.x * 0.5 + 0.5) * viewWidth;
+    const y = (-projected.y * 0.5 + 0.5) * viewHeight;
+    const flip = x > viewWidth * 0.72;
+    marker.hidden = false;
+    marker.style.transform = flip
+      ? `translate(${x - 10}px, ${y}px) translate(-100%, -50%)`
+      : `translate(${x + 12}px, ${y}px) translateY(-50%)`;
+  };
 
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
     const width = Math.max(1, Math.floor(rect.width));
     const height = Math.max(1, Math.floor(rect.height));
+    viewWidth = width;
+    viewHeight = height;
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
@@ -132,6 +220,7 @@ export function mountGalaxyCloud(
   let frame = 0;
   const loop = () => {
     controls.update();
+    placeMarker();
     renderer.render(scene, camera);
     frame = requestAnimationFrame(loop);
   };
@@ -145,6 +234,12 @@ export function mountGalaxyCloud(
     controls.dispose();
     geometry.dispose();
     material.dispose();
+    for (const object of [ringHalo, ring, dotHalo, dot]) {
+      object.geometry.dispose();
+      const objectMaterial = object.material;
+      if (Array.isArray(objectMaterial)) objectMaterial.forEach((entry) => entry.dispose());
+      else objectMaterial.dispose();
+    }
     renderer.dispose();
   };
 }

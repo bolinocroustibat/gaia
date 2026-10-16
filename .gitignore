@@ -14,6 +14,9 @@ wheels/
 # Frontend (also see frontend/.gitignore)
 node_modules/
 
+# Interrupted archive histogram; safe to delete
+data/processed/binned/*.partial.json
+
 # Editor / tooling
 .ipynb_checkpoints/
 .ruff_cache/

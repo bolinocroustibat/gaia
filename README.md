@@ -9,8 +9,8 @@ Processed assets live under [`data/processed/`](data/processed/). Start from [`d
 Regenerate locally:
 
 ```bash
-uv run python scripts/export_processed.py              # galaxies, plus an empty colour–brightness diagram
-uv run python scripts/export_processed.py --fetch-gaia # + archive counts and disk star sample
+uv run python scripts/export_processed.py              # galaxies; keeps the colour–luminosity diagram already on disk
+uv run python scripts/export_processed.py --fetch-gaia # + archive counts, disk star sample, absolute-magnitude diagram
 ```
 
 **Licence:** [CC BY-NC 3.0 IGO](https://www.cosmos.esa.int/web/gaia-users/license) — Credit: ESA, Gaia DPAC.

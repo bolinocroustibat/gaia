@@ -31,7 +31,7 @@
       "tier": "A",
       "format": "summary",
       "label": "Entonnoir galaxies",
-      "helpText": "De la liste large de candidats aux galaxies proches confirmées."
+      "helpText": "Candidats galaxies, puis les étoiles doubles du voisinage du Soleil."
     },
     {
       "id": "hr_diagram_bins",
@@ -43,27 +43,27 @@
       "sourceNote": "disk_stars_sample"
     },
     {
-      "id": "local_galaxies_sky2d",
-      "path": "points/local_galaxies_sky2d.json",
+      "id": "milky_way_sky2d",
+      "path": "points/milky_way_sky2d.json",
       "tier": "C",
       "format": "columnar",
-      "label": "Galaxies proches — carte du ciel",
-      "count": 58209,
+      "label": "Disque galactique — carte du ciel",
+      "count": 42158,
       "tooltipFields": [
         "source_id",
         "ra",
         "dec",
         "phot_g_mean_mag"
       ],
-      "helpText": "Direction dans le ciel et brillance des galaxies satellites proches."
+      "helpText": "Un échantillon de toutes les étoiles, doubles ou non, tant qu'elles sont dans la Voie lactée."
     },
     {
-      "id": "local_galaxies_space3d",
-      "path": "points/local_galaxies_space3d.json",
+      "id": "milky_way_space3d",
+      "path": "points/milky_way_space3d.json",
       "tier": "C",
       "format": "columnar",
-      "label": "Galaxies proches — espace 3D",
-      "count": 58209,
+      "label": "Disque galactique — en volume",
+      "count": 42158,
       "tooltipFields": [
         "source_id",
         "x_gc",
@@ -72,7 +72,7 @@
         "distance_pc",
         "phot_g_mean_mag"
       ],
-      "helpText": "Position dans le voisinage galactique (kpc), pour vues 3D."
+      "helpText": "Le même échantillon, en volume. De côté, on voit l'épaisseur du disque."
     },
     {
       "id": "disk_stars_sample",

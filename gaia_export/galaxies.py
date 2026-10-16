@@ -76,7 +76,7 @@ def export_local_galaxies(csv_path: Path, points_dir: Path) -> dict[str, Any]:
                 space_cols["distance_method"].append(row["distance_method"])
 
     filters_note = (
-        "non_single_star=3, parallax_over_error>5, parallax>0.01 mas; "
+        "non_single_star=3 (astrometric and spectroscopic binary), parallax_over_error>5, parallax>0.01 mas; "
         "space3d rows require finite galactocentric coordinates"
     )
     sky_path = points_dir / "local_galaxies_sky2d.json"

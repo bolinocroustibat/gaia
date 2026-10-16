@@ -43,7 +43,7 @@ export function hrPlot(bins: Binned2d, width: number): HTMLElement {
     marginLeft: 72,
     style: plotStyle,
     x: { label: bins.x.label },
-    y: { label: bins.y.label },
+    y: { label: bins.y.label, reverse: bins.y.id === "mg" },
     color: {
       type: "log",
       label: "Nombre",

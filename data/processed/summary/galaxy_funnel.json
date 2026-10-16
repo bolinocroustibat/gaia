@@ -25,17 +25,17 @@
     },
     {
       "id": "strict_galaxies_nss",
-      "label": "Galaxies proches confirmées (objet étendu)",
+      "label": "Étoiles doubles (position et spectre)",
       "count": 58215
     },
     {
       "id": "strict_galaxies_nearby_parallax",
-      "label": "Galaxies proches avec distance fiable",
+      "label": "Étoiles doubles avec une distance fiable",
       "count": 58209
     },
     {
       "id": "strict_galaxies_with_redshift",
-      "label": "Galaxies confirmées avec redshift",
+      "label": "Étoiles doubles avec un décalage vers le rouge",
       "count": 0
     }
   ]

@@ -6,14 +6,16 @@
   let { table }: { table: ColumnarTable } = $props();
 
   let canvas = $state<HTMLCanvasElement | undefined>();
+  let marker = $state<HTMLElement | undefined>();
   let tip = $state<{ x: number; y: number; lines: string[] } | null>(null);
 
   const fields = ["source_id", "x_gc", "y_gc", "z_gc", "distance_pc", "phot_g_mean_mag"];
 
   $effect(() => {
     const node = canvas;
+    const label = marker;
     const data = table;
-    if (!node) return;
+    if (!node || !label) return;
     return mountGalaxyCloud(node, data, (hover) => {
       if (!hover) {
         tip = null;
@@ -28,12 +30,13 @@
           return formatField(name, column?.[hover.index] ?? Number.NaN);
         }),
       };
-    });
+    }, label);
   });
 </script>
 
 <div class="cloud">
-  <canvas bind:this={canvas} aria-label="Galaxies proches en trois dimensions"></canvas>
+  <canvas bind:this={canvas} aria-label="Échantillon du disque de la Voie lactée, en trois dimensions, avec la position de la Terre"></canvas>
+  <p class="observer" bind:this={marker} hidden>Terre</p>
   {#if tip}
     <p class="tip" style:left="{tip.x}px" style:top="{tip.y}px">
       {#each tip.lines as line}
@@ -42,7 +45,7 @@
     </p>
   {/if}
 </div>
-<p class="hint">Glisser pour tourner</p>
+<p class="hint">Glisser pour tourner · le cercle marque la Terre, là où se trouve Gaia</p>
 
 <style>
   .cloud {
@@ -64,9 +67,27 @@
     touch-action: none;
   }
 
-  .tip {
+  .observer {
     position: absolute;
     z-index: 2;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0.12rem 0.38rem;
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .tip {
+    position: absolute;
+    z-index: 3;
     margin: 0;
     display: grid;
     gap: 0.15rem;

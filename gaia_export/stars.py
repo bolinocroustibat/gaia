@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -9,6 +10,12 @@ import numpy as np
 
 from gaia_export.columnar import field_specs, write_columnar_json
 from gaia_export.validate import check_file_size, check_unique_source_ids
+
+# Stellar disk of the Milky Way, measured from the Galactic center.
+# 0.05 mas is 20 kpc from the Sun: inside the Galaxy, short of the Magellanic Clouds.
+MILKY_WAY_RADIUS_KPC = 20.0
+MILKY_WAY_PARALLAX_MIN_MAS = 0.05
+MILKY_WAY_SAMPLE_MODULUS = 36_000
 
 DISK_STARS_QUERY = """
 SELECT TOP 50000
@@ -90,7 +97,127 @@ def export_disk_stars_sample(points_dir: Path, table) -> dict[str, Any]:
     return {"path": path, "count": count}
 
 
-def table_to_arrays(table) -> tuple[np.ndarray, np.ndarray]:
-    bp_rp = np.array(table["bp_rp"], dtype=float)
-    phot_g = np.array(table["phot_g_mean_mag"], dtype=float)
-    return bp_rp, phot_g
+MILKY_WAY_DISK_QUERY = f"""
+SELECT
+    source_id,
+    ra,
+    dec,
+    parallax,
+    parallax_over_error,
+    phot_g_mean_mag
+FROM gaiadr3.gaia_source
+WHERE parallax_over_error > 5
+  AND parallax > {MILKY_WAY_PARALLAX_MIN_MAS}
+  AND phot_g_mean_mag IS NOT NULL
+  AND MOD(source_id, {MILKY_WAY_SAMPLE_MODULUS}) = 0
+"""
+
+
+def fetch_milky_way_disk_table():
+    from astroquery.gaia import Gaia
+
+    Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
+    Gaia.ROW_LIMIT = -1
+    job = Gaia.launch_job_async(MILKY_WAY_DISK_QUERY)
+    return job.get_results()
+
+
+def _add_galactocentric_coords(table):
+    notebooks = Path(__file__).resolve().parents[1] / "notebooks"
+    if str(notebooks) not in sys.path:
+        sys.path.insert(0, str(notebooks))
+    from helpers.coordinates import add_galactocentric_coords
+
+    return add_galactocentric_coords(
+        table,
+        min_parallax_over_error=5.0,
+        prefer_distance_gspphot=False,
+        require_quality=True,
+    )
+
+
+def _as_float(column) -> np.ndarray:
+    data = np.asarray(column)
+    if isinstance(data, np.ma.MaskedArray):
+        data = data.filled(np.nan)
+    return data.astype(float, copy=False)
+
+
+def export_milky_way_disk(points_dir: Path, table) -> dict[str, Any]:
+    """Export a sky map and a 3D view for a sample of every source inside the disk."""
+    placed = _add_galactocentric_coords(table)
+    r_cyl = _as_float(placed["r_cyl_gc"])
+    keep = np.isfinite(r_cyl) & (r_cyl < MILKY_WAY_RADIUS_KPC)
+    placed = placed[keep]
+
+    source_id = [str(int(value)) for value in placed["source_id"]]
+    ra = _as_float(placed["ra"]).tolist()
+    dec = _as_float(placed["dec"]).tolist()
+    mag = _as_float(placed["phot_g_mean_mag"]).tolist()
+    parallax = _as_float(placed["parallax"])
+    distance_pc = (1000.0 / parallax).tolist()
+    x_gc = _as_float(placed["x_gc"]).tolist()
+    y_gc = _as_float(placed["y_gc"]).tolist()
+    z_gc = _as_float(placed["z_gc"]).tolist()
+
+    filters = {
+        "parallax_over_error_min": 5.0,
+        "parallax_min_mas": MILKY_WAY_PARALLAX_MIN_MAS,
+        "r_cyl_max_kpc": MILKY_WAY_RADIUS_KPC,
+        "mod_source_id": MILKY_WAY_SAMPLE_MODULUS,
+    }
+    filters_note = (
+        "Sample of every Gaia source (single or binary) with a reliable parallax, "
+        f"heliocentric distance under {int(1000 / MILKY_WAY_PARALLAX_MIN_MAS)} pc, "
+        f"and galactocentric cylindrical radius under {MILKY_WAY_RADIUS_KPC:g} kpc. "
+        f"One source out of {MILKY_WAY_SAMPLE_MODULUS}."
+    )
+
+    sky_fields = field_specs(
+        ["source_id", "ra", "dec", "phot_g_mean_mag"],
+        units={"ra": "deg", "dec": "deg", "phot_g_mean_mag": "mag"},
+    )
+    space_fields = field_specs(
+        ["source_id", "x_gc", "y_gc", "z_gc", "phot_g_mean_mag", "distance_pc"],
+        units={
+            "x_gc": "kpc",
+            "y_gc": "kpc",
+            "z_gc": "kpc",
+            "phot_g_mean_mag": "mag",
+            "distance_pc": "pc",
+        },
+    )
+
+    sky_path = points_dir / "milky_way_sky2d.json"
+    space_path = points_dir / "milky_way_space3d.json"
+    sky_count = write_columnar_json(
+        sky_path,
+        dataset="milky_way_sky2d",
+        columns={"source_id": source_id, "ra": ra, "dec": dec, "phot_g_mean_mag": mag},
+        fields=sky_fields,
+        extra={"filters": filters, "filters_note": filters_note},
+    )
+    space_count = write_columnar_json(
+        space_path,
+        dataset="milky_way_space3d",
+        columns={
+            "source_id": source_id,
+            "x_gc": x_gc,
+            "y_gc": y_gc,
+            "z_gc": z_gc,
+            "phot_g_mean_mag": mag,
+            "distance_pc": distance_pc,
+        },
+        fields=space_fields,
+        extra={"filters": filters, "filters_note": filters_note},
+    )
+    check_unique_source_ids(sky_path)
+    check_unique_source_ids(space_path)
+    check_file_size(sky_path)
+    check_file_size(space_path)
+    return {
+        "sky2d_path": sky_path,
+        "space3d_path": space_path,
+        "sky2d_count": sky_count,
+        "space3d_count": space_count,
+    }
