@@ -45,7 +45,7 @@
     </p>
   {/if}
 </div>
-<p class="hint">Glisser pour tourner · le cercle marque la Terre, là où se trouve Gaia</p>
+<p class="hint">Glisser pour tourner · le point marque la Terre, là où se trouve Gaia</p>
 
 <style>
   .cloud {

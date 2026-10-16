@@ -138,7 +138,7 @@ def main() -> int:
                     "distance_pc",
                     "phot_g_mean_mag",
                 ],
-                "helpText": "Un échantillon de toutes les étoiles, doubles ou non, tant qu'elles sont dans la Voie lactée. De côté, on voit l'épaisseur du disque.",
+                "helpText": "Un échantillon d'étoiles, doubles ou non, réparti tout autour du Soleil. De côté, on voit l'épaisseur du disque.",
             }
         )
 

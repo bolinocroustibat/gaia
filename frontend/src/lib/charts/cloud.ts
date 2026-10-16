@@ -9,31 +9,20 @@ export type CloudHover = {
   y: number;
 };
 
+/** Frame the camera on the bulk of the cloud. A few distant stars would otherwise stretch the view into rays. */
+function percentile(values: Float32Array, fraction: number): number {
+  const sorted = Array.from(values).sort((a, b) => a - b);
+  const index = Math.min(sorted.length - 1, Math.max(0, Math.round(fraction * (sorted.length - 1))));
+  return sorted[index] ?? 0;
+}
+
 /** Sun in the galactocentric frame used for x_gc, y_gc, z_gc.
  * Matches DEFAULT_GALACTOCENTRIC_FRAME: 8.3 kpc from the Galactic center, 20.8 pc above the plane.
  * Earth and Gaia coincide with the Sun at kiloparsec scale.
  */
 const OBSERVER_KPC = new THREE.Vector3(-8.3, 0, 0.0208);
-const OBSERVER_RING_INNER_KPC = 0.9;
-const OBSERVER_RING_OUTER_KPC = 1.05;
 const ACCENT_HEX = 0xd6ff4a;
 const HALO_HEX = 0x0c0c0c;
-
-function ringMarker(inner: number, outer: number, color: number, order: number): THREE.Mesh {
-  const mesh = new THREE.Mesh(
-    new THREE.RingGeometry(inner, outer, 96),
-    new THREE.MeshBasicMaterial({
-      color,
-      side: THREE.DoubleSide,
-      depthTest: false,
-      depthWrite: false,
-      transparent: true,
-    }),
-  );
-  mesh.position.copy(OBSERVER_KPC);
-  mesh.renderOrder = order;
-  return mesh;
-}
 
 function dotMarker(size: number, color: number, order: number): THREE.Points {
   const geometry = new THREE.BufferGeometry();
@@ -66,29 +55,23 @@ export function mountGalaxyCloud(
   const mag = table.numbers.phot_g_mean_mag;
   const count = table.count;
 
-  let minX = Infinity;
-  let minY = Infinity;
-  let minZ = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  let maxZ = -Infinity;
   let minMag = Infinity;
   let maxMag = -Infinity;
   for (let i = 0; i < count; i++) {
-    if (x[i] < minX) minX = x[i];
-    if (y[i] < minY) minY = y[i];
-    if (z[i] < minZ) minZ = z[i];
-    if (x[i] > maxX) maxX = x[i];
-    if (y[i] > maxY) maxY = y[i];
-    if (z[i] > maxZ) maxZ = z[i];
     if (mag[i] < minMag) minMag = mag[i];
     if (mag[i] > maxMag) maxMag = mag[i];
   }
   const magSpan = maxMag - minMag || 1;
-  const cx = (minX + maxX) / 2;
-  const cy = (minY + maxY) / 2;
-  const cz = (minZ + maxZ) / 2;
-  const span = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
+  const x0 = percentile(x, 0.02);
+  const x1 = percentile(x, 0.98);
+  const y0 = percentile(y, 0.02);
+  const y1 = percentile(y, 0.98);
+  const z0 = percentile(z, 0.02);
+  const z1 = percentile(z, 0.98);
+  const cx = (x0 + x1) / 2;
+  const cy = (y0 + y1) / 2;
+  const cz = (z0 + z1) / 2;
+  const span = Math.max(x1 - x0, y1 - y0, z1 - z0, 1);
 
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
@@ -118,26 +101,18 @@ export function mountGalaxyCloud(
   });
   const points = new THREE.Points(geometry, material);
 
-  const haloWidth = 0.16;
-  const ringHalo = ringMarker(
-    OBSERVER_RING_INNER_KPC - haloWidth,
-    OBSERVER_RING_OUTER_KPC + haloWidth,
-    HALO_HEX,
-    1,
-  );
-  const ring = ringMarker(OBSERVER_RING_INNER_KPC, OBSERVER_RING_OUTER_KPC, ACCENT_HEX, 2);
-  const dotHalo = dotMarker(14, HALO_HEX, 3);
-  const dot = dotMarker(7, ACCENT_HEX, 4);
+  const dotHalo = dotMarker(14, HALO_HEX, 1);
+  const dot = dotMarker(7, ACCENT_HEX, 2);
 
   const scene = new THREE.Scene();
   scene.add(points);
-  scene.add(ringHalo);
-  scene.add(ring);
   scene.add(dotHalo);
   scene.add(dot);
 
   const camera = new THREE.PerspectiveCamera(42, 1, span / 200, span * 20);
-  camera.position.set(cx + span * 0.15, cy - span * 0.9, cz + span * 0.55);
+  // Galactic height is z. Keep that axis upright so the disk lies flat, edge-on as a horizontal band.
+  camera.up.set(0, 0, 1);
+  camera.position.set(cx + span * 0.15, cy - span * 0.95, cz + span * 0.42);
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -234,7 +209,7 @@ export function mountGalaxyCloud(
     controls.dispose();
     geometry.dispose();
     material.dispose();
-    for (const object of [ringHalo, ring, dotHalo, dot]) {
+    for (const object of [dotHalo, dot]) {
       object.geometry.dispose();
       const objectMaterial = object.material;
       if (Array.isArray(objectMaterial)) objectMaterial.forEach((entry) => entry.dispose());

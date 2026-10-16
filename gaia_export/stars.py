@@ -13,9 +13,12 @@ from gaia_export.validate import check_file_size, check_unique_source_ids
 
 # Stellar disk of the Milky Way, measured from the Galactic center.
 # 0.05 mas is 20 kpc from the Sun: inside the Galaxy, short of the Magellanic Clouds.
+# random_index is Gaia's own shuffle. source_id is ordered by sky pixel, so a
+# modulus on source_id piles stars into a few sightlines and draws cones.
 MILKY_WAY_RADIUS_KPC = 20.0
 MILKY_WAY_PARALLAX_MIN_MAS = 0.05
-MILKY_WAY_SAMPLE_MODULUS = 36_000
+MILKY_WAY_RANDOM_INDEX_MAX = 5_000_000
+MILKY_WAY_SAMPLE_CAP = 80_000
 
 DISK_STARS_QUERY = """
 SELECT TOP 50000
@@ -98,7 +101,7 @@ def export_disk_stars_sample(points_dir: Path, table) -> dict[str, Any]:
 
 
 MILKY_WAY_DISK_QUERY = f"""
-SELECT
+SELECT TOP {MILKY_WAY_SAMPLE_CAP}
     source_id,
     ra,
     dec,
@@ -106,10 +109,11 @@ SELECT
     parallax_over_error,
     phot_g_mean_mag
 FROM gaiadr3.gaia_source
-WHERE parallax_over_error > 5
+WHERE random_index < {MILKY_WAY_RANDOM_INDEX_MAX}
+  AND parallax_over_error > 5
   AND parallax > {MILKY_WAY_PARALLAX_MIN_MAS}
   AND phot_g_mean_mag IS NOT NULL
-  AND MOD(source_id, {MILKY_WAY_SAMPLE_MODULUS}) = 0
+ORDER BY random_index
 """
 
 
@@ -162,13 +166,13 @@ def export_milky_way_disk(points_dir: Path, table) -> dict[str, Any]:
         "parallax_over_error_min": 5.0,
         "parallax_min_mas": MILKY_WAY_PARALLAX_MIN_MAS,
         "r_cyl_max_kpc": MILKY_WAY_RADIUS_KPC,
-        "mod_source_id": MILKY_WAY_SAMPLE_MODULUS,
+        "random_index_max": MILKY_WAY_RANDOM_INDEX_MAX,
     }
     filters_note = (
-        "Sample of every Gaia source (single or binary) with a reliable parallax, "
+        "Random sample of every Gaia source (single or binary) with a reliable parallax, "
         f"heliocentric distance under {int(1000 / MILKY_WAY_PARALLAX_MIN_MAS)} pc, "
         f"and galactocentric cylindrical radius under {MILKY_WAY_RADIUS_KPC:g} kpc. "
-        f"One source out of {MILKY_WAY_SAMPLE_MODULUS}."
+        f"random_index below {MILKY_WAY_RANDOM_INDEX_MAX}."
     )
 
     space_fields = field_specs(
