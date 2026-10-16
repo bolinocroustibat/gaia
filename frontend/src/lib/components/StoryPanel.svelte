@@ -60,12 +60,9 @@
     <LogBars rows={funnelRows(payload.summary.steps ?? [])} />
   {:else if payload?.kind === "hr"}
     <PlotFrame data={payload.bins} render={hrPlot} />
-  {:else if payload?.kind === "density"}
-    <SkyMap sky={{ mode: "density", nside: payload.sky.nside, counts: payload.sky.counts }} />
   {:else if payload?.kind === "galaxy-sky"}
     <SkyMap
       sky={{
-        mode: "points",
         ids: payload.table.strings.source_id ?? [],
         ra: payload.table.numbers.ra,
         dec: payload.table.numbers.dec,

@@ -9,7 +9,7 @@ Processed assets live under [`data/processed/`](data/processed/). Start from [`d
 Regenerate locally:
 
 ```bash
-uv run python scripts/export_processed.py              # galaxies + bins from local CSV
+uv run python scripts/export_processed.py              # galaxies, plus an empty colour–brightness diagram
 uv run python scripts/export_processed.py --fetch-gaia # + archive counts and disk star sample
 ```
 

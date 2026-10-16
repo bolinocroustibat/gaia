@@ -1,68 +1,18 @@
 import { geoGraticule, geoPath, type GeoPermissibleObjects } from "d3-geo";
 import { geoMollweide } from "d3-geo-projection";
-import { nestToCorners } from "../healpix";
 import { rampCss, theme } from "../theme";
 
-export type DensitySky = {
-  mode: "density";
-  nside: number;
-  counts: number[];
-};
-
-export type PointSky = {
-  mode: "points";
+export type SkySpec = {
   ids: string[];
   ra: Float32Array;
   dec: Float32Array;
   mag: Float32Array;
 };
 
-export type SkySpec = DensitySky | PointSky;
-
 export type ProjectedPoints = {
   x: Float32Array;
   y: Float32Array;
 };
-
-type DensityPoly = {
-  ring: [number, number][];
-  color: string;
-};
-
-const polysCache = new WeakMap<number[], DensityPoly[]>();
-
-function ringIsCompact(ring: [number, number][]): boolean {
-  for (let index = 0; index < ring.length; index++) {
-    const current = ring[index];
-    const next = ring[(index + 1) % ring.length];
-    let deltaRa = Math.abs(current[0] - next[0]);
-    if (deltaRa > 180) deltaRa = 360 - deltaRa;
-    if (deltaRa > 15 || Math.abs(current[1] - next[1]) > 15) return false;
-  }
-  return true;
-}
-
-function densityPolygons(nside: number, counts: number[]): DensityPoly[] {
-  const cached = polysCache.get(counts);
-  if (cached) return cached;
-  let max = 1;
-  for (const count of counts) {
-    if (count > max) max = count;
-  }
-  const logMax = Math.log(max);
-  const polygons: DensityPoly[] = [];
-  for (let ipix = 0; ipix < counts.length; ipix++) {
-    const count = counts[ipix];
-    if (!count || count <= 0) continue;
-    const t = Math.log(count) / logMax;
-    const ring = nestToCorners(nside, ipix).reverse();
-    if (!ringIsCompact(ring)) continue;
-    ring.push(ring[0]);
-    polygons.push({ ring, color: rampCss(0.2 + 0.8 * t) });
-  }
-  polysCache.set(counts, polygons);
-  return polygons;
-}
 
 function projectionFor(width: number, height: number) {
   const projection = geoMollweide().precision(0.2).reflectX(true);
@@ -97,23 +47,13 @@ export function drawSky(
   width: number,
   height: number,
   spec: SkySpec,
-): ProjectedPoints | null {
+): ProjectedPoints {
   context.clearRect(0, 0, width, height);
   const projection = projectionFor(width, height);
   const path = geoPath(projection, context);
   const graticule = geoGraticule().step([60, 30]);
   strokeHairline(context, path, { type: "Sphere" }, 0.55);
   strokeHairline(context, path, graticule(), 0.28);
-
-  if (spec.mode === "density") {
-    for (const polygon of densityPolygons(spec.nside, spec.counts)) {
-      context.fillStyle = polygon.color;
-      context.beginPath();
-      path({ type: "Polygon", coordinates: [polygon.ring] });
-      context.fill();
-    }
-    return null;
-  }
 
   const count = spec.ra.length;
   const xs = new Float32Array(count);

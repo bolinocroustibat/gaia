@@ -44,8 +44,5 @@ export async function loadPanel(kind: SectionKind, relativePath: string): Promis
   if (kind === "hr") {
     return { kind, bins: await loadJson(relativePath) };
   }
-  if (kind === "density") {
-    return { kind, sky: await loadJson(relativePath) };
-  }
   return { kind, table: await loadColumnar(relativePath) };
 }

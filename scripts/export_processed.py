@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from gaia_export.binned import write_hr_diagram_bins, write_sky_density_nside64
+from gaia_export.binned import write_hr_diagram_bins
 from gaia_export.galaxies import export_local_galaxies
 from gaia_export.manifest import build_manifest, write_manifest
 from gaia_export.stars import DISK_STARS_QUERY, export_disk_stars_sample, fetch_disk_stars_table, table_to_arrays
@@ -49,47 +49,21 @@ def main() -> int:
 
     stars_count = 0
     hr_source = "disk_stars_sample"
-    sky_source = "disk_stars_sample"
 
     if args.fetch_gaia:
         table = fetch_disk_stars_table()
         star_info = export_disk_stars_sample(points_dir, table)
         stars_count = star_info["count"]
-        ra, dec, bp_rp, phot_g = table_to_arrays(table)
+        bp_rp, phot_g = table_to_arrays(table)
         write_hr_diagram_bins(
             binned_dir / "hr_diagram_bins.json",
             bp_rp=bp_rp,
             phot_g=phot_g,
             source=DISK_STARS_QUERY.strip(),
         )
-        write_sky_density_nside64(
-            binned_dir / "sky_density_nside64.json",
-            ra_deg=ra,
-            dec_deg=dec,
-            source=DISK_STARS_QUERY.strip(),
-        )
     else:
-        # Derive bins from local galaxies CSV (sky only) when Gaia fetch is skipped.
-        import csv
-
         import numpy as np
 
-        ra_list: list[float] = []
-        dec_list: list[float] = []
-        with args.galaxies_csv.open(newline="", encoding="utf-8") as handle:
-            for row in csv.DictReader(handle):
-                ra_list.append(float(row["ra"]))
-                dec_list.append(float(row["dec"]))
-        ra = np.array(ra_list)
-        dec = np.array(dec_list)
-        sky_source = "data/local_galaxies_dr3.csv"
-        write_sky_density_nside64(
-            binned_dir / "sky_density_nside64.json",
-            ra_deg=ra,
-            dec_deg=dec,
-            source=sky_source,
-        )
-        # Placeholder HR bins (empty) with note — run with --fetch-gaia for real HR data.
         write_hr_diagram_bins(
             binned_dir / "hr_diagram_bins.json",
             bp_rp=np.array([]),
@@ -136,15 +110,6 @@ def main() -> int:
             "label": "Diagramme couleur–brillance",
             "helpText": "Carte de densité : couleur BP-RP vs brillance G.",
             "sourceNote": hr_source,
-        },
-        {
-            "id": "sky_density_nside64",
-            "path": "binned/sky_density_nside64.json",
-            "tier": "B",
-            "format": "healpix_counts",
-            "label": "Densité sur la voûte céleste",
-            "helpText": "Où les sources se concentrent sur le ciel (pixels HEALPix).",
-            "sourceNote": sky_source,
         },
         {
             "id": "local_galaxies_sky2d",

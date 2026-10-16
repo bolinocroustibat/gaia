@@ -90,9 +90,7 @@ def export_disk_stars_sample(points_dir: Path, table) -> dict[str, Any]:
     return {"path": path, "count": count}
 
 
-def table_to_arrays(table) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    ra = np.array(table["ra"], dtype=float)
-    dec = np.array(table["dec"], dtype=float)
+def table_to_arrays(table) -> tuple[np.ndarray, np.ndarray]:
     bp_rp = np.array(table["bp_rp"], dtype=float)
     phot_g = np.array(table["phot_g_mean_mag"], dtype=float)
-    return ra, dec, bp_rp, phot_g
+    return bp_rp, phot_g

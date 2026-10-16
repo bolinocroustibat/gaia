@@ -1,4 +1,4 @@
-export type DatasetFormat = "summary" | "binned2d" | "healpix_counts" | "columnar";
+export type DatasetFormat = "summary" | "binned2d" | "columnar";
 
 export type DatasetMeta = {
   id: string;
@@ -51,15 +51,6 @@ export type Binned2d = {
   counts: number[][];
 };
 
-export type HealpixCounts = {
-  scheme: "healpix";
-  nest: boolean;
-  nside: number;
-  n_pix: number;
-  nonzero_pixels: number;
-  counts: number[];
-};
-
 export type ColumnField = {
   name: string;
   type: "string" | "number";
@@ -81,17 +72,9 @@ export type ColumnarTable = {
   numbers: Record<string, Float32Array>;
 };
 
-export type SectionKind =
-  | "kpi"
-  | "types"
-  | "density"
-  | "hr"
-  | "galaxy-sky"
-  | "galaxy-3d"
-  | "funnel";
+export type SectionKind = "kpi" | "types" | "hr" | "galaxy-sky" | "galaxy-3d" | "funnel";
 
 export type PanelPayload =
   | { kind: "kpi" | "types" | "funnel"; summary: SummaryFile }
   | { kind: "hr"; bins: Binned2d }
-  | { kind: "density"; sky: HealpixCounts }
   | { kind: "galaxy-sky" | "galaxy-3d"; table: ColumnarTable };

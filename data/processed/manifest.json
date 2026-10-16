@@ -43,15 +43,6 @@
       "sourceNote": "disk_stars_sample"
     },
     {
-      "id": "sky_density_nside64",
-      "path": "binned/sky_density_nside64.json",
-      "tier": "B",
-      "format": "healpix_counts",
-      "label": "Densité sur la voûte céleste",
-      "helpText": "Où les sources se concentrent sur le ciel (pixels HEALPix).",
-      "sourceNote": "disk_stars_sample"
-    },
-    {
       "id": "local_galaxies_sky2d",
       "path": "points/local_galaxies_sky2d.json",
       "tier": "C",

@@ -7,12 +7,6 @@
   let canvas = $state<HTMLCanvasElement | undefined>();
   let tip = $state<{ x: number; y: number; lines: string[] } | null>(null);
 
-  const legend = $derived(
-    sky.mode === "density"
-      ? { start: "peu", end: "beaucoup" }
-      : { start: "faible", end: "brillante" },
-  );
-
   $effect(() => {
     const node = canvas;
     const spec = sky;
@@ -42,7 +36,7 @@
     paint();
 
     const onMove = (event: PointerEvent) => {
-      if (spec.mode !== "points" || !projected) return;
+      if (!projected) return;
       const rect = node.getBoundingClientRect();
       const px = event.clientX - rect.left;
       const py = event.clientY - rect.top;
@@ -66,10 +60,8 @@
       tip = null;
     };
 
-    if (spec.mode === "points") {
-      node.addEventListener("pointermove", onMove);
-      node.addEventListener("pointerleave", onLeave);
-    }
+    node.addEventListener("pointermove", onMove);
+    node.addEventListener("pointerleave", onLeave);
 
     return () => {
       cancelAnimationFrame(frame);
@@ -82,7 +74,7 @@
 </script>
 
 <div class="map">
-  <canvas bind:this={canvas} aria-label={sky.mode === "density" ? "Densité sur le ciel" : "Galaxies sur le ciel"}></canvas>
+  <canvas bind:this={canvas} aria-label="Galaxies sur le ciel"></canvas>
   {#if tip}
     <p class="tip" style:left="{tip.x}px" style:top="{tip.y}px">
       {#each tip.lines as line}
@@ -92,9 +84,9 @@
   {/if}
 </div>
 <p class="legend">
-  <span>{legend.start}</span>
+  <span>faible</span>
   <span class="ramp"></span>
-  <span>{legend.end}</span>
+  <span>brillante</span>
 </p>
 
 <style>

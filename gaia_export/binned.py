@@ -54,32 +54,3 @@ def write_hr_diagram_bins(
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-
-
-def write_sky_density_nside64(
-    path: Path,
-    *,
-    ra_deg: np.ndarray,
-    dec_deg: np.ndarray,
-    source: str,
-    nside: int = 64,
-) -> None:
-    import healpy as hp
-
-    theta = np.deg2rad(90.0 - dec_deg)
-    phi = np.deg2rad(ra_deg)
-    pix = hp.ang2pix(nside, theta, phi, nest=True)
-    n_pix = hp.nside2npix(nside)
-    counts = np.bincount(pix, minlength=n_pix)
-
-    payload = {
-        **_meta(source=source),
-        "scheme": "healpix",
-        "nest": True,
-        "nside": nside,
-        "n_pix": int(n_pix),
-        "nonzero_pixels": int(np.count_nonzero(counts)),
-        "counts": counts.astype(np.uint32).tolist(),
-    }
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
