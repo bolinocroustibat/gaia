@@ -144,15 +144,13 @@ def _as_float(column) -> np.ndarray:
 
 
 def export_milky_way_disk(points_dir: Path, table) -> dict[str, Any]:
-    """Export a sky map and a 3D view for a sample of every source inside the disk."""
+    """Export a 3D view for a sample of every source inside the disk."""
     placed = _add_galactocentric_coords(table)
     r_cyl = _as_float(placed["r_cyl_gc"])
     keep = np.isfinite(r_cyl) & (r_cyl < MILKY_WAY_RADIUS_KPC)
     placed = placed[keep]
 
     source_id = [str(int(value)) for value in placed["source_id"]]
-    ra = _as_float(placed["ra"]).tolist()
-    dec = _as_float(placed["dec"]).tolist()
     mag = _as_float(placed["phot_g_mean_mag"]).tolist()
     parallax = _as_float(placed["parallax"])
     distance_pc = (1000.0 / parallax).tolist()
@@ -173,10 +171,6 @@ def export_milky_way_disk(points_dir: Path, table) -> dict[str, Any]:
         f"One source out of {MILKY_WAY_SAMPLE_MODULUS}."
     )
 
-    sky_fields = field_specs(
-        ["source_id", "ra", "dec", "phot_g_mean_mag"],
-        units={"ra": "deg", "dec": "deg", "phot_g_mean_mag": "mag"},
-    )
     space_fields = field_specs(
         ["source_id", "x_gc", "y_gc", "z_gc", "phot_g_mean_mag", "distance_pc"],
         units={
@@ -188,15 +182,7 @@ def export_milky_way_disk(points_dir: Path, table) -> dict[str, Any]:
         },
     )
 
-    sky_path = points_dir / "milky_way_sky2d.json"
     space_path = points_dir / "milky_way_space3d.json"
-    sky_count = write_columnar_json(
-        sky_path,
-        dataset="milky_way_sky2d",
-        columns={"source_id": source_id, "ra": ra, "dec": dec, "phot_g_mean_mag": mag},
-        fields=sky_fields,
-        extra={"filters": filters, "filters_note": filters_note},
-    )
     space_count = write_columnar_json(
         space_path,
         dataset="milky_way_space3d",
@@ -211,13 +197,6 @@ def export_milky_way_disk(points_dir: Path, table) -> dict[str, Any]:
         fields=space_fields,
         extra={"filters": filters, "filters_note": filters_note},
     )
-    check_unique_source_ids(sky_path)
     check_unique_source_ids(space_path)
-    check_file_size(sky_path)
     check_file_size(space_path)
-    return {
-        "sky2d_path": sky_path,
-        "space3d_path": space_path,
-        "sky2d_count": sky_count,
-        "space3d_count": space_count,
-    }
+    return {"path": space_path, "count": space_count}

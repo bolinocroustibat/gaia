@@ -43,21 +43,6 @@
       "sourceNote": "disk_stars_sample"
     },
     {
-      "id": "milky_way_sky2d",
-      "path": "points/milky_way_sky2d.json",
-      "tier": "C",
-      "format": "columnar",
-      "label": "Disque galactique — carte du ciel",
-      "count": 42158,
-      "tooltipFields": [
-        "source_id",
-        "ra",
-        "dec",
-        "phot_g_mean_mag"
-      ],
-      "helpText": "Un échantillon de toutes les étoiles, doubles ou non, tant qu'elles sont dans la Voie lactée."
-    },
-    {
       "id": "milky_way_space3d",
       "path": "points/milky_way_space3d.json",
       "tier": "C",
@@ -72,7 +57,7 @@
         "distance_pc",
         "phot_g_mean_mag"
       ],
-      "helpText": "Le même échantillon, en volume. De côté, on voit l'épaisseur du disque."
+      "helpText": "Un échantillon de toutes les étoiles, doubles ou non, tant qu'elles sont dans la Voie lactée. De côté, on voit l'épaisseur du disque."
     },
     {
       "id": "disk_stars_sample",

@@ -68,7 +68,6 @@ def main() -> int:
     hr_partial = binned_dir / "hr_diagram_bins.partial.json"
     hr_source = "gaiadr3 absolute G magnitude for sources with a reliable parallax"
 
-    milky_sky_count = _columnar_count(points_dir / "milky_way_sky2d.json")
     milky_space_count = _columnar_count(points_dir / "milky_way_space3d.json")
 
     if args.fetch_gaia:
@@ -76,8 +75,7 @@ def main() -> int:
         star_info = export_disk_stars_sample(points_dir, table)
         stars_count = star_info["count"]
         milky_info = export_milky_way_disk(points_dir, fetch_milky_way_disk_table())
-        milky_sky_count = milky_info["sky2d_count"]
-        milky_space_count = milky_info["space3d_count"]
+        milky_space_count = milky_info["count"]
         counts = fetch_hr_absolute_histogram(hr_partial)
         write_hr_diagram_bins(hr_path, counts=counts, source=HR_ABSOLUTE_SOURCE)
         hr_partial.unlink(missing_ok=True)
@@ -123,37 +121,25 @@ def main() -> int:
         },
     ]
 
-    if milky_sky_count and milky_space_count:
-        datasets.extend(
-            [
-                {
-                    "id": "milky_way_sky2d",
-                    "path": "points/milky_way_sky2d.json",
-                    "tier": "C",
-                    "format": "columnar",
-                    "label": "Disque galactique — carte du ciel",
-                    "count": milky_sky_count,
-                    "tooltipFields": ["source_id", "ra", "dec", "phot_g_mean_mag"],
-                    "helpText": "Un échantillon de toutes les étoiles, doubles ou non, tant qu'elles sont dans la Voie lactée.",
-                },
-                {
-                    "id": "milky_way_space3d",
-                    "path": "points/milky_way_space3d.json",
-                    "tier": "C",
-                    "format": "columnar",
-                    "label": "Disque galactique — en volume",
-                    "count": milky_space_count,
-                    "tooltipFields": [
-                        "source_id",
-                        "x_gc",
-                        "y_gc",
-                        "z_gc",
-                        "distance_pc",
-                        "phot_g_mean_mag",
-                    ],
-                    "helpText": "Le même échantillon, en volume. De côté, on voit l'épaisseur du disque.",
-                },
-            ]
+    if milky_space_count:
+        datasets.append(
+            {
+                "id": "milky_way_space3d",
+                "path": "points/milky_way_space3d.json",
+                "tier": "C",
+                "format": "columnar",
+                "label": "Disque galactique — en volume",
+                "count": milky_space_count,
+                "tooltipFields": [
+                    "source_id",
+                    "x_gc",
+                    "y_gc",
+                    "z_gc",
+                    "distance_pc",
+                    "phot_g_mean_mag",
+                ],
+                "helpText": "Un échantillon de toutes les étoiles, doubles ou non, tant qu'elles sont dans la Voie lactée. De côté, on voit l'épaisseur du disque.",
+            }
         )
 
     if stars_count:

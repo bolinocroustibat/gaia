@@ -72,9 +72,9 @@ export type ColumnarTable = {
   numbers: Record<string, Float32Array>;
 };
 
-export type SectionKind = "kpi" | "types" | "hr" | "galaxy-sky" | "galaxy-3d" | "funnel";
+export type SectionKind = "kpi" | "types" | "hr" | "galaxy-3d" | "funnel";
 
 export type PanelPayload =
   | { kind: "kpi" | "types" | "funnel"; summary: SummaryFile }
   | { kind: "hr"; bins: Binned2d }
-  | { kind: "galaxy-sky" | "galaxy-3d"; table: ColumnarTable };
+  | { kind: "galaxy-3d"; table: ColumnarTable };

@@ -9,7 +9,6 @@
   import KpiStrip from "./KpiStrip.svelte";
   import LogBars from "./LogBars.svelte";
   import PlotFrame from "./PlotFrame.svelte";
-  import SkyMap from "./SkyMap.svelte";
 
   let { kind, path }: { kind: SectionKind; path: string } = $props();
 
@@ -60,15 +59,6 @@
     <LogBars rows={funnelRows(payload.summary.steps ?? [])} />
   {:else if payload?.kind === "hr"}
     <PlotFrame data={payload.bins} render={hrPlot} />
-  {:else if payload?.kind === "galaxy-sky"}
-    <SkyMap
-      sky={{
-        ids: payload.table.strings.source_id ?? [],
-        ra: payload.table.numbers.ra,
-        dec: payload.table.numbers.dec,
-        mag: payload.table.numbers.phot_g_mean_mag,
-      }}
-    />
   {:else if payload?.kind === "galaxy-3d"}
     <GalaxyCloud table={payload.table} />
   {:else if failed}
