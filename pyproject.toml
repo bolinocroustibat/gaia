@@ -1,0 +1,28 @@
+[project]
+name = "gaia"
+version = "0.1.0"
+description = "Notebooks and export tooling for Gaia DR3 data used in frontend dataviz prototypes."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "astropy>=8.0.1",
+    "astroquery>=0.4.11",
+    "healpy>=1.18.0",
+    "ipykernel>=7.3.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.22",
+    "ty>=0.0.62",
+]
+
+[tool.uv]
+package = true
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["gaia_export*"]

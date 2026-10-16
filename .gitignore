@@ -1,0 +1,21 @@
+# Python
+.python-version
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+wheels/
+
+# OS
+.DS_Store
+
+# Frontend (also see frontend/.gitignore)
+node_modules/
+
+# Editor / tooling
+.ipynb_checkpoints/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/

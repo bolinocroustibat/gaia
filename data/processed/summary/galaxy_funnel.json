@@ -1,0 +1,42 @@
+{
+  "release": "gaiadr3",
+  "generated_at": "2026-10-16T21:18:33.983843+00:00",
+  "source": "gaiadr3.gaia_source via astroquery",
+  "license": {
+    "id": "CC-BY-NC-3.0-IGO",
+    "url": "https://www.cosmos.esa.int/web/gaia-users/license"
+  },
+  "credit": "ESA Gaia DPAC",
+  "steps": [
+    {
+      "id": "galaxy_candidates_total",
+      "label": "Candidats galaxie (liste large)",
+      "count": 4842342
+    },
+    {
+      "id": "galaxy_candidates_with_redshift",
+      "label": "Avec décalage vers le rouge (distance lointaine)",
+      "count": 1367153
+    },
+    {
+      "id": "galaxy_candidates_without_redshift",
+      "label": "Sans décalage vers le rouge",
+      "count": 3475189
+    },
+    {
+      "id": "strict_galaxies_nss",
+      "label": "Galaxies proches confirmées (objet étendu)",
+      "count": 58215
+    },
+    {
+      "id": "strict_galaxies_nearby_parallax",
+      "label": "Galaxies proches avec distance fiable",
+      "count": 58209
+    },
+    {
+      "id": "strict_galaxies_with_redshift",
+      "label": "Galaxies confirmées avec redshift",
+      "count": 0
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "release": "gaiadr3",
+  "generated_at": "2026-10-16T21:18:33.983296+00:00",
+  "source": "gaiadr3.gaia_source via astroquery",
+  "license": {
+    "id": "CC-BY-NC-3.0-IGO",
+    "url": "https://www.cosmos.esa.int/web/gaia-users/license"
+  },
+  "credit": "ESA Gaia DPAC",
+  "rows": [
+    {
+      "id": "objects_total",
+      "label": "Sources mesurées dans le catalogue",
+      "count": 1811709771
+    },
+    {
+      "id": "likely_single_stars",
+      "label": "Étoiles seules (estimation)",
+      "count": 1810896084
+    },
+    {
+      "id": "strict_galaxies_nss",
+      "label": "Galaxies proches reconnues",
+      "count": 58215
+    }
+  ]
+}

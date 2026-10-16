@@ -1,0 +1,33 @@
+{
+  "release": "gaiadr3",
+  "generated_at": "2026-10-16T21:18:33.983680+00:00",
+  "source": "gaiadr3.gaia_source via astroquery",
+  "license": {
+    "id": "CC-BY-NC-3.0-IGO",
+    "url": "https://www.cosmos.esa.int/web/gaia-users/license"
+  },
+  "credit": "ESA Gaia DPAC",
+  "dimensions": [
+    {
+      "id": "object_type",
+      "label": "Type d'objet"
+    }
+  ],
+  "rows": [
+    {
+      "object_type": "binary_stars",
+      "label": "Étoiles doubles probables",
+      "count": 813687
+    },
+    {
+      "object_type": "galaxy_candidates",
+      "label": "Galaxies probables",
+      "count": 4842342
+    },
+    {
+      "object_type": "other_sources",
+      "label": "Autres objets : étoiles seules, quasars, non classés",
+      "count": 1806053742
+    }
+  ]
+}
