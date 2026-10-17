@@ -1,19 +1,47 @@
-name: Deploy to prod on push to main
+name: Deploy to prod
 
 on:
   push:
     branches:
       - main
+    tags:
+      - "*"
 
 permissions:
   contents: write
 
 jobs:
 
+  bump-version:
+    name: Bump version to ${{ github.ref_name }}
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Bump version in frontend/package.json to ${{ github.ref_name }}
+        run: sed -E -i 's/"version":[[:space:]]"[0-9]+.[0-9]+.[0-9]+"/"version":\ "${{ github.ref_name }}"/g' ./frontend/package.json
+
+      - name: Commit and push updated package.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: main
+          commit_message: "chore: bump version to ${{ github.ref_name }}"
+          commit_user_name: Adrien Carpentier
+          commit_user_email: me@adriencarpentier.com
+          commit_author: Adrien Carpentier <me@adriencarpentier.com>
+
+
   build-and-deploy:
-    name: Deploy ${{ github.sha }} to prod
+    name: Deploy to prod
     runs-on: ubuntu-latest
     environment: production
+    needs: bump-version
+    if: always() && !cancelled() && (needs.bump-version.result == 'success' || needs.bump-version.result == 'skipped')
     defaults:
       run:
         working-directory: frontend
@@ -22,8 +50,15 @@ jobs:
       VITE_ENVIRONMENT: "production"
     steps:
 
-      - name: Checkout main
+      - name: Checkout pushed commit on main
+        if: github.ref_type == 'branch'
         uses: actions/checkout@v4
+
+      - name: Checkout main after version bump
+        if: github.ref_type == 'tag'
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Cache Bun dependencies
         uses: actions/cache@v4
@@ -66,6 +101,7 @@ jobs:
           script: sudo systemctl restart nginx.service
 
       # - name: Create Sentry release
+      #   if: github.ref_type == 'tag'
       #   uses: getsentry/action-release@v3
       #   env:
       #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -73,4 +109,4 @@ jobs:
       #     SENTRY_PROJECT: "lenia"
       #   with:
       #     environment: production
-      #     release: ${{ github.sha }}
+      #     release: ${{ github.ref_name }}
