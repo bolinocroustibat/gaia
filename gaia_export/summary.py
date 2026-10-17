@@ -57,7 +57,10 @@ def write_catalog_totals(
             },
             {
                 "id": "qso_candidates",
-                "label": "quasars probables",
+                "label": (
+                    "quasars (cœurs ultra-brillants de galaxies, alimentés par un trou noir "
+                    "supermassif) probables"
+                ),
                 "count": qso_candidates_total,
             },
             {
