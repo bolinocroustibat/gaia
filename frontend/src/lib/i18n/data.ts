@@ -37,9 +37,9 @@ const datasetEn: Record<
 };
 
 const rowEn: Record<string, string> = {
-  objects_total: "Sources in the catalogue",
-  binary_stars: "Likely binary stars",
-  galaxy_candidates: "Likely galaxies",
+  objects_total: "Objects listed by Gaia, including…",
+  galaxy_candidates: "likely galaxies",
+  binary_stars: "likely binary stars",
   other_sources: "Mostly single stars and other objects",
   galaxy_candidates_total: "Likely galaxies (Gaia list)",
   galaxy_candidates_with_redshift: "Far away: distance measured",

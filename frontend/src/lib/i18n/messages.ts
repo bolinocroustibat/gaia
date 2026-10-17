@@ -2,7 +2,11 @@ import type { Locale } from "./locale.svelte";
 
 export const messages = {
   fr: {
-    ledeFallback: "Le catalogue, en quelques images.",
+    siteTitle: "Qu’a vu le télescope spatial Gaia ?",
+    siteIntro1:
+      "Depuis 2013, Gaia tourne autour de la Terre. Comme tant d’explorations avant elle, elle répond à une envie très ancienne : mieux connaître le ciel et en dresser la carte — mais à une échelle que personne n’avait encore atteinte.",
+    siteIntro2: "En explorant ses dernières données ouvertes, que pouvons-nous apprendre ?",
+    ledeFallback: "En explorant ses dernières données ouvertes, que pouvons-nous apprendre ?",
     catalogLoadFailed: "Le catalogue n’a pas pu être chargé.",
     panelLoadFailed: "Ces données n’ont pas pu être chargées.",
     galaxyCanvasLabel:
@@ -30,7 +34,11 @@ export const messages = {
     langEn: "English",
   },
   en: {
-    ledeFallback: "The catalogue in a few charts.",
+    siteTitle: "What has the Gaia space telescope seen?",
+    siteIntro1:
+      "Since 2013, Gaia has orbited Earth. Like many explorations before it, it answers an old drive: to know the sky better and map it — this time at a scale no one had reached yet.",
+    siteIntro2: "By exploring its latest open data, what can we learn?",
+    ledeFallback: "By exploring its latest open data, what can we learn?",
     catalogLoadFailed: "The catalogue could not be loaded.",
     panelLoadFailed: "This data could not be loaded.",
     galaxyCanvasLabel: "Sample of the Milky Way disk in three dimensions, with Earth’s position",

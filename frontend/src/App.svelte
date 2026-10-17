@@ -29,11 +29,6 @@
 
   const byId = $derived(new Map(manifest?.datasets.map((dataset) => [dataset.id, dataset]) ?? []));
 
-  const catalogLede = $derived.by(() => {
-    const totals = byId.get("catalog_totals");
-    if (totals) return localizedDataset(localeState.value, totals).helpText;
-    return t(localeState.value, "ledeFallback");
-  });
 </script>
 
 <LanguageSwitch />
@@ -41,8 +36,11 @@
 <main>
   <header class="mast">
     <p class="index">DR3</p>
-    <h1>Gaia</h1>
-    <p class="lede">{catalogLede}</p>
+    <h1>{t(localeState.value, "siteTitle")}</h1>
+    <div class="lede">
+      <p>{t(localeState.value, "siteIntro1")}</p>
+      <p>{t(localeState.value, "siteIntro2")}</p>
+    </div>
   </header>
 
   {#if failed}
@@ -92,19 +90,25 @@
   }
 
   h1 {
-    margin: 0.4rem 0 1rem;
-    font-size: clamp(5rem, 16vw, 11rem);
+    margin: 0.4rem 0 1.25rem;
+    max-width: 18em;
+    font-size: clamp(2.1rem, 5.5vw, 3.6rem);
     font-weight: 500;
-    letter-spacing: -0.07em;
-    line-height: 0.82;
+    letter-spacing: -0.045em;
+    line-height: 1.02;
   }
 
   .lede {
-    margin: 0;
-    max-width: 28rem;
+    display: grid;
+    gap: 1rem;
+    max-width: 36rem;
     color: var(--muted);
     font-size: 1.05rem;
     line-height: 1.45;
+  }
+
+  .lede p {
+    margin: 0;
   }
 
   .pending {

@@ -44,17 +44,17 @@ def write_catalog_totals(
         "rows": [
             {
                 "id": "objects_total",
-                "label": "Sources dans le catalogue",
+                "label": "Objets recensés par Gaia, dont…",
                 "count": totals["objects_total"],
             },
             {
                 "id": "galaxy_candidates",
-                "label": "Galaxies probables",
+                "label": "galaxies probables",
                 "count": funnel["galaxy_candidates_total"],
             },
             {
                 "id": "binary_stars",
-                "label": "Étoiles doubles probables",
+                "label": "étoiles doubles probables",
                 "count": binary_stars_total,
             },
         ],
