@@ -2,7 +2,7 @@
   import { formatDate } from "./lib/format";
   import { localizedDataset } from "./lib/i18n/data";
   import { localeState } from "./lib/i18n/locale.svelte";
-  import { t } from "./lib/i18n/messages";
+  import { footerLinks, t } from "./lib/i18n/messages";
   import { loadManifest } from "./lib/load";
   import { storySections } from "./lib/sections";
   import LanguageSwitch from "./lib/components/LanguageSwitch.svelte";
@@ -62,6 +62,17 @@
     {/each}
 
     <footer>
+      <nav class="footer-links" aria-label="Liens">
+        <a href={footerLinks.sourceRepo} target="_blank" rel="noopener noreferrer">
+          {t(localeState.value, "footerSourceCode")}
+        </a>
+        <a href={footerLinks.gaiaArchive} target="_blank" rel="noopener noreferrer">
+          {t(localeState.value, "footerGaiaCatalog")}
+        </a>
+        <a href={footerLinks.author} target="_blank" rel="noopener noreferrer">
+          {t(localeState.value, "footerByBolino")}
+        </a>
+      </nav>
       <p>{manifest.credit}</p>
       <p><a href={manifest.license.url}>{manifest.license.id}</a></p>
       <p>{manifest.release}</p>
@@ -130,6 +141,14 @@
     font-size: 0.72rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    width: 100%;
+    margin-bottom: 0.35rem;
   }
 
   footer p {

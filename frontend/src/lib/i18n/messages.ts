@@ -32,6 +32,9 @@ export const messages = {
     langSwitch: "Langue",
     langFr: "Français",
     langEn: "English",
+    footerSourceCode: "Code source",
+    footerGaiaCatalog: "Catalogue Gaia",
+    footerByBolino: "par bolino",
   },
   en: {
     siteTitle: "What has the Gaia space telescope seen?",
@@ -63,7 +66,17 @@ export const messages = {
     langSwitch: "Language",
     langFr: "Français",
     langEn: "English",
+    footerSourceCode: "Source code",
+    footerGaiaCatalog: "Gaia catalogue",
+    footerByBolino: "by bolino",
   },
+} as const;
+
+/** External links shown in the site footer. */
+export const footerLinks = {
+  sourceRepo: "https://github.com/bolinocroustibat/gaia",
+  gaiaArchive: "https://gea.esac.esa.int/archive/",
+  author: "https://adriencarpentier.com",
 } as const;
 
 export type MessageKey = keyof (typeof messages)["fr"];
