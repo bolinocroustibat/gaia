@@ -9,14 +9,15 @@ export const messages = {
       "Échantillon du disque de la Voie lactée, en trois dimensions, avec la position de la Terre",
     earth: "Terre",
     galaxyHint: "Glisser pour tourner · le point marque la Terre, là où se trouve Gaia",
-    hrGiants: "Géantes rouges",
+    hrGiants: "Géantes",
     hrGiantsText:
-      "Étoiles en fin de vie, qui gonflent et tendent vers le rouge car elles manquent de carburant.",
+      "Étoiles en fin de vie qui gonflent et rougissent après avoir épuisé leur cœur en hydrogène.",
     hrMainSequence: "Séquence principale",
     hrMainSequenceText:
-      "Le stade le plus long de la vie d’une étoile. Sur cette ligne, les étoiles ont différentes masses, donc différentes couleurs et luminosités.",
+      "Étoiles au stade adulte, où elles passent l’essentiel de leur vie. Plus l’étoile est massive, plus elle est chaude, brillante et bleue.",
     hrWhiteDwarfs: "Naines blanches",
-    hrWhiteDwarfsText: "Étoiles mortes qui se sont effondrées.",
+    hrWhiteDwarfsText:
+      "Cœurs d’étoiles mortes ultra-denses qui ne fusionnent plus rien et se refroidissent lentement au fil des milliards d’années.",
     langSwitch: "Langue",
     langFr: "Français",
     langEn: "English",
@@ -28,13 +29,15 @@ export const messages = {
     galaxyCanvasLabel: "Sample of the Milky Way disk in three dimensions, with Earth’s position",
     earth: "Earth",
     galaxyHint: "Drag to rotate · the dot marks Earth, where Gaia lives",
-    hrGiants: "Red giants",
-    hrGiantsText: "Stars near the end of their life. They swell and turn red as they run out of fuel.",
+    hrGiants: "Giants",
+    hrGiantsText:
+      "Stars near the end of their life. They swell and turn red after exhausting the hydrogen in their core.",
     hrMainSequence: "Main sequence",
     hrMainSequenceText:
-      "The longest stage of a star’s life. Along this line, stars of different masses have different colors and luminosities.",
+      "Stars in their adult stage, where they spend most of their life. The more massive a star, the hotter, brighter, and bluer it is.",
     hrWhiteDwarfs: "White dwarfs",
-    hrWhiteDwarfsText: "Dead stars that have collapsed.",
+    hrWhiteDwarfsText:
+      "Ultra-dense cores of dead stars. They no longer fuse anything and cool slowly over billions of years.",
     langSwitch: "Language",
     langFr: "Français",
     langEn: "English",
