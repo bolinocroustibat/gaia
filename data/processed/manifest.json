@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "gaiadr3",
-  "generated_at": "2026-10-16T21:20:43.677916+00:00",
+  "generated_at": "2026-10-17T21:23:12.899638+00:00",
   "license": {
     "id": "CC-BY-NC-3.0-IGO",
     "url": "https://www.cosmos.esa.int/web/gaia-users/license"
@@ -14,16 +14,8 @@
       "path": "summary/catalog_totals.json",
       "tier": "A",
       "format": "summary",
-      "label": "Volume du catalogue",
-      "helpText": "Quatre ordres de grandeur : tout le catalogue, les galaxies et quasars probables repérés, les étoiles doubles repérées."
-    },
-    {
-      "id": "object_types",
-      "path": "summary/object_types.json",
-      "tier": "A",
-      "format": "summary",
-      "label": "Types d'objets",
-      "helpText": "Répartition simplifiée du catalogue. Les barres très hautes sont tronquées à l'affichage."
+      "label": "Qu'a vu Gaia ?",
+      "helpText": "Ordres de grandeur du catalogue et barres comparatives (échelle linéaire ; la barre la plus haute est tronquée)."
     },
     {
       "id": "galaxy_funnel",
@@ -58,21 +50,6 @@
         "phot_g_mean_mag"
       ],
       "helpText": "Un échantillon d'étoiles, doubles ou non, réparti tout autour du Soleil. De côté, on voit l'épaisseur du disque."
-    },
-    {
-      "id": "disk_stars_sample",
-      "path": "points/disk_stars_sample.json",
-      "tier": "C",
-      "format": "columnar",
-      "label": "Échantillon d'étoiles du disque",
-      "count": 24207,
-      "tooltipFields": [
-        "source_id",
-        "bp_rp",
-        "phot_g_mean_mag",
-        "parallax"
-      ],
-      "helpText": "Sous-ensemble d'étoiles avec distance fiable, pour nuages de points."
     }
   ]
 }

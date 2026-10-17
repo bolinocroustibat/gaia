@@ -7,7 +7,6 @@
   import { loadPanel } from "../load";
   import type { SectionKind } from "../types";
   import type { PanelPayload } from "../types";
-  import BrokenBars from "./BrokenBars.svelte";
   import GalaxyCloud from "./GalaxyCloud.svelte";
   import KpiStrip from "./KpiStrip.svelte";
   import LogBars from "./LogBars.svelte";
@@ -55,8 +54,8 @@
   const kpiRows = $derived(
     payload?.kind === "kpi" ? localizedRows(localeState.value, payload.summary.rows ?? []) : [],
   );
-  const typeRows = $derived(
-    payload?.kind === "types" ? localizedRows(localeState.value, payload.summary.rows ?? []) : [],
+  const kpiBarRows = $derived(
+    payload?.kind === "kpi" ? localizedRows(localeState.value, payload.summary.bar_rows ?? []) : [],
   );
   const funnel = $derived(
     payload?.kind === "funnel"
@@ -73,9 +72,7 @@
 
 <div bind:this={host}>
   {#if payload?.kind === "kpi"}
-    <KpiStrip rows={kpiRows} />
-  {:else if payload?.kind === "types"}
-    <BrokenBars rows={typeRows} />
+    <KpiStrip rows={kpiRows} barRows={kpiBarRows} />
   {:else if payload?.kind === "funnel"}
     <LogBars rows={funnel} />
   {:else if hrView}
