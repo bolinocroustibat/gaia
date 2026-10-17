@@ -1,7 +1,9 @@
-name: Deploy to prod when tag
+name: Deploy to prod
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "*"
 
@@ -12,6 +14,7 @@ jobs:
 
   bump-version:
     name: Bump version to ${{ github.ref_name }}
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
 
@@ -34,19 +37,25 @@ jobs:
 
 
   build-and-deploy:
-    name: Deploy ${{ github.ref_name }} to prod
+    name: Deploy ${{ github.ref_type == 'tag' && github.ref_name || github.sha }} to prod
     runs-on: ubuntu-latest
     environment: production
+    needs: bump-version
+    if: always() && !cancelled() && (needs.bump-version.result == 'success' || needs.bump-version.result == 'skipped')
     defaults:
       run:
         working-directory: frontend
     env:
       VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       VITE_ENVIRONMENT: "production"
-    needs: bump-version
     steps:
 
-      - name: Checkout main after bump
+      - name: Checkout pushed commit on main
+        if: github.ref_type == 'branch'
+        uses: actions/checkout@v4
+
+      - name: Checkout main after version bump
+        if: github.ref_type == 'tag'
         uses: actions/checkout@v4
         with:
           ref: main
@@ -91,7 +100,8 @@ jobs:
           # The server allows this restart without a password. reload is not in that list, so sudo asks for a password and the job fails.
           script: sudo systemctl restart nginx.service
 
-      # - name: Create Sentry "${{ github.ref_name }}" release
+      # - name: Create Sentry release
+      #   if: github.ref_type == 'tag'
       #   uses: getsentry/action-release@v3
       #   env:
       #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
