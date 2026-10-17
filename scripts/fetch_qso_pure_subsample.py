@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Fetch Gaia DR3 quasar candidates at ~95% purity (Table 11 selection)."""
 
 from __future__ import annotations

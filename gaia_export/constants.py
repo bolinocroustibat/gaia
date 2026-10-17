@@ -26,6 +26,9 @@ SNAPSHOT_GALAXY_FUNNEL = {
     "galaxy_candidates_without_redshift": 3_475_189,
 }
 
+# gaiadr3.qso_candidates, Table 11 purer subsample (~95% estimated purity).
+SNAPSHOT_QSO_PURE_SUBSAMPLE_TOTAL = 1_942_825
+
 NON_SINGLE_STAR_LABELS: dict[int | None, tuple[str, str]] = {
     None: ("single_star", "Étoile seule"),
     0: ("single_star", "Étoile seule"),
