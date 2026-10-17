@@ -40,10 +40,12 @@ def write_catalog_totals(
     *,
     qso_candidates_total: int,
     binary_stars_total: int,
+    bar_rows: list[dict[str, Any]],
     source: str,
 ) -> None:
     payload = {
         **_meta(source=source),
+        "bar_rows": bar_rows,
         "rows": [
             {
                 "id": "objects_total",
@@ -69,16 +71,6 @@ def write_catalog_totals(
                 "count": binary_stars_total,
             },
         ],
-    }
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
-def write_object_types(path: Path, rows: list[dict[str, Any]], *, source: str) -> None:
-    payload = {
-        **_meta(source=source),
-        "dimensions": [{"id": "object_type", "label": "Type d'objet"}],
-        "rows": rows,
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -215,13 +207,12 @@ def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
         funnel,
         qso_candidates_total=qso_candidates_total,
         binary_stars_total=binary_stars_total,
+        bar_rows=object_rows,
         source=source,
     )
-    write_object_types(summary_dir / "object_types.json", object_rows, source=source)
     write_galaxy_funnel(summary_dir / "galaxy_funnel.json", funnel, source=source)
 
     return {
         "catalog_totals": "summary/catalog_totals.json",
-        "object_types": "summary/object_types.json",
         "galaxy_funnel": "summary/galaxy_funnel.json",
     }

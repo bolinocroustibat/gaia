@@ -2,8 +2,9 @@
   import { formatCount } from "../format";
   import { localeState } from "../i18n/locale.svelte";
   import type { CountRow } from "../types";
+  import BrokenBars from "./BrokenBars.svelte";
 
-  let { rows }: { rows: CountRow[] } = $props();
+  let { rows, barRows = [] }: { rows: CountRow[]; barRows?: CountRow[] } = $props();
 </script>
 
 <ul>
@@ -40,6 +41,12 @@
   {/each}
 </ul>
 
+{#if barRows.length > 0}
+  <div class="kpi-bars">
+    <BrokenBars rows={barRows} />
+  </div>
+{/if}
+
 <style>
   ul {
     list-style: none;
@@ -47,6 +54,10 @@
     padding: 0;
     display: grid;
     gap: 2.2rem;
+  }
+
+  .kpi-bars {
+    margin-top: clamp(2rem, 5vw, 3rem);
   }
 
   .figure {

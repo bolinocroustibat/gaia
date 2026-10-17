@@ -8,11 +8,7 @@ const datasetEn: Record<
   catalog_totals: {
     label: "Catalogue size",
     helpText:
-      "Four round numbers: the whole catalogue, likely galaxies and quasars, and likely binary stars.",
-  },
-  object_types: {
-    label: "Object types",
-    helpText: "A simplified split of the catalogue. Very tall bars are clipped on screen.",
+      "Headline counts plus linear comparison bars (the tallest bar is clipped on screen).",
   },
   galaxy_funnel: {
     label: "Galaxies: how many and how far?",
