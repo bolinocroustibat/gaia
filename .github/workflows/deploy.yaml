@@ -37,7 +37,7 @@ jobs:
 
 
   build-and-deploy:
-    name: Deploy to prod
+    name: Deploy ${{ github.ref_type == 'tag' && github.ref_name || github.sha }} to prod
     runs-on: ubuntu-latest
     environment: production
     needs: bump-version
