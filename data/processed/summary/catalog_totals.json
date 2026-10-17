@@ -1,7 +1,7 @@
 {
   "release": "gaiadr3",
-  "generated_at": "2026-10-16T21:18:33.983296+00:00",
-  "source": "gaiadr3.gaia_source via astroquery",
+  "generated_at": "2026-10-17T20:54:03.186570+00:00",
+  "source": "snapshot:explore_gaia_archive.ipynb",
   "license": {
     "id": "CC-BY-NC-3.0-IGO",
     "url": "https://www.cosmos.esa.int/web/gaia-users/license"
@@ -17,6 +17,11 @@
       "id": "galaxy_candidates",
       "label": "galaxies probables",
       "count": 4842342
+    },
+    {
+      "id": "qso_candidates",
+      "label": "quasars probables",
+      "count": 1942825
     },
     {
       "id": "binary_stars",

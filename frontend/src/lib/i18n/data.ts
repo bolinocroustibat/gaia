@@ -8,7 +8,7 @@ const datasetEn: Record<
   catalog_totals: {
     label: "Catalogue size",
     helpText:
-      "Three round numbers: the whole catalogue, likely galaxies, and likely binary stars.",
+      "Four round numbers: the whole catalogue, likely galaxies and quasars, and likely binary stars.",
   },
   object_types: {
     label: "Object types",
@@ -39,6 +39,7 @@ const datasetEn: Record<
 const rowEn: Record<string, string> = {
   objects_total: "Objects listed by Gaia, including…",
   galaxy_candidates: "likely galaxies",
+  qso_candidates: "likely quasars",
   binary_stars: "likely binary stars",
   other_sources: "Mostly single stars and other objects",
   galaxy_candidates_total: "Likely galaxies (Gaia list)",
