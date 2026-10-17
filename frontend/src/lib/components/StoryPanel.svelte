@@ -66,6 +66,9 @@
   const hrBins = $derived(
     payload?.kind === "hr" ? localizedBins(localeState.value, payload.bins) : null,
   );
+  const hrView = $derived(
+    hrBins ? { bins: hrBins, locale: localeState.value } : null,
+  );
 </script>
 
 <div bind:this={host}>
@@ -75,8 +78,8 @@
     <BrokenBars rows={typeRows} />
   {:else if payload?.kind === "funnel"}
     <LogBars rows={funnel} />
-  {:else if payload?.kind === "hr" && hrBins}
-    <PlotFrame data={hrBins} render={hrPlot} />
+  {:else if hrView}
+    <PlotFrame data={hrView} render={hrPlot} />
   {:else if payload?.kind === "galaxy-3d"}
     <GalaxyCloud table={payload.table} />
   {:else if failed}

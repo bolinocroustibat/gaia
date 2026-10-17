@@ -49,6 +49,7 @@
   }
 
   .plot-host :global(figure) {
+    position: relative;
     margin: 0;
   }
 
@@ -61,5 +62,31 @@
 
   .plot-host :global(text) {
     font-family: var(--font-mono);
+  }
+
+  .plot-host :global(.family-tip) {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    gap: 0.28rem;
+    margin: 0;
+    padding: 0.55rem 0.7rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.45;
+    pointer-events: none;
+  }
+
+  .plot-host :global(.family-tip p) {
+    margin: 0;
+  }
+
+  .plot-host :global(.family-name) {
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 </style>
