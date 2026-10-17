@@ -91,7 +91,7 @@ def main() -> int:
             "path": "summary/catalog_totals.json",
             "tier": "A",
             "format": "summary",
-            "label": "Volume du catalogue",
+            "label": "Qu'a vu Gaia ?",
             "helpText": "Ordres de grandeur du catalogue et barres comparatives (échelle linéaire ; la barre la plus haute est tronquée).",
         },
         {

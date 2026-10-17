@@ -6,7 +6,7 @@ const datasetEn: Record<
   { label: string; helpText: string; sourceNote?: string }
 > = {
   catalog_totals: {
-    label: "Catalogue size",
+    label: "What has Gaia seen?",
     helpText:
       "Headline counts plus linear comparison bars (the tallest bar is clipped on screen).",
   },
