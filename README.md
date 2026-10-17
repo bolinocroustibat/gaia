@@ -10,14 +10,16 @@ This project uses **[uv](https://docs.astral.sh/uv/)** for Python dependencies (
 uv sync
 ```
 
-Run tooling with `uv run` (no manual activation required):
+CLI entry points (via `uv run`):
 
 ```bash
-uv run python scripts/export_processed.py
-uv run python scripts/export_processed.py --fetch-gaia
-uv run python scripts/fetch_qso_pure_subsample.py --count-only
-uv run python scripts/fetch_qso_pure_subsample.py -o data/qso_candidates_pure_dr3.csv
+uv run export-processed
+uv run export-processed --fetch-gaia
+uv run fetch-qso-pure-subsample --count-only
+uv run fetch-qso-pure-subsample -o data/qso_candidates_pure_dr3.csv
 ```
+
+See [AGENTS.md](AGENTS.md) for contributor and automation notes.
 
 ## Frontend-ready JSON
 
@@ -26,8 +28,8 @@ Processed assets live under [`data/processed/`](data/processed/). Start from [`d
 Regenerate locally (after `uv sync`):
 
 ```bash
-uv run python scripts/export_processed.py              # galaxies; keeps the colour–luminosity diagram already on disk
-uv run python scripts/export_processed.py --fetch-gaia # + archive counts, disk star sample, absolute-magnitude diagram
+uv run export-processed              # galaxies; keeps the colour–luminosity diagram already on disk
+uv run export-processed --fetch-gaia # + archive counts, disk star sample, absolute-magnitude diagram
 ```
 
 **Licence:** [CC BY-NC 3.0 IGO](https://www.cosmos.esa.int/web/gaia-users/license) — Credit: ESA, Gaia DPAC.

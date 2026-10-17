@@ -16,6 +16,10 @@ dev = [
     "ty>=0.0.62",
 ]
 
+[project.scripts]
+export-processed = "gaia_export.export_processed:main"
+fetch-qso-pure-subsample = "gaia_export.fetch_qso_pure_subsample:main"
+
 [tool.uv]
 package = true
 
