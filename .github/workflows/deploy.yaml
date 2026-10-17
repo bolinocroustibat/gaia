@@ -1,40 +1,17 @@
-name: Deploy to prod when tag
+name: Deploy to prod on push to main
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
 
-  bump-version:
-    name: Bump version to ${{ github.ref_name }}
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - name: Bump version in frontend/package.json to ${{ github.ref_name }}
-        run: sed -E -i 's/"version":[[:space:]]"[0-9]+.[0-9]+.[0-9]+"/"version":\ "${{ github.ref_name }}"/g' ./frontend/package.json
-
-      - name: Commit and push updated package.json
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          branch: main
-          commit_message: "chore: bump version to ${{ github.ref_name }}"
-          commit_user_name: Adrien Carpentier
-          commit_user_email: me@adriencarpentier.com
-          commit_author: Adrien Carpentier <me@adriencarpentier.com>
-
-
   build-and-deploy:
-    name: Deploy ${{ github.ref_name }} to prod
+    name: Deploy ${{ github.sha }} to prod
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -43,13 +20,10 @@ jobs:
     env:
       VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       VITE_ENVIRONMENT: "production"
-    needs: bump-version
     steps:
 
-      - name: Checkout main after bump
+      - name: Checkout main
         uses: actions/checkout@v4
-        with:
-          ref: main
 
       - name: Cache Bun dependencies
         uses: actions/cache@v4
@@ -91,7 +65,7 @@ jobs:
           # The server allows this restart without a password. reload is not in that list, so sudo asks for a password and the job fails.
           script: sudo systemctl restart nginx.service
 
-      # - name: Create Sentry "${{ github.ref_name }}" release
+      # - name: Create Sentry release
       #   uses: getsentry/action-release@v3
       #   env:
       #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -99,4 +73,4 @@ jobs:
       #     SENTRY_PROJECT: "lenia"
       #   with:
       #     environment: production
-      #     release: ${{ github.ref_name }}
+      #     release: ${{ github.sha }}
