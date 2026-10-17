@@ -144,8 +144,69 @@ type FamilyMark = (typeof familyMarks)[keyof typeof familyMarks];
 
 const marginTop = 20;
 const marginRight = 24;
-const marginBottom = 48;
-const marginLeft = 72;
+const marginBottom = 68;
+const marginLeft = 78;
+
+/** Absolute G magnitude of the Sun. Axis ticks are shown as multiples of its light. */
+const sunAbsoluteG = 4.67;
+const solarTicks = [1000, 100, 10, 1, 0.1, 0.01, 0.001, 0.0001];
+
+function solarMagnitude(timesSun: number): number {
+  return sunAbsoluteG - 2.5 * Math.log10(timesSun);
+}
+
+/**
+ * Rounded main-sequence anchors for Gaia BP−RP: a color name plus a surface
+ * temperature. Giants of the same color run a little cooler, so this is a
+ * guide, not a thermometer for every star.
+ */
+const colorStops = [
+  { bpRp: -0.25, celsius: 12000, name: "hrColorBlue" },
+  { bpRp: 0.35, celsius: 8000, name: "hrColorWhite" },
+  { bpRp: 0.82, celsius: 5500, name: "hrColorYellow" },
+  { bpRp: 1.6, celsius: 4000, name: "hrColorOrange" },
+  { bpRp: 3.2, celsius: 2500, name: "hrColorRed" },
+] as const;
+
+function colorStopsFor(width: number) {
+  if (width >= 720) return colorStops;
+  return colorStops.filter((stop) => stop.name === "hrColorBlue" || stop.name === "hrColorYellow" || stop.name === "hrColorRed");
+}
+
+function celsiusLabel(celsius: number, locale: Locale): string {
+  const language = locale === "fr" ? "fr-FR" : "en-GB";
+  const formatted = new Intl.NumberFormat(language, { maximumFractionDigits: 0 }).format(celsius);
+  return `${formatted} °C`;
+}
+
+function stackColorTicks(svg: SVGSVGElement): void {
+  const ns = "http://www.w3.org/2000/svg";
+  for (const node of svg.querySelectorAll("text")) {
+    const raw = node.textContent ?? "";
+    if (!raw.includes("\n")) continue;
+    const [name, temperature] = raw.split("\n");
+    const x = node.getAttribute("x") ?? "0";
+    node.textContent = "";
+    const nameSpan = document.createElementNS(ns, "tspan");
+    nameSpan.setAttribute("x", x);
+    nameSpan.textContent = name ?? "";
+    const temperatureSpan = document.createElementNS(ns, "tspan");
+    temperatureSpan.setAttribute("x", x);
+    temperatureSpan.setAttribute("dy", "1.2em");
+    temperatureSpan.textContent = temperature ?? "";
+    node.append(nameSpan, temperatureSpan);
+  }
+}
+
+function solarTickLabel(timesSun: number, locale: Locale): string {
+  const language = locale === "fr" ? "fr-FR" : "en-GB";
+  const digits = timesSun >= 1 ? 0 : Math.round(-Math.log10(timesSun));
+  const formatted = new Intl.NumberFormat(language, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(timesSun);
+  return `${formatted}×`;
+}
 
 type PlotScale = {
   px: (x: number) => number;
@@ -317,8 +378,40 @@ export function hrPlot(input: HrPlotInput, width: number): HTMLElement {
     marginBottom,
     marginLeft,
     style: plotStyle,
-    x: { label: bins.x.label },
-    y: { label: bins.y.label, reverse: bins.y.id === "mg" },
+    x: {
+      label: bins.x.id === "bp_rp" ? t(locale, "hrColorAxis") : bins.x.label,
+      labelArrow: bins.x.id === "bp_rp" ? false : undefined,
+      ticks: bins.x.id === "bp_rp" ? colorStopsFor(width).map((stop) => stop.bpRp) : undefined,
+      tickFormat:
+        bins.x.id === "bp_rp"
+          ? (value: number) => {
+              const stops = colorStopsFor(width);
+              const nearest = stops.reduce((best, stop) =>
+                Math.abs(stop.bpRp - value) < Math.abs(best.bpRp - value) ? stop : best,
+              );
+              return `${t(locale, nearest.name)}\n${celsiusLabel(nearest.celsius, locale)}`;
+            }
+          : undefined,
+    },
+    y: {
+      label: bins.y.id === "mg" ? t(locale, "hrLuminosity") : bins.y.label,
+      labelArrow: bins.y.id === "mg" ? false : undefined,
+      reverse: bins.y.id === "mg",
+      ticks: bins.y.id === "mg" ? solarTicks.map(solarMagnitude) : undefined,
+      tickFormat:
+        bins.y.id === "mg"
+          ? (value: number) => {
+              const timesSun = 10 ** ((sunAbsoluteG - value) / 2.5);
+              const nearest = solarTicks.reduce((best, tick) =>
+                Math.abs(Math.log10(tick) - Math.log10(timesSun)) <
+                Math.abs(Math.log10(best) - Math.log10(timesSun))
+                  ? tick
+                  : best,
+              );
+              return solarTickLabel(nearest, locale);
+            }
+          : undefined,
+    },
     marks: [
       Plot.frame({ stroke: theme.line }),
       Plot.rect(cells, {
@@ -347,6 +440,7 @@ export function hrPlot(input: HrPlotInput, width: number): HTMLElement {
       ),
     ],
   }) as SVGSVGElement;
+  stackColorTicks(svg);
   markerInk(svg);
   const marks = svg.querySelectorAll('[filter="url(#hr-marker)"]');
   families.forEach((family, index) => {

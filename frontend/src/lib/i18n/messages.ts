@@ -15,6 +15,13 @@ export const messages = {
     hrMainSequence: "Séquence principale",
     hrMainSequenceText:
       "Étoiles au stade adulte, où elles passent l’essentiel de leur vie. Plus l’étoile est massive, plus elle est chaude, brillante et bleue.",
+    hrLuminosity: "Luminosité (fois le Soleil)",
+    hrColorAxis: "Température de surface",
+    hrColorBlue: "Bleu",
+    hrColorWhite: "Blanc",
+    hrColorYellow: "Jaune",
+    hrColorOrange: "Orange",
+    hrColorRed: "Rouge",
     hrWhiteDwarfs: "Naines blanches",
     hrWhiteDwarfsText:
       "Cœurs d’étoiles mortes ultra-denses qui ne fusionnent plus rien et se refroidissent lentement au fil des milliards d’années.",
@@ -35,6 +42,13 @@ export const messages = {
     hrMainSequence: "Main sequence",
     hrMainSequenceText:
       "Stars in their adult stage, where they spend most of their life. The more massive a star, the hotter, brighter, and bluer it is.",
+    hrLuminosity: "Luminosity (times the Sun)",
+    hrColorAxis: "Surface temperature",
+    hrColorBlue: "Blue",
+    hrColorWhite: "White",
+    hrColorYellow: "Yellow",
+    hrColorOrange: "Orange",
+    hrColorRed: "Red",
     hrWhiteDwarfs: "White dwarfs",
     hrWhiteDwarfsText:
       "Ultra-dense cores of dead stars. They no longer fuse anything and cool slowly over billions of years.",

@@ -50,8 +50,8 @@ const rowEn: Record<string, string> = {
 };
 
 const axisEn: Record<string, string> = {
-  bp_rp: "Color (blue → red)",
-  mg: "Luminosity (higher = brighter)",
+  bp_rp: "Surface temperature",
+  mg: "Luminosity (times the Sun)",
 };
 
 const fieldEn: Record<string, string> = {
