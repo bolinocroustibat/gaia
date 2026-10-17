@@ -39,7 +39,8 @@ const datasetEn: Record<
 const rowEn: Record<string, string> = {
   objects_total: "Objects listed by Gaia, including…",
   galaxy_candidates: "likely galaxies",
-  qso_candidates: "likely quasars",
+  qso_candidates:
+    "likely quasars (ultra-bright galactic cores powered by a supermassive black hole)",
   binary_stars: "likely binary stars",
   other_sources: "Mostly single stars and other objects",
   galaxy_candidates_total: "Likely galaxies (Gaia list)",
