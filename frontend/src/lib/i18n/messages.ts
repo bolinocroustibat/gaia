@@ -12,11 +12,11 @@ export const messages = {
     hrGiants: "Géantes",
     hrGiantsText:
       "Étoiles en fin de vie qui gonflent et rougissent après avoir épuisé leur cœur en hydrogène.",
-    hrMainSequence: "Séquence principale",
+    hrMainSequence: "« Séquence principale »",
     hrMainSequenceText:
       "Étoiles au stade adulte, où elles passent l’essentiel de leur vie. Plus l’étoile est massive, plus elle est chaude, brillante et bleue.",
     hrLuminosity: "Luminosité (fois le Soleil)",
-    hrColorAxis: "Température de surface",
+    hrColorAxis: "Température de surface (estimée d’après la couleur bleu–rouge)",
     hrColorBlue: "Bleu",
     hrColorWhite: "Blanc",
     hrColorYellow: "Jaune",
@@ -39,11 +39,11 @@ export const messages = {
     hrGiants: "Giants",
     hrGiantsText:
       "Stars near the end of their life. They swell and turn red after exhausting the hydrogen in their core.",
-    hrMainSequence: "Main sequence",
+    hrMainSequence: "“Main sequence”",
     hrMainSequenceText:
       "Stars in their adult stage, where they spend most of their life. The more massive a star, the hotter, brighter, and bluer it is.",
     hrLuminosity: "Luminosity (times the Sun)",
-    hrColorAxis: "Surface temperature",
+    hrColorAxis: "Surface temperature (estimated from the blue–red color)",
     hrColorBlue: "Blue",
     hrColorWhite: "White",
     hrColorYellow: "Yellow",

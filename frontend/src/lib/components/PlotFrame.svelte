@@ -84,6 +84,26 @@
     margin: 0;
   }
 
+  .plot-host :global(.family-tip::before) {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+  }
+
+  .plot-host :global(.family-tip[data-aim="left"]::before) {
+    left: -12px;
+    top: 1.15rem;
+    border-right-color: var(--accent);
+  }
+
+  .plot-host :global(.family-tip[data-aim="left-low"]::before) {
+    left: -12px;
+    bottom: 1.5rem;
+    border-right-color: var(--accent);
+  }
+
   .plot-host :global(.family-name) {
     color: var(--accent);
     letter-spacing: 0.12em;

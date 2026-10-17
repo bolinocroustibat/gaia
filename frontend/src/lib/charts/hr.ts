@@ -16,13 +16,14 @@ type Cell = {
 
 const background: Rgb = [0x0c, 0x0c, 0x0c];
 
-/** Stellar tint along BP−RP: blue, then white-yellow, then red. */
+/** Stellar tint along BP−RP. Blue stays saturated until the white stars. */
 const starStops: { at: number; rgb: Rgb }[] = [
-  { at: -0.5, rgb: [80, 150, 255] },
-  { at: 0.2, rgb: [190, 214, 255] },
-  { at: 0.85, rgb: [255, 228, 170] },
-  { at: 1.5, rgb: [255, 156, 64] },
-  { at: 2.4, rgb: [255, 72, 48] },
+  { at: -0.5, rgb: [20, 70, 255] },
+  { at: 0.05, rgb: [55, 120, 255] },
+  { at: 0.45, rgb: [246, 244, 236] },
+  { at: 0.85, rgb: [255, 214, 140] },
+  { at: 1.5, rgb: [255, 150, 55] },
+  { at: 2.4, rgb: [255, 70, 42] },
   { at: 3.6, rgb: [176, 32, 42] },
   { at: 5, rgb: [120, 18, 28] },
 ];
@@ -111,6 +112,7 @@ const familyMarks = {
   },
   main: {
     ridge: [
+      [0.28, 1.95],
       [0.4, 2.25],
       [0.7, 3.5],
       [1.0, 4.9],
@@ -307,9 +309,9 @@ function markerInk(svg: SVGSVGElement): void {
 
 /** Top-left of each tooltip, in data units, sitting in a quiet part of the frame. */
 const tipPlaces = {
-  giants: { x: 3.28, y: -0.2 },
-  main: { x: 3.42, y: 5.5 },
-  dwarfs: { x: 1.05, y: 13.5 },
+  giants: { x: 3.28, y: 0.55, aim: "left" },
+  main: { x: 3.42, y: 6.3, aim: "left" },
+  dwarfs: { x: 1.2, y: 10.2, aim: "left-low" },
 } as const;
 
 function familyTips(
@@ -325,10 +327,11 @@ function familyTips(
     const tip = document.createElement("div");
     tip.className = "family-tip";
     tip.dataset.family = family.id;
+    tip.dataset.aim = place.aim;
     tip.style.width = `${tipWidth}px`;
     const left = marginLeft + scale.px(place.x);
     const top = marginTop + scale.py(place.y);
-    const reserve = family.id === "main" ? 112 : 76;
+    const reserve = family.id === "dwarfs" ? 168 : family.id === "main" ? 108 : 72;
     tip.style.left = `${Math.max(8, Math.min(left, width - tipWidth - 8))}px`;
     tip.style.top = `${Math.max(8, Math.min(top, height - marginBottom - reserve))}px`;
     const name = document.createElement("p");
@@ -380,6 +383,7 @@ export function hrPlot(input: HrPlotInput, width: number): HTMLElement {
     style: plotStyle,
     x: {
       label: bins.x.id === "bp_rp" ? t(locale, "hrColorAxis") : bins.x.label,
+      labelAnchor: bins.x.id === "bp_rp" ? "center" : undefined,
       labelArrow: bins.x.id === "bp_rp" ? false : undefined,
       ticks: bins.x.id === "bp_rp" ? colorStopsFor(width).map((stop) => stop.bpRp) : undefined,
       tickFormat:

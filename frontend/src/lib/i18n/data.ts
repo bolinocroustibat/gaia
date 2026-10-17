@@ -20,8 +20,9 @@ const datasetEn: Record<
       "First the list of likely galaxies, then nearby objects whose distance we can estimate.",
   },
   hr_diagram_bins: {
-    label: "Color–luminosity diagram",
-    helpText: "Absolute brightness vs. color. The main stellar families separate here.",
+    label: "When you observe this many celestial bodies, do families show up?",
+    helpText:
+      "Yes! Most of the objects Gaia flags are stars. For each one, when it can, the probe measures a brightness and a color. Plot them on a diagram and three clear groups appear: three broad families, each tied to a stage in a star’s life.",
     sourceNote: "Gaia DR3 absolute G magnitude for sources with a reliable parallax",
   },
   milky_way_space3d: {
@@ -50,7 +51,7 @@ const rowEn: Record<string, string> = {
 };
 
 const axisEn: Record<string, string> = {
-  bp_rp: "Surface temperature",
+  bp_rp: "Surface temperature (estimated from the blue–red color)",
   mg: "Luminosity (times the Sun)",
 };
 
