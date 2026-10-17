@@ -263,6 +263,7 @@ function familyTips(
     const place = tipPlaces[family.id];
     const tip = document.createElement("div");
     tip.className = "family-tip";
+    tip.dataset.family = family.id;
     tip.style.width = `${tipWidth}px`;
     const left = marginLeft + scale.px(place.x);
     const top = marginTop + scale.py(place.y);
@@ -347,7 +348,46 @@ export function hrPlot(input: HrPlotInput, width: number): HTMLElement {
     ],
   }) as SVGSVGElement;
   markerInk(svg);
+  const marks = svg.querySelectorAll('[filter="url(#hr-marker)"]');
+  families.forEach((family, index) => {
+    const mark = marks[index];
+    if (!mark) return;
+    mark.classList.add("hr-mark");
+    mark.setAttribute("data-family", family.id);
+  });
   const figure = document.createElement("figure");
+  figure.className = "hr-figure";
   figure.append(svg, familyTips(families, scale, width, height));
+  revealWhenVisible(figure);
   return figure;
+}
+
+/** Marks and notes stay hidden until the diagram has been scrolled into view. */
+function revealWhenVisible(figure: HTMLElement): void {
+  let frames = 0;
+  const arm = () => {
+    if (!figure.isConnected) {
+      if (frames++ > 8) return;
+      requestAnimationFrame(arm);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        figure.classList.add("is-visible");
+        observer.disconnect();
+      },
+      { threshold: 0.28 },
+    );
+    observer.observe(figure);
+    const parent = figure.parentElement;
+    if (!parent) return;
+    const removal = new MutationObserver(() => {
+      if (figure.isConnected) return;
+      observer.disconnect();
+      removal.disconnect();
+    });
+    removal.observe(parent, { childList: true });
+  };
+  requestAnimationFrame(arm);
 }

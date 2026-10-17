@@ -89,4 +89,41 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
+
+  .plot-host :global(.hr-figure:not(.is-visible) .hr-mark),
+  .plot-host :global(.hr-figure:not(.is-visible) .family-tip) {
+    opacity: 0;
+  }
+
+  .plot-host :global(.hr-figure .hr-mark),
+  .plot-host :global(.hr-figure .family-tip) {
+    transition: opacity 0.95s ease;
+  }
+
+  .plot-host :global(.hr-figure.is-visible .hr-mark[data-family="main"]),
+  .plot-host :global(.hr-figure.is-visible .family-tip[data-family="main"]) {
+    transition-delay: 0.15s;
+  }
+
+  .plot-host :global(.hr-figure.is-visible .hr-mark[data-family="giants"]),
+  .plot-host :global(.hr-figure.is-visible .family-tip[data-family="giants"]) {
+    transition-delay: 1.2s;
+  }
+
+  .plot-host :global(.hr-figure.is-visible .hr-mark[data-family="dwarfs"]),
+  .plot-host :global(.hr-figure.is-visible .family-tip[data-family="dwarfs"]) {
+    transition-delay: 2.25s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plot-host :global(.hr-figure:not(.is-visible) .hr-mark),
+    .plot-host :global(.hr-figure:not(.is-visible) .family-tip) {
+      opacity: 1;
+    }
+
+    .plot-host :global(.hr-figure .hr-mark),
+    .plot-host :global(.hr-figure .family-tip) {
+      transition: none;
+    }
+  }
 </style>
