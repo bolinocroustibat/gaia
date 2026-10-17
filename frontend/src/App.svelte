@@ -1,7 +1,11 @@
 <script lang="ts">
   import { formatDate } from "./lib/format";
+  import { localizedDataset } from "./lib/i18n/data";
+  import { localeState } from "./lib/i18n/locale.svelte";
+  import { t } from "./lib/i18n/messages";
   import { loadManifest } from "./lib/load";
   import { storySections } from "./lib/sections";
+  import LanguageSwitch from "./lib/components/LanguageSwitch.svelte";
   import Section from "./lib/components/Section.svelte";
   import StoryPanel from "./lib/components/StoryPanel.svelte";
   import type { Manifest } from "./lib/types";
@@ -24,27 +28,34 @@
   });
 
   const byId = $derived(new Map(manifest?.datasets.map((dataset) => [dataset.id, dataset]) ?? []));
+
+  const catalogLede = $derived.by(() => {
+    const totals = byId.get("catalog_totals");
+    if (totals) return localizedDataset(localeState.value, totals).helpText;
+    return t(localeState.value, "ledeFallback");
+  });
 </script>
+
+<LanguageSwitch />
 
 <main>
   <header class="mast">
     <p class="index">DR3</p>
     <h1>Gaia</h1>
-    <p class="lede">
-      {byId.get("catalog_totals")?.helpText ?? "Le catalogue, en quelques images."}
-    </p>
+    <p class="lede">{catalogLede}</p>
   </header>
 
   {#if failed}
-    <p class="pending">Le catalogue n’a pas pu être chargé.</p>
+    <p class="pending">{t(localeState.value, "catalogLoadFailed")}</p>
   {:else if manifest}
     {#each storySections as section, index (section.id)}
       {@const meta = byId.get(section.id)}
       {#if meta}
+        {@const copy = localizedDataset(localeState.value, meta)}
         <Section
           index={String(index + 1).padStart(2, "0")}
-          title={meta.label}
-          help={meta.helpText}
+          title={copy.label}
+          help={copy.helpText}
           caption={section.caption}
         >
           <StoryPanel kind={section.kind} path={meta.path} />
@@ -56,7 +67,7 @@
       <p>{manifest.credit}</p>
       <p><a href={manifest.license.url}>{manifest.license.id}</a></p>
       <p>{manifest.release}</p>
-      <p>{formatDate(manifest.generated_at)}</p>
+      <p>{formatDate(manifest.generated_at, localeState.value)}</p>
     </footer>
   {:else}
     <p class="pending" aria-hidden="true">…</p>

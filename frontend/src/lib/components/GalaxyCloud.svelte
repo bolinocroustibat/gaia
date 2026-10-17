@@ -1,13 +1,15 @@
 <script lang="ts">
   import { mountGalaxyCloud } from "../charts/cloud";
   import { formatField } from "../format";
+  import { localeState } from "../i18n/locale.svelte";
+  import { t } from "../i18n/messages";
   import type { ColumnarTable } from "../types";
 
   let { table }: { table: ColumnarTable } = $props();
 
   let canvas = $state<HTMLCanvasElement | undefined>();
   let marker = $state<HTMLElement | undefined>();
-  let tip = $state<{ x: number; y: number; lines: string[] } | null>(null);
+  let tip = $state<{ x: number; y: number; lines: { field: string; text: string }[] } | null>(null);
 
   const fields = ["source_id", "x_gc", "y_gc", "z_gc", "distance_pc", "phot_g_mean_mag"];
 
@@ -15,6 +17,7 @@
     const node = canvas;
     const label = marker;
     const data = table;
+    const loc = localeState.value;
     if (!node || !label) return;
     return mountGalaxyCloud(node, data, (hover) => {
       if (!hover) {
@@ -25,9 +28,11 @@
         x: hover.x,
         y: hover.y,
         lines: fields.map((name) => {
-          if (name === "source_id") return formatField(name, data.strings.source_id?.[hover.index] ?? "");
-          const column = data.numbers[name];
-          return formatField(name, column?.[hover.index] ?? Number.NaN);
+          const value =
+            name === "source_id"
+              ? (data.strings.source_id?.[hover.index] ?? "")
+              : (data.numbers[name]?.[hover.index] ?? Number.NaN);
+          return { field: name, text: formatField(name, value, loc) };
         }),
       };
     }, label);
@@ -35,17 +40,17 @@
 </script>
 
 <div class="cloud">
-  <canvas bind:this={canvas} aria-label="Échantillon du disque de la Voie lactée, en trois dimensions, avec la position de la Terre"></canvas>
-  <p class="observer" bind:this={marker} hidden>Terre</p>
+  <canvas bind:this={canvas} aria-label={t(localeState.value, "galaxyCanvasLabel")}></canvas>
+  <p class="observer" bind:this={marker} hidden>{t(localeState.value, "earth")}</p>
   {#if tip}
     <p class="tip" style:left="{tip.x}px" style:top="{tip.y}px">
-      {#each tip.lines as line}
-        <span class:id={line.startsWith("identifiant")}>{line}</span>
+      {#each tip.lines as line (line.field)}
+        <span class:id={line.field === "source_id"}>{line.text}</span>
       {/each}
     </p>
   {/if}
 </div>
-<p class="hint">Glisser pour tourner · le point marque la Terre, là où se trouve Gaia</p>
+<p class="hint">{t(localeState.value, "galaxyHint")}</p>
 
 <style>
   .cloud {

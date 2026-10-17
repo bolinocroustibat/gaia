@@ -1,6 +1,9 @@
 <script lang="ts">
   import { funnelRows } from "../charts/funnel";
   import { hrPlot } from "../charts/hr";
+  import { localizedBins, localizedRows } from "../i18n/data";
+  import { localeState } from "../i18n/locale.svelte";
+  import { t } from "../i18n/messages";
   import { loadPanel } from "../load";
   import type { SectionKind } from "../types";
   import type { PanelPayload } from "../types";
@@ -48,21 +51,36 @@
       observer.disconnect();
     };
   });
+
+  const kpiRows = $derived(
+    payload?.kind === "kpi" ? localizedRows(localeState.value, payload.summary.rows ?? []) : [],
+  );
+  const typeRows = $derived(
+    payload?.kind === "types" ? localizedRows(localeState.value, payload.summary.rows ?? []) : [],
+  );
+  const funnel = $derived(
+    payload?.kind === "funnel"
+      ? localizedRows(localeState.value, funnelRows(payload.summary.steps ?? []))
+      : [],
+  );
+  const hrBins = $derived(
+    payload?.kind === "hr" ? localizedBins(localeState.value, payload.bins) : null,
+  );
 </script>
 
 <div bind:this={host}>
   {#if payload?.kind === "kpi"}
-    <KpiStrip rows={payload.summary.rows ?? []} />
+    <KpiStrip rows={kpiRows} />
   {:else if payload?.kind === "types"}
-    <BrokenBars rows={payload.summary.rows ?? []} />
+    <BrokenBars rows={typeRows} />
   {:else if payload?.kind === "funnel"}
-    <LogBars rows={funnelRows(payload.summary.steps ?? [])} />
-  {:else if payload?.kind === "hr"}
-    <PlotFrame data={payload.bins} render={hrPlot} />
+    <LogBars rows={funnel} />
+  {:else if payload?.kind === "hr" && hrBins}
+    <PlotFrame data={hrBins} render={hrPlot} />
   {:else if payload?.kind === "galaxy-3d"}
     <GalaxyCloud table={payload.table} />
   {:else if failed}
-    <p class="pending">Ces données n’ont pas pu être chargées.</p>
+    <p class="pending">{t(localeState.value, "panelLoadFailed")}</p>
   {:else}
     <p class="pending" aria-hidden="true">…</p>
   {/if}

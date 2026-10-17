@@ -27,24 +27,35 @@ def _meta(*, source: str) -> dict[str, Any]:
     }
 
 
-def write_catalog_totals(path: Path, totals: dict[str, int], *, source: str) -> None:
+def count_likely_binary_stars(group_counts: dict[int | None, int]) -> int:
+    return sum(count for code, count in group_counts.items() if code not in (None, 0))
+
+
+def write_catalog_totals(
+    path: Path,
+    totals: dict[str, int],
+    funnel: dict[str, int],
+    *,
+    binary_stars_total: int,
+    source: str,
+) -> None:
     payload = {
         **_meta(source=source),
         "rows": [
             {
                 "id": "objects_total",
-                "label": "Sources mesurées dans le catalogue",
+                "label": "Sources dans le catalogue",
                 "count": totals["objects_total"],
             },
             {
-                "id": "likely_single_stars",
-                "label": "Étoiles seules (estimation)",
-                "count": totals["likely_single_stars"],
+                "id": "galaxy_candidates",
+                "label": "Galaxies probables",
+                "count": funnel["galaxy_candidates_total"],
             },
             {
-                "id": "strict_galaxies_nss",
-                "label": "Étoiles doubles (position et spectre)",
-                "count": totals["strict_galaxies_nss"],
+                "id": "binary_stars",
+                "label": "Étoiles doubles probables",
+                "count": binary_stars_total,
             },
         ],
     }
@@ -64,12 +75,15 @@ def write_object_types(path: Path, rows: list[dict[str, Any]], *, source: str) -
 
 def write_galaxy_funnel(path: Path, funnel: dict[str, int], *, source: str) -> None:
     steps = [
-        ("galaxy_candidates_total", "Candidats galaxie (liste large)"),
-        ("galaxy_candidates_with_redshift", "Avec décalage vers le rouge (distance lointaine)"),
-        ("galaxy_candidates_without_redshift", "Sans décalage vers le rouge"),
-        ("strict_galaxies_nss", "Étoiles doubles (position et spectre)"),
-        ("strict_galaxies_nearby_parallax", "Étoiles doubles avec une distance fiable"),
-        ("strict_galaxies_with_redshift", "Étoiles doubles avec un décalage vers le rouge"),
+        ("galaxy_candidates_total", "Galaxies probables (liste Gaia)"),
+        ("galaxy_candidates_with_redshift", "Lointaines : distance mesurée"),
+        ("galaxy_candidates_without_redshift", "Sans distance lointaine connue"),
+        ("strict_galaxies_nss", "Voisinage : autres sources repérées (~58 k)"),
+        (
+            "strict_galaxies_nearby_parallax",
+            "Dont distance mesurée (parallaxe, carte 3D)",
+        ),
+        ("strict_galaxies_with_redshift", "Avec distance par décalage vers le rouge"),
     ]
     payload = {
         **_meta(source=source),
@@ -93,7 +107,7 @@ def object_type_display_rows(
     in_galaxy_candidates count. The last row is the rest of the catalogue.
     """
     non_binary = group_counts.get(None, 0) + group_counts.get(0, 0)
-    binaries = sum(count for code, count in group_counts.items() if code not in (None, 0))
+    binaries = count_likely_binary_stars(group_counts)
     return [
         {
             "object_type": "binary_stars",
@@ -107,7 +121,7 @@ def object_type_display_rows(
         },
         {
             "object_type": "other_sources",
-            "label": "Autres objets : étoiles seules, quasars, non classés",
+            "label": "Surtout étoiles seules et autres objets",
             "count": int(non_binary - galaxy_candidates),
         },
     ]
@@ -180,8 +194,15 @@ def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
             group_counts[2] = remainder - group_counts[1]
 
     object_rows = object_type_display_rows(group_counts, funnel["galaxy_candidates_total"])
+    binary_stars_total = count_likely_binary_stars(group_counts)
 
-    write_catalog_totals(summary_dir / "catalog_totals.json", totals, source=source)
+    write_catalog_totals(
+        summary_dir / "catalog_totals.json",
+        totals,
+        funnel,
+        binary_stars_total=binary_stars_total,
+        source=source,
+    )
     write_object_types(summary_dir / "object_types.json", object_rows, source=source)
     write_galaxy_funnel(summary_dir / "galaxy_funnel.json", funnel, source=source)
 

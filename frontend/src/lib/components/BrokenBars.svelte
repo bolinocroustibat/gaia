@@ -1,5 +1,6 @@
 <script lang="ts">
   import { formatCompact } from "../format";
+  import { localeState } from "../i18n/locale.svelte";
   import type { CountRow } from "../types";
 
   let { rows }: { rows: CountRow[] } = $props();
@@ -38,11 +39,12 @@
   }
 
   const ticks = $derived.by(() => {
+    const loc = localeState.value;
     const marks: { label: string; left: string }[] = [];
     for (let step = 1; step <= 5; step += 1) {
       const value = (scaleMax / 5) * step;
       marks.push({
-        label: formatCompact(value),
+        label: formatCompact(value, loc),
         left: `${(value / scaleMax) * LINEAR * 100}%`,
       });
     }
@@ -65,7 +67,7 @@
         <span class="guide" style:left={tick.left}></span>
       {/each}
     </div>
-    <p class="count">{formatCompact(row.count)}</p>
+    <p class="count">{formatCompact(row.count, localeState.value)}</p>
   {/each}
   <div class="axis" aria-hidden="true">
     {#each ticks as tick (tick.left)}

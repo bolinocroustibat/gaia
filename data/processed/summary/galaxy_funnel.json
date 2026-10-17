@@ -10,32 +10,32 @@
   "steps": [
     {
       "id": "galaxy_candidates_total",
-      "label": "Candidats galaxie (liste large)",
+      "label": "Galaxies probables (liste Gaia)",
       "count": 4842342
     },
     {
       "id": "galaxy_candidates_with_redshift",
-      "label": "Avec décalage vers le rouge (distance lointaine)",
+      "label": "Lointaines : distance mesurée",
       "count": 1367153
     },
     {
       "id": "galaxy_candidates_without_redshift",
-      "label": "Sans décalage vers le rouge",
+      "label": "Sans distance lointaine connue",
       "count": 3475189
     },
     {
       "id": "strict_galaxies_nss",
-      "label": "Étoiles doubles (position et spectre)",
+      "label": "Voisinage : autres sources repérées (~58 k)",
       "count": 58215
     },
     {
       "id": "strict_galaxies_nearby_parallax",
-      "label": "Étoiles doubles avec une distance fiable",
+      "label": "Dont distance mesurée (parallaxe, carte 3D)",
       "count": 58209
     },
     {
       "id": "strict_galaxies_with_redshift",
-      "label": "Étoiles doubles avec un décalage vers le rouge",
+      "label": "Avec distance par décalage vers le rouge",
       "count": 0
     }
   ]

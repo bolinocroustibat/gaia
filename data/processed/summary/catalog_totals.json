@@ -10,18 +10,18 @@
   "rows": [
     {
       "id": "objects_total",
-      "label": "Sources mesurées dans le catalogue",
+      "label": "Sources dans le catalogue",
       "count": 1811709771
     },
     {
-      "id": "likely_single_stars",
-      "label": "Étoiles seules (estimation)",
-      "count": 1810896084
+      "id": "galaxy_candidates",
+      "label": "Galaxies probables",
+      "count": 4842342
     },
     {
-      "id": "strict_galaxies_nss",
-      "label": "Étoiles doubles (position et spectre)",
-      "count": 58215
+      "id": "binary_stars",
+      "label": "Étoiles doubles probables",
+      "count": 813687
     }
   ]
 }

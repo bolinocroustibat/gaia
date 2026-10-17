@@ -92,7 +92,7 @@ def main() -> int:
             "tier": "A",
             "format": "summary",
             "label": "Volume du catalogue",
-            "helpText": "Combien de sources Gaia a mesurées, en gros chiffres.",
+            "helpText": "Trois ordres de grandeur : tout le catalogue, les galaxies repérées, les étoiles doubles repérées.",
         },
         {
             "id": "object_types",
@@ -100,15 +100,15 @@ def main() -> int:
             "tier": "A",
             "format": "summary",
             "label": "Types d'objets",
-            "helpText": "Étoiles doubles probables, galaxies probables, et le reste. La grande barre est coupée.",
+            "helpText": "Répartition simplifiée du catalogue. Les barres très hautes sont tronquées à l'affichage.",
         },
         {
             "id": "galaxy_funnel",
             "path": "summary/galaxy_funnel.json",
             "tier": "A",
             "format": "summary",
-            "label": "Entonnoir galaxies",
-            "helpText": "Candidats galaxies, puis les étoiles doubles du voisinage du Soleil.",
+            "label": "Galaxies : combien et où ?",
+            "helpText": "D'abord la liste des galaxies probables, puis les objets proches dont on peut estimer la distance.",
         },
         {
             "id": "hr_diagram_bins",

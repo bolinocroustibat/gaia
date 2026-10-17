@@ -1,5 +1,6 @@
 <script lang="ts">
   import { formatCount } from "../format";
+  import { localeState } from "../i18n/locale.svelte";
   import type { CountRow } from "../types";
 
   let { rows }: { rows: CountRow[] } = $props();
@@ -8,7 +9,7 @@
 <ul>
   {#each rows as row (row.id ?? row.label)}
     <li>
-      <p class="value" class:accent={row.id === "objects_total"}>{formatCount(row.count)}</p>
+      <p class="value" class:accent={row.id === "objects_total"}>{formatCount(row.count, localeState.value)}</p>
       <p class="label">{row.label}</p>
     </li>
   {/each}
