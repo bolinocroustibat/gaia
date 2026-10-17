@@ -1,0 +1,3 @@
+{
+  "install": "curl -LsSf https://astral.sh/uv/install.sh | sh && sudo ln -sf \"$HOME/.local/bin/uv\" /usr/local/bin/uv && uv sync --all-groups"
+}

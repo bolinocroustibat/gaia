@@ -1,4 +1,7 @@
-"""Fetch Gaia DR3 quasar candidates at ~95% purity (Table 11 selection)."""
+"""Fetch Gaia DR3 quasar candidates at ~95% purity (Table 11 selection).
+
+Run: uv run python scripts/fetch_qso_pure_subsample.py [--count-only] [-o PATH]
+"""
 
 from __future__ import annotations
 
