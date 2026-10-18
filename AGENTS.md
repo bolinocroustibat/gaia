@@ -16,7 +16,7 @@ uv sync --all-groups
 
 ## Python commands
 
-Until CLI entry points are registered in `pyproject.toml`, run scripts explicitly:
+CLI implementations live under `gaia_export/`; `scripts/` are thin wrappers. Run:
 
 ```bash
 uv run python scripts/export_processed.py
@@ -24,8 +24,6 @@ uv run python scripts/export_processed.py --fetch-gaia
 uv run python scripts/fetch_qso_pure_subsample.py --count-only
 uv run python scripts/fetch_qso_pure_subsample.py -o data/qso_candidates_pure_dr3.csv
 ```
-
-When entry points exist, prefer `uv run export-processed` and `uv run fetch-qso-pure-subsample` (see README).
 
 ## Frontend
 
