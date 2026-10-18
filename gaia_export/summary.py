@@ -14,7 +14,9 @@ from gaia_export.constants import (
     LICENSE_URL,
     SNAPSHOT_CATALOG_TOTALS,
     SNAPSHOT_GALAXY_FUNNEL,
+    SNAPSHOT_QSO_PURE_SUBSAMPLE_TOTAL,
 )
+from gaia_export.quasars import count_pure_qso_candidates
 
 
 def _meta(*, source: str) -> dict[str, Any]:
@@ -36,6 +38,7 @@ def write_catalog_totals(
     totals: dict[str, int],
     funnel: dict[str, int],
     *,
+    qso_candidates_total: int,
     binary_stars_total: int,
     source: str,
 ) -> None:
@@ -51,6 +54,14 @@ def write_catalog_totals(
                 "id": "galaxy_candidates",
                 "label": "galaxies probables",
                 "count": funnel["galaxy_candidates_total"],
+            },
+            {
+                "id": "qso_candidates",
+                "label": (
+                    "quasars (cœurs ultra-brillants de galaxies, alimentés par un trou noir "
+                    "supermassif) probables"
+                ),
+                "count": qso_candidates_total,
             },
             {
                 "id": "binary_stars",
@@ -163,6 +174,7 @@ def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
 
     totals = dict(SNAPSHOT_CATALOG_TOTALS)
     funnel = dict(SNAPSHOT_GALAXY_FUNNEL)
+    qso_candidates_total = SNAPSHOT_QSO_PURE_SUBSAMPLE_TOTAL
     group_counts: dict[int | None, int] | None = None
 
     if fetch_gaia:
@@ -171,6 +183,7 @@ def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
             group_counts = fetch_object_type_counts_from_gaia()
             totals["likely_single_stars"] = group_counts.get(None, 0) + group_counts.get(0, 0)
             totals["strict_galaxies_nss"] = group_counts.get(3, 0)
+            qso_candidates_total = count_pure_qso_candidates()
         except Exception as exc:  # noqa: BLE001 — fall back to snapshot
             source = f"snapshot:explore_gaia_archive.ipynb (Gaia fetch failed: {exc})"
             group_counts = None
@@ -200,6 +213,7 @@ def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
         summary_dir / "catalog_totals.json",
         totals,
         funnel,
+        qso_candidates_total=qso_candidates_total,
         binary_stars_total=binary_stars_total,
         source=source,
     )

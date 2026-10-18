@@ -21,6 +21,12 @@
             <circle cx="18" cy="44" r="1" fill="currentColor" />
             <circle cx="72" cy="46" r="0.8" fill="currentColor" opacity="0.65" />
           </svg>
+        {:else if row.id === "qso_candidates"}
+          <svg class="mark" viewBox="0 0 96 64" aria-hidden="true">
+            <circle cx="48" cy="32" r="22" fill="currentColor" opacity="0.08" />
+            <circle cx="48" cy="32" r="7" fill="currentColor" />
+            <path d="M48 32 L8 20 M48 32 L88 20 M48 32 L8 44 M48 32 L88 44" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.55" />
+          </svg>
         {:else if row.id === "binary_stars"}
           <svg class="mark" viewBox="0 0 96 64" aria-hidden="true">
             <ellipse cx="48" cy="34" rx="32" ry="15" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45" transform="rotate(-18 48 34)" />

@@ -15,7 +15,7 @@
       "tier": "A",
       "format": "summary",
       "label": "Volume du catalogue",
-      "helpText": "Trois ordres de grandeur : tout le catalogue, les galaxies repérées, les étoiles doubles repérées."
+      "helpText": "Quatre ordres de grandeur : tout le catalogue, les galaxies et quasars probables repérés, les étoiles doubles repérées."
     },
     {
       "id": "object_types",

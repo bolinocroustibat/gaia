@@ -92,7 +92,7 @@ def main() -> int:
             "tier": "A",
             "format": "summary",
             "label": "Volume du catalogue",
-            "helpText": "3 ordres de grandeur : tout le catalogue, les galaxies repérées, les étoiles doubles repérées.",
+            "helpText": "Quatre ordres de grandeur : tout le catalogue, les galaxies et quasars probables repérés, les étoiles doubles repérées.",
         },
         {
             "id": "object_types",
