@@ -6,13 +6,9 @@ const datasetEn: Record<
   { label: string; helpText: string; sourceNote?: string }
 > = {
   catalog_totals: {
-    label: "Catalogue size",
+    label: "What has Gaia seen?",
     helpText:
-      "Four round numbers: the whole catalogue, likely galaxies and quasars, and likely binary stars.",
-  },
-  object_types: {
-    label: "Object types",
-    helpText: "A simplified split of the catalogue. Very tall bars are clipped on screen.",
+      "Headline counts plus linear comparison bars (the tallest bar is clipped on screen).",
   },
   galaxy_funnel: {
     label: "Galaxies: how many and how far?",

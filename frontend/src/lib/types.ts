@@ -35,6 +35,7 @@ export type SummaryFile = {
   credit: string;
   license: { id: string; url: string };
   rows?: CountRow[];
+  bar_rows?: CountRow[];
   steps?: CountRow[];
 };
 
@@ -72,9 +73,9 @@ export type ColumnarTable = {
   numbers: Record<string, Float32Array>;
 };
 
-export type SectionKind = "kpi" | "types" | "hr" | "galaxy-3d" | "funnel";
+export type SectionKind = "kpi" | "hr" | "galaxy-3d" | "funnel";
 
 export type PanelPayload =
-  | { kind: "kpi" | "types" | "funnel"; summary: SummaryFile }
+  | { kind: "kpi" | "funnel"; summary: SummaryFile }
   | { kind: "hr"; bins: Binned2d }
   | { kind: "galaxy-3d"; table: ColumnarTable };

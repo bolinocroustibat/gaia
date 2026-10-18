@@ -38,7 +38,7 @@ export async function loadColumnar(relativePath: string): Promise<ColumnarTable>
 }
 
 export async function loadPanel(kind: SectionKind, relativePath: string): Promise<PanelPayload> {
-  if (kind === "kpi" || kind === "types" || kind === "funnel") {
+  if (kind === "kpi" || kind === "funnel") {
     return { kind, summary: await loadJson(relativePath) };
   }
   if (kind === "hr") {

@@ -91,16 +91,8 @@ def main() -> int:
             "path": "summary/catalog_totals.json",
             "tier": "A",
             "format": "summary",
-            "label": "Volume du catalogue",
-            "helpText": "Quatre ordres de grandeur : tout le catalogue, les galaxies et quasars probables repérés, les étoiles doubles repérées.",
-        },
-        {
-            "id": "object_types",
-            "path": "summary/object_types.json",
-            "tier": "A",
-            "format": "summary",
-            "label": "Types d'objets",
-            "helpText": "Répartition simplifiée du catalogue. Les barres très hautes sont tronquées à l'affichage.",
+            "label": "Qu'a vu Gaia ?",
+            "helpText": "Ordres de grandeur du catalogue et barres comparatives (échelle linéaire ; la barre la plus haute est tronquée).",
         },
         {
             "id": "galaxy_funnel",
