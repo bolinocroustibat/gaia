@@ -1,4 +1,5 @@
-import { cpSync, createReadStream, existsSync, statSync } from "node:fs";
+import { execSync } from "node:child_process";
+import { cpSync, createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
@@ -6,6 +7,10 @@ import { defineConfig, type Plugin } from "vite";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const processedSource = path.resolve(root, "../data/processed");
+const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as {
+  version: string;
+};
+const commit = execSync("git rev-parse --short=8 HEAD", { encoding: "utf8" }).trim();
 
 function processedData(): Plugin {
   let outDir = path.resolve(root, "dist");
@@ -53,5 +58,9 @@ function processedData(): Plugin {
 }
 
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+    __APP_COMMIT__: JSON.stringify(commit),
+  },
   plugins: [svelte(), processedData()],
 });

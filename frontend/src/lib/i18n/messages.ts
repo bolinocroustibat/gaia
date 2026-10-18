@@ -35,6 +35,7 @@ export const messages = {
     footerSourceCode: "Code source",
     footerGaiaCatalog: "Catalogue Gaia",
     footerByBolino: "par bolino",
+    footerExported: "Données exportées de Gaia le",
   },
   en: {
     siteTitle: "What has the Gaia space telescope seen?",
@@ -69,6 +70,7 @@ export const messages = {
     footerSourceCode: "Source code",
     footerGaiaCatalog: "Gaia catalogue",
     footerByBolino: "by bolino",
+    footerExported: "Data exported from Gaia on",
   },
 } as const;
 

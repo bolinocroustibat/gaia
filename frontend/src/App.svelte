@@ -62,21 +62,24 @@
     {/each}
 
     <footer>
-      <nav class="footer-links" aria-label="Liens">
+      <p>
         <a href={footerLinks.sourceRepo} target="_blank" rel="noopener noreferrer">
           {t(localeState.value, "footerSourceCode")}
         </a>
+        v{__APP_VERSION__} ({__APP_COMMIT__}) ·
         <a href={footerLinks.gaiaArchive} target="_blank" rel="noopener noreferrer">
           {t(localeState.value, "footerGaiaCatalog")}
         </a>
+        ·
         <a href={footerLinks.author} target="_blank" rel="noopener noreferrer">
           {t(localeState.value, "footerByBolino")}
         </a>
-      </nav>
-      <p>{manifest.credit}</p>
-      <p><a href={manifest.license.url}>{manifest.license.id}</a></p>
-      <p>{manifest.release}</p>
-      <p>{formatDate(manifest.generated_at, localeState.value)}</p>
+      </p>
+      <p>
+        {t(localeState.value, "footerExported")}
+        {formatDate(manifest.generated_at, localeState.value)} · {manifest.release} · {manifest.credit}
+        · <a href={manifest.license.url}>{manifest.license.id}</a>
+      </p>
     </footer>
   {:else}
     <p class="pending" aria-hidden="true">…</p>
@@ -132,8 +135,8 @@
 
   footer {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.5rem;
+    flex-direction: column;
+    gap: 0.45rem;
     padding: 1.4rem clamp(1.25rem, 6vw, 5.5rem) 2.4rem;
     border-top: 1px solid var(--line);
     color: var(--muted);
@@ -141,14 +144,6 @@
     font-size: 0.72rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-
-  .footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.5rem;
-    width: 100%;
-    margin-bottom: 0.35rem;
   }
 
   footer p {

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "gaiadr3",
+  "release": "Gaia DR3",
   "generated_at": "2026-10-17T21:23:12.899638+00:00",
   "license": {
-    "id": "CC-BY-NC-3.0-IGO",
+    "id": "CC BY-NC 3.0 IGO",
     "url": "https://www.cosmos.esa.int/web/gaia-users/license"
   },
-  "credit": "ESA Gaia DPAC",
+  "credit": "ESA, Gaia DPAC",
   "source_id_type": "string",
   "datasets": [
     {

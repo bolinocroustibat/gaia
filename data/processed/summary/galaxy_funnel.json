@@ -1,12 +1,12 @@
 {
-  "release": "gaiadr3",
+  "release": "Gaia DR3",
   "generated_at": "2026-10-17T21:23:12.316989+00:00",
   "source": "snapshot:explore_gaia_archive.ipynb",
   "license": {
-    "id": "CC-BY-NC-3.0-IGO",
+    "id": "CC BY-NC 3.0 IGO",
     "url": "https://www.cosmos.esa.int/web/gaia-users/license"
   },
-  "credit": "ESA Gaia DPAC",
+  "credit": "ESA, Gaia DPAC",
   "steps": [
     {
       "id": "galaxy_candidates_total",
