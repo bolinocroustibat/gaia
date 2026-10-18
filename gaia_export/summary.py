@@ -132,7 +132,7 @@ def object_type_display_rows(
         },
         {
             "object_type": "other_sources",
-            "label": "Étoiles simples probables et autres objets",
+            "label": "étoiles simples probables et autres objets",
             "count": int(non_binary - galaxy_candidates - qso_candidates),
         },
     ]
