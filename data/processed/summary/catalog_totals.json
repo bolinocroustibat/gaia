@@ -9,19 +9,24 @@
   "credit": "ESA, Gaia DPAC",
   "bar_rows": [
     {
-      "object_type": "binary_stars",
-      "label": "Étoiles doubles probables",
-      "count": 813687
-    },
-    {
       "object_type": "galaxy_candidates",
       "label": "Galaxies probables",
       "count": 4842342
     },
     {
+      "object_type": "qso_candidates",
+      "label": "Quasars probables",
+      "count": 1942825
+    },
+    {
+      "object_type": "binary_stars",
+      "label": "Étoiles doubles probables",
+      "count": 813687
+    },
+    {
       "object_type": "other_sources",
-      "label": "Surtout étoiles seules et autres objets",
-      "count": 1806053742
+      "label": "Étoiles simples probables et autres objets",
+      "count": 1804110917
     }
   ],
   "rows": [
@@ -37,7 +42,7 @@
     },
     {
       "id": "qso_candidates",
-      "label": "quasars (cœurs ultra-brillants de galaxies, alimentés par un trou noir supermassif) probables",
+      "label": "quasars probables\nles quasars sont des cœurs ultra-brillants de galaxies, alimentés par un trou noir supermassif",
       "count": 1942825
     },
     {

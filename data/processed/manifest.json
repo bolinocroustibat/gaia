@@ -15,7 +15,7 @@
       "tier": "A",
       "format": "summary",
       "label": "Qu'a vu Gaia ?",
-      "helpText": "Ordres de grandeur du catalogue et barres comparatives (échelle linéaire ; la barre la plus haute est tronquée)."
+      "helpText": "Ordres de grandeur du catalogue : une bande à l’échelle montre que presque tout est des étoiles."
     },
     {
       "id": "galaxy_funnel",

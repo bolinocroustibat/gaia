@@ -60,8 +60,9 @@ def write_catalog_totals(
             {
                 "id": "qso_candidates",
                 "label": (
-                    "quasars (cœurs ultra-brillants de galaxies, alimentés par un trou noir "
-                    "supermassif) probables"
+                    "quasars probables\n"
+                    "les quasars sont des cœurs ultra-brillants de galaxies, alimentés par un "
+                    "trou noir supermassif"
                 ),
                 "count": qso_candidates_total,
             },
@@ -103,29 +104,36 @@ def write_galaxy_funnel(path: Path, funnel: dict[str, int], *, source: str) -> N
 def object_type_display_rows(
     group_counts: dict[int | None, int],
     galaxy_candidates: int,
+    qso_candidates: int,
 ) -> list[dict[str, Any]]:
-    """Three categories for a linear bar chart.
+    """Categories for a part-to-whole strip of the catalogue.
 
-    Binaries are every non_single_star code from 1 to 7. Galaxies are the
-    in_galaxy_candidates count. The last row is the rest of the catalogue.
+    Binaries are every non_single_star code from 1 to 7. Galaxies and quasars
+    are the published candidate counts (carved out of the non-binary remainder).
+    The last row is the rest of the catalogue.
     """
     non_binary = group_counts.get(None, 0) + group_counts.get(0, 0)
     binaries = count_likely_binary_stars(group_counts)
     return [
-        {
-            "object_type": "binary_stars",
-            "label": "Étoiles doubles probables",
-            "count": int(binaries),
-        },
         {
             "object_type": "galaxy_candidates",
             "label": "Galaxies probables",
             "count": int(galaxy_candidates),
         },
         {
+            "object_type": "qso_candidates",
+            "label": "Quasars probables",
+            "count": int(qso_candidates),
+        },
+        {
+            "object_type": "binary_stars",
+            "label": "Étoiles doubles probables",
+            "count": int(binaries),
+        },
+        {
             "object_type": "other_sources",
-            "label": "Surtout étoiles seules et autres objets",
-            "count": int(non_binary - galaxy_candidates),
+            "label": "Étoiles simples probables et autres objets",
+            "count": int(non_binary - galaxy_candidates - qso_candidates),
         },
     ]
 
@@ -198,7 +206,11 @@ def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
             group_counts[1] = remainder // 2
             group_counts[2] = remainder - group_counts[1]
 
-    object_rows = object_type_display_rows(group_counts, funnel["galaxy_candidates_total"])
+    object_rows = object_type_display_rows(
+        group_counts,
+        funnel["galaxy_candidates_total"],
+        qso_candidates_total,
+    )
     binary_stars_total = count_likely_binary_stars(group_counts)
 
     write_catalog_totals(

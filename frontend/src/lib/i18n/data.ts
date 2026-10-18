@@ -8,7 +8,7 @@ const datasetEn: Record<
   catalog_totals: {
     label: "What has Gaia seen?",
     helpText:
-      "Headline counts plus linear comparison bars (the tallest bar is clipped on screen).",
+      "Headline counts: a to-scale strip shows that almost everything is stars.",
   },
   galaxy_funnel: {
     label: "Galaxies: how many and how far?",
@@ -36,9 +36,9 @@ const rowEn: Record<string, string> = {
   objects_total: "Objects listed by Gaia, including…",
   galaxy_candidates: "likely galaxies",
   qso_candidates:
-    "likely quasars (ultra-bright galactic cores powered by a supermassive black hole)",
+    "likely quasars\nquasars are ultra-bright galactic cores powered by a supermassive black hole",
   binary_stars: "likely binary stars",
-  other_sources: "Mostly single stars and other objects",
+  other_sources: "likely single stars and other objects",
   galaxy_candidates_total: "Likely galaxies (Gaia list)",
   galaxy_candidates_with_redshift: "Far away: distance measured",
   galaxy_candidates_without_redshift: "No known far distance",

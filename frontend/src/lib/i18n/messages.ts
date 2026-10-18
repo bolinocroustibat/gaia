@@ -36,6 +36,8 @@ export const messages = {
     footerGaiaCatalog: "Catalogue Gaia",
     footerByBolino: "par bolino",
     footerExported: "Données exportées de Gaia le",
+    kpiShareTitle: "Répartition du catalogue",
+    kpiShareHint: "Cette bande représente le catalogue des objets recensés par Gaia.",
   },
   en: {
     siteTitle: "What has the Gaia space telescope seen?",
@@ -71,6 +73,8 @@ export const messages = {
     footerGaiaCatalog: "Gaia catalogue",
     footerByBolino: "by bolino",
     footerExported: "Data exported from Gaia on",
+    kpiShareTitle: "Share of the catalogue",
+    kpiShareHint: "This strip is the catalogue of objects listed by Gaia.",
   },
 } as const;
 
