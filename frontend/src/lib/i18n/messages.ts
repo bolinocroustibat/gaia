@@ -4,7 +4,7 @@ export const messages = {
 	fr: {
 		siteTitle: "Qu’a vu le télescope spatial Gaia ?",
 		siteIntro1:
-			"Depuis 2013, Gaia tourne autour de la Terre. Comme tant d’explorations avant elle, elle répond à une envie très ancienne : mieux connaître le ciel et en dresser la carte, à une échelle que personne n’avait encore atteinte.",
+			"Depuis 2013, le télescope Gaia tourne autour de la Terre pour accomplir la plus grande mission de cartographie de l’histoire de l’humanité. Comme tous les explorateurs avant elle, elle répond à une envie très ancienne : dresser la carte de notre voisinage, de l’univers, à une échelle que personne n’avait encore atteinte avant.",
 		siteIntro2: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
 		sectionGalaxies: "Des galaxies",
 		ledeFallback: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
@@ -65,7 +65,7 @@ export const messages = {
 	en: {
 		siteTitle: "What has the Gaia space telescope seen?",
 		siteIntro1:
-			"Since 2013, Gaia has orbited Earth. Like many explorations before it, it answers an old drive: to know the sky better and map it, at a scale no one had reached yet.",
+			"Since 2013, the Gaia telescope has orbited Earth to carry out the greatest mapping mission in human history. Like all explorers before it, it answers an old drive: to map our cosmic neighborhood and the universe at a scale no one had reached before.",
 		siteIntro2: "Its measurements are public. Here is what we can see in them.",
 		sectionGalaxies: "Galaxies",
 		ledeFallback:

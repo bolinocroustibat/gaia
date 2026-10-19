@@ -156,9 +156,10 @@ def main() -> int:
                 "format": "columnar",
                 "label": "Des exoplanètes",
                 "helpText": (
-                    "À quelle distance de leur étoile tournent les exoplanètes géantes ?\n\n"
-                    "Le télescope Gaia en dit un peu sur ces planètes, et presque rien sur les plus petites. "
-                    "Mais on peut compléter les données de Gaia avec le catalogue des exoplanètes confirmées de la NASA."
+                    "Le télescope Gaia en dit un peu directement sur les exoplanètes, et presque rien sur les plus petites. "
+                    "Il ne donne que des informations sur le mouvement et la luminosité des étoiles, à partir desquelles on peut parfois en déduire la présence d’exoplanètes. "
+                    "Mais on peut compléter les données de Gaia avec le catalogue des exoplanètes confirmées de la NASA.\n\n"
+                    "À quelle distance de leur étoile tournent les exoplanètes géantes ?"
                 ),
                 "count": orbit_count,
                 "credit": NASA_CREDIT,

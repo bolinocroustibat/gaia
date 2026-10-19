@@ -23,7 +23,7 @@ const datasetEn: Record<
 	giant_orbits: {
 		label: "Exoplanets",
 		helpText:
-			"How far from their star do giant exoplanets orbit?\n\nThe Gaia telescope says a little about these planets, and almost nothing about the smaller ones. But Gaia’s data can be filled in with NASA’s catalogue of confirmed exoplanets.",
+			"On its own, the Gaia telescope says a little about exoplanets, and almost nothing about the smaller ones. It only records how stars move and how bright they are, and from that one can sometimes infer that an exoplanet is there. Gaia’s data can be filled in with NASA’s catalogue of confirmed exoplanets.\n\nHow far from their star do giant exoplanets orbit?",
 		sourceNote: "NASA Exoplanet Archive, confirmed planets (pscomppars)",
 	},
 	hr_diagram_bins: {
