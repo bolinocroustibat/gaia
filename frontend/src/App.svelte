@@ -42,18 +42,25 @@ $effect(() => {
 
 <main>
   <header class="mast">
-    <h1>{t(localeState.value, "siteTitle")}</h1>
-    {#if manifest}
-      <p class="mast-meta">
-        {t(localeState.value, "siteMastMeta").replace(
-          "{date}",
-          formatDate(manifest.generated_at, localeState.value),
-        )}
-      </p>
-    {/if}
-    <div class="lede">
-      <p>{t(localeState.value, "siteIntro1")}</p>
-      <p>{t(localeState.value, "siteIntro2")}</p>
+    <img
+      class="mast-art"
+      src="/mission-gaia.webp"
+      alt={t(localeState.value, "siteHeroAlt")}
+    />
+    <div class="mast-copy">
+      <h1>{t(localeState.value, "siteTitle")}</h1>
+      {#if manifest}
+        <p class="mast-meta">
+          {t(localeState.value, "siteMastMeta").replace(
+            "{date}",
+            formatDate(manifest.generated_at, localeState.value),
+          )}
+        </p>
+      {/if}
+      <div class="lede">
+        <p>{t(localeState.value, "siteIntro1")}</p>
+        <p>{t(localeState.value, "siteIntro2")}</p>
+      </div>
     </div>
   </header>
 
@@ -120,7 +127,65 @@ $effect(() => {
   }
 
   .mast {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: hidden;
     padding: clamp(4rem, 12vw, 8rem) clamp(1.25rem, 6vw, 5.5rem) clamp(3rem, 8vw, 5rem);
+  }
+
+  .mast-art {
+    position: absolute;
+    top: 3.25rem;
+    right: -1rem;
+    z-index: 0;
+    display: block;
+    width: min(70vw, 20rem);
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+    mix-blend-mode: lighten;
+    mask-image: radial-gradient(
+      ellipse 64% 70% at 54% 48%,
+      #000 0%,
+      #000 42%,
+      transparent 78%
+    );
+    -webkit-mask-image: radial-gradient(
+      ellipse 64% 70% at 54% 48%,
+      #000 0%,
+      #000 42%,
+      transparent 78%
+    );
+  }
+
+  .mast-copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (min-width: 900px) {
+    .mast {
+      grid-template-columns: minmax(22rem, 1fr) minmax(20rem, 40vw);
+      align-items: center;
+      column-gap: 0.75rem;
+    }
+
+    .mast-art {
+      position: relative;
+      top: auto;
+      right: auto;
+      width: 100%;
+      max-width: 38rem;
+      justify-self: end;
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .mast-copy {
+      grid-column: 1;
+      grid-row: 1;
+    }
   }
 
   .mast-meta {

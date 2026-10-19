@@ -8,6 +8,8 @@ export const messages = {
 		siteIntro2:
 			"Ses mesures sont publiques, et de nouvelles données sont publiées régulièrement. Voici ce qu’on peut y voir aujourd’hui.",
 		siteMastMeta: "Cartographie ouverte · export du {date}",
+		siteHeroAlt:
+			"Le télescope spatial Gaia, vu de trois quarts sur fond d’étoiles",
 		sectionGalaxies: "Des galaxies",
 		ledeFallback:
 			"Ses mesures sont publiques, et de nouvelles données sont publiées régulièrement. Voici ce qu’on peut y voir aujourd’hui.",
@@ -72,6 +74,8 @@ export const messages = {
 		siteIntro2:
 			"Its measurements are public, and new data is published regularly. Here is what we can see in them today.",
 		siteMastMeta: "Open map · data from {date}",
+		siteHeroAlt:
+			"The Gaia space telescope, seen from an angle against a star field",
 		sectionGalaxies: "Galaxies",
 		ledeFallback:
 			"Its measurements are public, and new data is published regularly. Here is what we can see in them today.",
