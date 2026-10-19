@@ -101,7 +101,7 @@ def main() -> int:
             "path": "summary/catalog_totals.json",
             "tier": "A",
             "format": "summary",
-            "label": "Qu'a vu Gaia ?",
+            "label": "Surtout des étoiles",
             "helpText": "Presque tout ce que Gaia a recensé, ce sont des étoiles. Le reste n’en représente qu’une infime fraction.",
         },
         {
@@ -109,7 +109,7 @@ def main() -> int:
             "path": "summary/galaxy_funnel.json",
             "tier": "A",
             "format": "summary",
-            "label": "Jusqu'où voit-on les galaxies ?",
+            "label": "Que sait Gaia de ces millions de galaxies ?",
             "helpText": "Pour une partie des presque 5 millions de galaxies probables que Gaia a recensées, Gaia peut estimer à quelle distance elles se trouvent. Pour certaines, elle peut mesurer aussi leur forme.",
         },
     ]
@@ -139,8 +139,8 @@ def main() -> int:
                 "path": "binned/hr_diagram_bins.json",
                 "tier": "B",
                 "format": "binned2d",
-                "label": "En observant autant d'astres, voit-on des familles se dégager ?",
-                "helpText": "Oui ! La plupart des objets repérés par Gaia sont des étoiles. Pour chacune, quand c'est possible, elle mesure une luminosité et une couleur. En les plaçant sur un diagramme, trois groupes nets apparaissent : trois grandes familles, qui correspondent à trois stades de la vie des étoiles.",
+                "label": "Trois familles d'étoiles",
+                "helpText": "En observant autant d'astres, voit-on des familles se dégager ? Oui ! La plupart des objets repérés par Gaia sont des étoiles. Pour chacune, quand c'est possible, elle mesure une luminosité et une couleur. En les plaçant sur un diagramme, trois groupes nets apparaissent : trois grandes familles, qui correspondent à trois stades de la vie des étoiles.",
                 "sourceNote": hr_source,
             },
         ]
@@ -154,8 +154,9 @@ def main() -> int:
                 "path": "exoplanets/giant_orbits.json",
                 "tier": "C",
                 "format": "columnar",
-                "label": "À quelle distance de leur étoile tournent les exoplanètes géantes ?",
+                "label": "Des exoplanètes",
                 "helpText": (
+                    "À quelle distance de leur étoile tournent les exoplanètes géantes ?\n\n"
                     "Le télescope Gaia en dit un peu sur ces planètes, et presque rien sur les plus petites. "
                     "Mais on peut compléter les données de Gaia avec le catalogue des exoplanètes confirmées de la NASA."
                 ),
@@ -173,7 +174,7 @@ def main() -> int:
                 "path": "points/milky_way_space3d.json",
                 "tier": "C",
                 "format": "columnar",
-                "label": "En observant autant d'astres, voit-on une forme émerger ?",
+                "label": "Notre Galaxie",
                 "count": milky_space_count,
                 "tooltipFields": [
                     "source_id",
@@ -183,7 +184,7 @@ def main() -> int:
                     "distance_pc",
                     "phot_g_mean_mag",
                 ],
-                "helpText": "Si l'on prend uniquement les objets recensés par Gaia qui sont suffisamment proches de notre système solaire, on voit la forme de la Voie lactée, notre galaxie, émerger.",
+                "helpText": "En observant autant d'astres, voit-on une forme émerger ?\n\nSi l'on prend uniquement les objets qui sont assez proches, on voit la forme de la Voie lactée, notre galaxie, émerger.",
             }
         )
 

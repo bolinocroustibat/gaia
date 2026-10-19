@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>Gaia</title>
+  <rect width="32" height="32" rx="8" fill="#0c0c0c"/>
+  <circle cx="16" cy="16" r="10" fill="none" stroke="#d6ff4a" stroke-width="1.5" opacity="0.35"/>
+  <path fill="#d6ff4a" d="M16 6.2 17.55 13.7 25 16l-7.45 2.3L16 25.8l-1.55-7.5L7 16l7.45-2.3z"/>
+</svg>

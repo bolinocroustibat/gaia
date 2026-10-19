@@ -1,13 +1,15 @@
 <script lang="ts">
 import LanguageSwitch from "./lib/components/LanguageSwitch.svelte"
 import Section from "./lib/components/Section.svelte"
+import SectionGroup from "./lib/components/SectionGroup.svelte"
 import StoryPanel from "./lib/components/StoryPanel.svelte"
+import Subsection from "./lib/components/Subsection.svelte"
 import { formatDate } from "./lib/format"
 import { localizedDataset } from "./lib/i18n/data"
 import { localeState } from "./lib/i18n/locale.svelte"
 import { footerLinks, t } from "./lib/i18n/messages"
 import { loadManifest } from "./lib/load"
-import { storySections } from "./lib/sections"
+import { storyItems } from "./lib/sections"
 import type { Manifest } from "./lib/types"
 
 let manifest = $state.raw<Manifest | null>(null)
@@ -50,18 +52,32 @@ $effect(() => {
   {#if failed}
     <p class="pending">{t(localeState.value, "catalogLoadFailed")}</p>
   {:else if manifest}
-    {#each storySections as section, index (section.id)}
-      {@const meta = byId.get(section.id)}
-      {#if meta}
-        {@const copy = localizedDataset(localeState.value, meta)}
-        <Section
-          index={String(index + 1).padStart(2, "0")}
-          title={copy.label}
-          help={copy.helpText}
-          caption={section.caption}
-        >
-          <StoryPanel kind={section.kind} path={meta.path} />
-        </Section>
+    {#each storyItems as item (item.type === "group" ? item.id : item.id)}
+      {#if item.type === "panel"}
+        {@const meta = byId.get(item.id)}
+        {#if meta}
+          {@const copy = localizedDataset(localeState.value, meta)}
+          <Section
+            id={item.id}
+            title={copy.label}
+            help={copy.helpText}
+            caption={item.caption}
+          >
+            <StoryPanel kind={item.kind} path={meta.path} />
+          </Section>
+        {/if}
+      {:else}
+        <SectionGroup id={item.id} title={t(localeState.value, item.titleKey)}>
+          {#each item.children as child (child.id)}
+            {@const meta = byId.get(child.id)}
+            {#if meta}
+              {@const copy = localizedDataset(localeState.value, meta)}
+              <Subsection id={child.id} title={copy.label} help={copy.helpText}>
+                <StoryPanel kind={child.kind} path={meta.path} />
+              </Subsection>
+            {/if}
+          {/each}
+        </SectionGroup>
       {/if}
     {/each}
 

@@ -2,25 +2,35 @@
 import type { Snippet } from "svelte"
 
 let {
-	index,
+	id,
 	title,
 	help,
 	caption,
 	children,
 }: {
-	index: string
+	id: string
 	title: string
 	help: string
 	caption?: string
 	children: Snippet
 } = $props()
+
+const paragraphs = $derived(
+	help
+		.split(/\n\s*\n/)
+		.map((part) => part.trim())
+		.filter(Boolean),
+)
 </script>
 
-<section aria-labelledby="section-{index}">
+<section aria-labelledby="section-{id}">
   <header>
-    <p class="index">{index}</p>
-    <h2 id="section-{index}">{title}</h2>
-    <p class="help">{help}</p>
+    <h2 id="section-{id}">{title}</h2>
+    <div class="help">
+      {#each paragraphs as paragraph}
+        <p>{paragraph}</p>
+      {/each}
+    </div>
     {#if caption}
       <p class="caption">{caption}</p>
     {/if}
@@ -38,18 +48,8 @@ let {
     border-top: 1px solid var(--line);
   }
 
-  .index,
-  .caption {
-    margin: 0;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
   h2 {
-    margin: 0.55rem 0 0.9rem;
+    margin: 0 0 0.9rem;
     font-size: clamp(2rem, 4vw, 3.25rem);
     font-weight: 500;
     letter-spacing: -0.045em;
@@ -57,16 +57,23 @@ let {
   }
 
   .help {
-    margin: 0;
+    display: grid;
+    gap: 0.85rem;
     max-width: 28rem;
     color: var(--muted);
     line-height: 1.45;
   }
 
+  .help p {
+    margin: 0;
+  }
+
   .caption {
-    margin-top: 1.25rem;
+    margin: 1.25rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     letter-spacing: 0.04em;
-    text-transform: none;
+    color: var(--muted);
     line-height: 1.4;
   }
 

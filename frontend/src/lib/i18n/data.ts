@@ -6,7 +6,7 @@ const datasetEn: Record<
 	{ label: string; helpText: string; sourceNote?: string }
 > = {
 	catalog_totals: {
-		label: "What has Gaia seen?",
+		label: "Mostly stars",
 		helpText:
 			"Almost everything Gaia has listed is a star. Everything else is only a tiny fraction of the catalogue.",
 	},
@@ -16,26 +16,26 @@ const datasetEn: Record<
 			"For the 1,367,153 galaxies whose distance is estimated. The farther right a bar sits, the more its light is pulled toward red.",
 	},
 	galaxy_funnel: {
-		label: "How far do we see the galaxies?",
+		label: "What does Gaia know about these millions of galaxies?",
 		helpText:
 			"For some of the nearly 5 million likely galaxies Gaia has catalogued, Gaia can estimate how far away they are. For some of those, it can also measure their shape.",
 	},
 	giant_orbits: {
-		label: "How far from their star do giant exoplanets orbit?",
+		label: "Exoplanets",
 		helpText:
-			"The Gaia telescope says a little about these planets, and almost nothing about the smaller ones. But Gaia’s data can be filled in with NASA’s catalogue of confirmed exoplanets.",
+			"How far from their star do giant exoplanets orbit?\n\nThe Gaia telescope says a little about these planets, and almost nothing about the smaller ones. But Gaia’s data can be filled in with NASA’s catalogue of confirmed exoplanets.",
 		sourceNote: "NASA Exoplanet Archive, confirmed planets (pscomppars)",
 	},
 	hr_diagram_bins: {
-		label: "When you observe this many celestial bodies, do families show up?",
+		label: "Three star families",
 		helpText:
-			"Yes! Most of the objects Gaia flags are stars. For each one, when it can, it measures a brightness and a color. Plot them on a diagram and three clear groups appear: three broad families, each tied to a stage in a star’s life.",
+			"When you observe this many celestial bodies, do families show up? Yes! Most of the objects Gaia flags are stars. For each one, when it can, it measures a brightness and a color. Plot them on a diagram and three clear groups appear: three broad families, each tied to a stage in a star’s life.",
 		sourceNote: "Absolute G magnitude for sources with a reliable parallax",
 	},
 	milky_way_space3d: {
-		label: "Galactic disk — in 3D",
+		label: "Our Galaxy",
 		helpText:
-			"A sample of stars, binary or not, spread around the Sun. From the side you see the disk thickness.",
+			"When you observe this many celestial bodies, does a shape emerge?\n\nIf we keep only the objects that are close enough, the shape of the Milky Way, our galaxy, emerges.",
 	},
 	disk_stars_sample: {
 		label: "Disk star sample",

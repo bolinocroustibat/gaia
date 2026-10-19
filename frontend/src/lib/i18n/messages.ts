@@ -6,6 +6,7 @@ export const messages = {
 		siteIntro1:
 			"Depuis 2013, Gaia tourne autour de la Terre. Comme tant d’explorations avant elle, elle répond à une envie très ancienne : mieux connaître le ciel et en dresser la carte, à une échelle que personne n’avait encore atteinte.",
 		siteIntro2: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
+		sectionGalaxies: "Des galaxies",
 		ledeFallback: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
 		catalogLoadFailed: "Le catalogue n’a pas pu être chargé.",
 		panelLoadFailed: "Ces données n’ont pas pu être chargées.",
@@ -66,6 +67,7 @@ export const messages = {
 		siteIntro1:
 			"Since 2013, Gaia has orbited Earth. Like many explorations before it, it answers an old drive: to know the sky better and map it, at a scale no one had reached yet.",
 		siteIntro2: "Its measurements are public. Here is what we can see in them.",
+		sectionGalaxies: "Galaxies",
 		ledeFallback:
 			"Its measurements are public. Here is what we can see in them.",
 		catalogLoadFailed: "The catalogue could not be loaded.",

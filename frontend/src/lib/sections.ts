@@ -1,16 +1,33 @@
 import type { SectionKind } from "./types"
 
-export type StorySection = {
+export type StoryPanel = {
+	type: "panel"
 	id: string
 	kind: SectionKind
 	caption?: string
 }
 
-export const storySections: StorySection[] = [
-	{ id: "catalog_totals", kind: "kpi" },
-	{ id: "hr_diagram_bins", kind: "hr" },
-	{ id: "giant_orbits", kind: "orbits" },
-	{ id: "milky_way_space3d", kind: "galaxy-3d" },
-	{ id: "galaxy_funnel", kind: "funnel" },
-	{ id: "galaxy_distances", kind: "galaxy-distances" },
+export type StoryGroup = {
+	type: "group"
+	id: string
+	titleKey: "sectionGalaxies"
+	children: Omit<StoryPanel, "type">[]
+}
+
+export type StoryItem = StoryPanel | StoryGroup
+
+export const storyItems: StoryItem[] = [
+	{ type: "panel", id: "catalog_totals", kind: "kpi" },
+	{ type: "panel", id: "hr_diagram_bins", kind: "hr" },
+	{ type: "panel", id: "giant_orbits", kind: "orbits" },
+	{ type: "panel", id: "milky_way_space3d", kind: "galaxy-3d" },
+	{
+		type: "group",
+		id: "galaxies",
+		titleKey: "sectionGalaxies",
+		children: [
+			{ id: "galaxy_funnel", kind: "funnel" },
+			{ id: "galaxy_distances", kind: "galaxy-distances" },
+		],
+	},
 ]
