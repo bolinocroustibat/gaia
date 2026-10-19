@@ -15,10 +15,10 @@ const ORDER = [
 ] as const
 
 const SWATCH: Record<string, string> = {
-	galaxy_candidates: "#f472b6",
-	qso_candidates: "#4ec4ff",
-	binary_stars: "#ff8f4a",
-	other_sources: "#e0c07a",
+	galaxy_candidates: "var(--kpi-galaxy)",
+	qso_candidates: "var(--kpi-qso)",
+	binary_stars: "var(--kpi-binary)",
+	other_sources: "var(--kpi-other)",
 }
 
 type Connector = { key: string; d: string; color: string }
@@ -143,8 +143,6 @@ $effect(() => {
 </script>
 
 <div class="block">
-  <p class="hint">{t(localeState.value, "kpiShareHint")}</p>
-
   {#if totalRow}
     <div class="total">
       <p class="value accent">{formatCount(totalRow.count, localeState.value)}</p>
@@ -154,16 +152,19 @@ $effect(() => {
 
   <div class="chart" bind:this={chartEl}>
     {#if segments.length > 0}
-      <div class="strip" role="img" aria-label={t(localeState.value, "kpiShareTitle")}>
-        {#each segments as seg (seg.key)}
-          <span
-            class="seg"
-            data-seg={seg.key}
-            style:width="{seg.widthPct}%"
-            style:background={seg.color}
-            title="{seg.label.split('\n')[0]} — {formatCount(seg.count, localeState.value)}"
-          ></span>
-        {/each}
+      <div class="strip-wrap">
+        <p class="hint">{t(localeState.value, "kpiShareHint")}</p>
+        <div class="strip" role="img" aria-label={t(localeState.value, "kpiShareTitle")}>
+          {#each segments as seg (seg.key)}
+            <span
+              class="seg"
+              data-seg={seg.key}
+              style:width="{seg.widthPct}%"
+              style:background={seg.color}
+              title="{seg.label.split('\n')[0]} — {formatCount(seg.count, localeState.value)}"
+            ></span>
+          {/each}
+        </div>
       </div>
     {/if}
 
@@ -255,6 +256,11 @@ $effect(() => {
   .block {
     display: grid;
     gap: 1.25rem;
+  }
+
+  .strip-wrap {
+    display: grid;
+    gap: 0.45rem;
   }
 
   .hint {
