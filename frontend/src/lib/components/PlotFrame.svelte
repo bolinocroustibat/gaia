@@ -53,6 +53,23 @@
     margin: 0;
   }
 
+  .plot-host :global(.orbit-figure figcaption),
+  .plot-host :global(.orbit-credit) {
+    margin: 0.9rem 0 0;
+    max-width: 36rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .plot-host :global(.orbit-credit) {
+    margin-top: 0.35rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   .plot-host :global(svg) {
     display: block;
     max-width: 100%;

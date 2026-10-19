@@ -17,6 +17,7 @@ from gaia_export.binned import (
     fetch_hr_absolute_histogram,
     write_hr_diagram_bins,
 )
+from gaia_export.exoplanets import NASA_CREDIT, export_giant_orbits, giant_orbits_count
 from gaia_export.galaxies import export_local_galaxies
 from gaia_export.manifest import build_manifest, write_manifest
 from gaia_export.stars import (
@@ -44,6 +45,11 @@ def main() -> int:
         help="Refresh summary counts, disk samples, and the absolute-magnitude diagram from Gaia Archive",
     )
     parser.add_argument(
+        "--fetch-exoplanets",
+        action="store_true",
+        help="Refresh confirmed giant-planet orbits from the NASA Exoplanet Archive",
+    )
+    parser.add_argument(
         "--processed-dir",
         type=Path,
         default=ROOT / "data" / "processed",
@@ -69,6 +75,7 @@ def main() -> int:
     hr_source = "gaiadr3 absolute G magnitude for sources with a reliable parallax"
 
     milky_space_count = _columnar_count(points_dir / "milky_way_space3d.json")
+    orbits_path = processed_dir / "exoplanets" / "giant_orbits.json"
 
     if args.fetch_gaia:
         table = fetch_disk_stars_table()
@@ -79,6 +86,10 @@ def main() -> int:
         counts = fetch_hr_absolute_histogram(hr_partial)
         write_hr_diagram_bins(hr_path, counts=counts, source=HR_ABSOLUTE_SOURCE)
         hr_partial.unlink(missing_ok=True)
+
+    if args.fetch_exoplanets:
+        orbit_count = export_giant_orbits(orbits_path)
+        print(f"Giant exoplanet orbits: {orbit_count:,}")
 
     for path in processed_dir.rglob("*.json"):
         if path.name == "manifest.json":
@@ -112,6 +123,26 @@ def main() -> int:
             "sourceNote": hr_source,
         },
     ]
+
+    orbit_count = giant_orbits_count(orbits_path)
+    if orbit_count:
+        datasets.append(
+            {
+                "id": "giant_orbits",
+                "path": "exoplanets/giant_orbits.json",
+                "tier": "C",
+                "format": "columnar",
+                "label": "À quelle distance de leur étoile tournent les exoplanètes géantes ?",
+                "helpText": (
+                    "Le télescope Gaia en dit un peu sur ces planètes, et presque rien sur les plus petites. "
+                    "Mais on peut compléter les données de Gaia avec le catalogue des exoplanètes confirmées de la NASA."
+                ),
+                "count": orbit_count,
+                "credit": NASA_CREDIT,
+                "sourceNote": "NASA Exoplanet Archive, confirmed planets (pscomppars)",
+                "tooltipFields": ["pl_name", "hostname", "pl_orbsmax", "pl_orbper"],
+            }
+        )
 
     if milky_space_count:
         datasets.append(

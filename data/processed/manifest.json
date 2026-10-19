@@ -35,6 +35,18 @@
       "sourceNote": "gaiadr3 absolute G magnitude for sources with a reliable parallax"
     },
     {
+      "id": "giant_orbits",
+      "path": "exoplanets/giant_orbits.json",
+      "tier": "C",
+      "format": "columnar",
+      "label": "À quelle distance de leur étoile tournent les exoplanètes géantes ?",
+      "helpText": "Le télescope Gaia en dit un peu sur ces planètes, et presque rien sur les plus petites. Mais on peut compléter les données de Gaia avec le catalogue des exoplanètes confirmées de la NASA.",
+      "count": 1784,
+      "credit": "NASA Exoplanet Archive",
+      "sourceNote": "NASA Exoplanet Archive, confirmed planets (pscomppars)",
+      "tooltipFields": ["pl_name", "hostname", "pl_orbsmax", "pl_orbper"]
+    },
+    {
       "id": "milky_way_space3d",
       "path": "points/milky_way_space3d.json",
       "tier": "C",

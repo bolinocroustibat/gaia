@@ -1,6 +1,7 @@
 <script lang="ts">
   import { funnelRows } from "../charts/funnel";
   import { hrPlot } from "../charts/hr";
+  import { orbitPlot } from "../charts/orbits";
   import { localizedBins, localizedRows } from "../i18n/data";
   import { localeState } from "../i18n/locale.svelte";
   import { t } from "../i18n/messages";
@@ -68,6 +69,9 @@
   const hrView = $derived(
     hrBins ? { bins: hrBins, locale: localeState.value } : null,
   );
+  const orbitView = $derived(
+    payload?.kind === "orbits" ? { planets: payload.planets, locale: localeState.value } : null,
+  );
 </script>
 
 <div bind:this={host}>
@@ -77,6 +81,8 @@
     <Funnel rows={funnel} />
   {:else if hrView}
     <PlotFrame data={hrView} render={hrPlot} />
+  {:else if orbitView}
+    <PlotFrame data={orbitView} render={orbitPlot} />
   {:else if payload?.kind === "galaxy-3d"}
     <GalaxyCloud table={payload.table} />
   {:else if failed}

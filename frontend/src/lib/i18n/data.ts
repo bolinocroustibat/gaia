@@ -15,6 +15,12 @@ const datasetEn: Record<
     helpText:
       "Millions of likely galaxies. Only for some of them does Gaia also estimate how far away they are. For some of those, it also measures their shape.",
   },
+  giant_orbits: {
+    label: "How far from their star do giant exoplanets orbit?",
+    helpText:
+      "The Gaia telescope says a little about these planets, and almost nothing about the smaller ones. But Gaia’s data can be filled in with NASA’s catalogue of confirmed exoplanets.",
+    sourceNote: "NASA Exoplanet Archive, confirmed planets (pscomppars)",
+  },
   hr_diagram_bins: {
     label: "When you observe this many celestial bodies, do families show up?",
     helpText:

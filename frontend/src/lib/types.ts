@@ -8,6 +8,7 @@ export type DatasetMeta = {
   label: string;
   helpText: string;
   sourceNote?: string;
+  credit?: string;
   count?: number;
   tooltipFields?: string[];
 };
@@ -73,9 +74,17 @@ export type ColumnarTable = {
   numbers: Record<string, Float32Array>;
 };
 
-export type SectionKind = "kpi" | "hr" | "galaxy-3d" | "funnel";
+export type OrbitPlanet = {
+  name: string;
+  host: string;
+  au: number;
+  period: number | null;
+};
+
+export type SectionKind = "kpi" | "hr" | "galaxy-3d" | "funnel" | "orbits";
 
 export type PanelPayload =
   | { kind: "kpi" | "funnel"; summary: SummaryFile }
   | { kind: "hr"; bins: Binned2d }
-  | { kind: "galaxy-3d"; table: ColumnarTable };
+  | { kind: "galaxy-3d"; table: ColumnarTable }
+  | { kind: "orbits"; planets: OrbitPlanet[] };
