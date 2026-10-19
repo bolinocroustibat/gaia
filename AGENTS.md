@@ -14,6 +14,29 @@ uv sync --all-groups
 
 - Use **uv only** for Python (`uv sync`, `uv run …`). Do not use `pip install`.
 
+## Before every commit
+
+Always lint and format **both** Python and the frontend before creating a commit, even if the change looks clean or only touches one language. CI fails if Ruff or Biome would still reformat a file.
+
+Fix first, then confirm the same checks as CI pass. Do not commit with remaining lint errors or unformatted files.
+
+### Python (Ruff, repo root)
+
+```bash
+uv run ruff check --extend-select I --fix .
+uv run ruff format .
+uv run ruff check --extend-select I .
+uv run ruff format --check .
+```
+
+### Frontend (Biome, `frontend/`)
+
+```bash
+cd frontend
+bun run format   # biome check --write .
+bun run lint     # biome check .
+```
+
 ## Python commands
 
 Until CLI entry points are registered in `pyproject.toml`, run scripts explicitly:
@@ -31,7 +54,7 @@ When entry points exist, prefer `uv run export-processed` and `uv run fetch-qso-
 
 - App in `frontend/` (Svelte + Vite). Processed data is served from `data/processed/` at build/dev time.
 - Use **Bun** in `frontend/` for `install` / `build` when changing the UI.
-- Lint and format the frontend with **Biome**: `bun run lint` / `bun run format`.
+- Lint and format with **Biome** before every commit (see [Before every commit](#before-every-commit)).
 
 ## Data licence
 
