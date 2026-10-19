@@ -5,8 +5,8 @@ export const messages = {
     siteTitle: "Qu’a vu le télescope spatial Gaia ?",
     siteIntro1:
       "Depuis 2013, Gaia tourne autour de la Terre. Comme tant d’explorations avant elle, elle répond à une envie très ancienne : mieux connaître le ciel et en dresser la carte, à une échelle que personne n’avait encore atteinte.",
-    siteIntro2: "Ses mesures sont publiques. Voici ce qu’on y voit.",
-    ledeFallback: "Ses mesures sont publiques. Voici ce qu’on y voit.",
+    siteIntro2: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
+    ledeFallback: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
     catalogLoadFailed: "Le catalogue n’a pas pu être chargé.",
     panelLoadFailed: "Ces données n’ont pas pu être chargées.",
     galaxyCanvasLabel:
@@ -44,8 +44,8 @@ export const messages = {
     siteTitle: "What has the Gaia space telescope seen?",
     siteIntro1:
       "Since 2013, Gaia has orbited Earth. Like many explorations before it, it answers an old drive: to know the sky better and map it, at a scale no one had reached yet.",
-    siteIntro2: "Its measurements are public. Here is what they show.",
-    ledeFallback: "Its measurements are public. Here is what they show.",
+    siteIntro2: "Its measurements are public. Here is what we can see in them.",
+    ledeFallback: "Its measurements are public. Here is what we can see in them.",
     catalogLoadFailed: "The catalogue could not be loaded.",
     panelLoadFailed: "This data could not be loaded.",
     galaxyCanvasLabel: "Sample of the Milky Way disk in three dimensions, with Earth’s position",
