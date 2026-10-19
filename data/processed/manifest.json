@@ -15,7 +15,7 @@
       "tier": "A",
       "format": "summary",
       "label": "Qu'a vu Gaia ?",
-      "helpText": "Ordres de grandeur du catalogue : une bande à l’échelle montre que presque tout est des étoiles."
+      "helpText": "Presque tout ce que Gaia a recensé, ce sont des étoiles. Le reste n’en représente qu’une infime fraction."
     },
     {
       "id": "galaxy_funnel",
@@ -23,7 +23,7 @@
       "tier": "A",
       "format": "summary",
       "label": "Jusqu'où voit-on les galaxies ?",
-      "helpText": "Des millions de galaxies probables. Pour une partie d'entre elles seulement, Gaia estime à quelle distance elles se trouvent. Pour certaines, elle mesure aussi leur forme."
+      "helpText": "Pour une partie des presque 5 millions de galaxies probables que Gaia a recensées, Gaia peut estimer à quelle distance elles se trouvent. Pour certaines, elle peut mesurer aussi leur forme."
     },
     {
       "id": "galaxy_distances",
@@ -71,7 +71,7 @@
         "distance_pc",
         "phot_g_mean_mag"
       ],
-      "helpText": "Si l'on prend uniquement les objets qui sont assez proches, on voit la forme de la Voie lactée, notre galaxie, émerger."
+      "helpText": "Si l'on prend uniquement les objets recensés par Gaia qui sont suffisamment proches de notre système solaire, on voit la forme de la Voie lactée, notre galaxie, émerger."
     }
   ]
 }

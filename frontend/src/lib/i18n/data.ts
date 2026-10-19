@@ -8,7 +8,7 @@ const datasetEn: Record<
 	catalog_totals: {
 		label: "What has Gaia seen?",
 		helpText:
-			"Headline counts: a to-scale strip shows that almost everything is stars.",
+			"Almost everything Gaia has listed is a star. Everything else is only a tiny fraction of the catalogue.",
 	},
 	galaxy_distances: {
 		label: "How far away are they?",
@@ -18,7 +18,7 @@ const datasetEn: Record<
 	galaxy_funnel: {
 		label: "How far do we see the galaxies?",
 		helpText:
-			"Millions of likely galaxies. Only for some of them does Gaia also estimate how far away they are. For some of those, it also measures their shape.",
+			"For some of the nearly 5 million likely galaxies Gaia has catalogued, Gaia can estimate how far away they are. For some of those, it can also measure their shape.",
 	},
 	giant_orbits: {
 		label: "How far from their star do giant exoplanets orbit?",
