@@ -1,7 +1,4 @@
-#!/usr/bin/env python3
 """Build data/processed JSON assets for frontend dataviz."""
-
-from __future__ import annotations
 
 import argparse
 import json
@@ -183,7 +180,9 @@ def main() -> int:
     write_manifest(processed_dir / "manifest.json", manifest)
 
     print(f"Wrote {processed_dir / 'manifest.json'}")
-    print(f"Galaxies sky2d: {galaxy_stats['sky2d_count']:,}, space3d: {galaxy_stats['space3d_count']:,}")
+    print(
+        f"Galaxies sky2d: {galaxy_stats['sky2d_count']:,}, space3d: {galaxy_stats['space3d_count']:,}"
+    )
     if milky_space_count:
         print(f"Milky Way disk sample: {milky_space_count:,}")
     if stars_count:

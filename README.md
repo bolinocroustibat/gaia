@@ -4,6 +4,16 @@ Notebooks and export tooling for Gaia DR3 data used in frontend dataviz prototyp
 
 Contributor and agent setup (uv, scripts, frontend): see [AGENTS.md](AGENTS.md).
 
+## Lint and format (Ruff)
+
+[Ruff](https://docs.astral.sh/ruff/) is a dev dependency (`uv sync --all-groups`). The whole `notebooks/` tree (`.ipynb` and helper modules) is excluded; only `gaia_export/` and `scripts/` are linted and formatted.
+
+```bash
+uv run ruff check .
+uv run ruff check --fix .
+uv run ruff format .
+```
+
 ## Frontend-ready JSON
 
 Processed assets live under [`data/processed/`](data/processed/). Start from [`data/processed/manifest.json`](data/processed/manifest.json) (dataset index, French labels, licence).

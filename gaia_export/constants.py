@@ -1,7 +1,5 @@
 """Shared metadata and snapshot counts (validated in explore_gaia_archive.ipynb)."""
 
-from __future__ import annotations
-
 LICENSE_ID = "CC BY-NC 3.0 IGO"
 LICENSE_URL = "https://www.cosmos.esa.int/web/gaia-users/license"
 CREDIT = "ESA, Gaia DPAC"

@@ -1,7 +1,5 @@
 """Gaia DR3 quasar candidate subsamples (qso_candidates)."""
 
-from __future__ import annotations
-
 import time
 from pathlib import Path
 from typing import Any, Literal
@@ -49,7 +47,11 @@ def pure_subsample_select(
 ) -> str:
     """ADQL SELECT for the recommended purer quasar subsample."""
     if join_gaia_source:
-        cols = ", ".join(SKY_COLUMNS) if columns == DEFAULT_LIST_COLUMNS else ", ".join(columns)
+        cols = (
+            ", ".join(SKY_COLUMNS)
+            if columns == DEFAULT_LIST_COLUMNS
+            else ", ".join(columns)
+        )
         return f"""
 SELECT {cols}
 FROM gaiadr3.qso_candidates AS q
@@ -117,7 +119,9 @@ def fetch_pure_qso_candidates(
                 raise RuntimeError(msg)
             result_file = job.outputFile
             if not result_file:
-                raise RuntimeError(f"Gaia job {job.jobid} completed but no outputFile was set")
+                raise RuntimeError(
+                    f"Gaia job {job.jobid} completed but no outputFile was set"
+                )
             result_path = Path(result_file)
             if output_path is not None:
                 output_path.parent.mkdir(parents=True, exist_ok=True)

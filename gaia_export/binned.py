@@ -1,7 +1,5 @@
 """Binned JSON exports for heatmaps (tier B)."""
 
-from __future__ import annotations
-
 import json
 import time
 from datetime import UTC, datetime
@@ -132,7 +130,9 @@ def _as_int(value: Any) -> int:
     return int(value)
 
 
-def _read_partial(path: Path, shape: tuple[int, int]) -> tuple[np.ndarray, set[tuple[int, int]]]:
+def _read_partial(
+    path: Path, shape: tuple[int, int]
+) -> tuple[np.ndarray, set[tuple[int, int]]]:
     counts = np.zeros(shape, dtype=np.int64)
     done: set[tuple[int, int]] = set()
     if not path.exists():
@@ -175,9 +175,15 @@ def fetch_hr_absolute_histogram(partial_path: Path) -> np.ndarray:
     try:
         for index, (index_min, index_max) in enumerate(chunks, start=1):
             if (index_min, index_max) in done:
-                print(f"HR chunk {index}/{len(chunks)} {index_min}..{index_max} already done", flush=True)
+                print(
+                    f"HR chunk {index}/{len(chunks)} {index_min}..{index_max} already done",
+                    flush=True,
+                )
                 continue
-            print(f"HR chunk {index}/{len(chunks)} random_index {index_min}..{index_max}", flush=True)
+            print(
+                f"HR chunk {index}/{len(chunks)} random_index {index_min}..{index_max}",
+                flush=True,
+            )
             table = _run_archive_query(hr_chunk_query(index_min, index_max))
             added = 0
             for row in table:
@@ -190,7 +196,10 @@ def fetch_hr_absolute_histogram(partial_path: Path) -> np.ndarray:
                 added += count
             done.add((index_min, index_max))
             _write_partial(partial_path, counts, done)
-            print(f"  sources in chunk: {added:,}; total so far: {int(counts.sum()):,}", flush=True)
+            print(
+                f"  sources in chunk: {added:,}; total so far: {int(counts.sum()):,}",
+                flush=True,
+            )
     finally:
         Gaia.ROW_LIMIT = previous_limit
     return counts
@@ -209,7 +218,9 @@ def write_hr_diagram_bins(
     ``counts`` has shape (n_mag_bins, n_color_bins): one row per luminosity bin.
     """
     bp_rp_edges = color_edges() if bp_rp_edges is None else np.asarray(bp_rp_edges)
-    mag_edges = absolute_magnitude_edges() if mag_edges is None else np.asarray(mag_edges)
+    mag_edges = (
+        absolute_magnitude_edges() if mag_edges is None else np.asarray(mag_edges)
+    )
     counts = np.asarray(counts)
     expected = (len(mag_edges) - 1, len(bp_rp_edges) - 1)
     if counts.shape != expected:
@@ -233,4 +244,6 @@ def write_hr_diagram_bins(
         "counts": counts.astype(np.int64).tolist(),
     }
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+    )

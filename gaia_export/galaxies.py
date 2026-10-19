@@ -1,7 +1,5 @@
 """Local galaxy JSON exports from CSV."""
 
-from __future__ import annotations
-
 import csv
 import math
 from pathlib import Path
@@ -44,7 +42,9 @@ def export_local_galaxies(csv_path: Path, points_dir: Path) -> dict[str, Any]:
         },
     )
 
-    sky_cols: dict[str, list[Any]] = {name: [] for name in ["source_id", "ra", "dec", "phot_g_mean_mag"]}
+    sky_cols: dict[str, list[Any]] = {
+        name: [] for name in ["source_id", "ra", "dec", "phot_g_mean_mag"]
+    }
     space_cols: dict[str, list[Any]] = {
         name: []
         for name in [

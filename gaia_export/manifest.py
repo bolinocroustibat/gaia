@@ -1,7 +1,5 @@
 """manifest.json builder for frontend dataviz."""
 
-from __future__ import annotations
-
 import json
 from datetime import UTC, datetime
 from pathlib import Path
@@ -10,7 +8,9 @@ from typing import Any
 from gaia_export.constants import CREDIT, GAIA_RELEASE, LICENSE_ID, LICENSE_URL
 
 
-def build_manifest(*, datasets: list[dict[str, Any]], generated_at: str | None = None) -> dict[str, Any]:
+def build_manifest(
+    *, datasets: list[dict[str, Any]], generated_at: str | None = None
+) -> dict[str, Any]:
     return {
         "schemaVersion": 1,
         "release": GAIA_RELEASE,

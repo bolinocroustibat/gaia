@@ -36,12 +36,36 @@ jobs:
           commit_author: Adrien Carpentier <me@adriencarpentier.com>
 
 
+  lint:
+    name: Lint, format, and type check
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/astral-sh/uv:python3.12-trixie
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Lint and format code and sort imports
+        # ruff check --extend-select I . : check linting and imports sorting without fixing (to fix, use --fix)
+        # ruff format --check . : check code formatting without fixing (to fix, remove --check)
+        run: |
+          uv run ruff --version
+          uv run ruff check --extend-select I .
+          uv run ruff format --check .
+
+      - name: Type check
+        run: uv run ty check
+
+
   build-and-deploy:
     name: Deploy ${{ github.ref_type == 'tag' && github.ref_name || github.sha }} to prod
     runs-on: ubuntu-latest
     environment: production
-    needs: bump-version
-    if: always() && !cancelled() && (needs.bump-version.result == 'success' || needs.bump-version.result == 'skipped')
+    needs: [bump-version, lint]
+    if: always() && !cancelled() && (needs.bump-version.result == 'success' || needs.bump-version.result == 'skipped') && needs.lint.result == 'success'
     defaults:
       run:
         working-directory: frontend

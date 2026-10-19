@@ -1,7 +1,5 @@
 """Confirmed giant exoplanets from the NASA Exoplanet Archive."""
 
-from __future__ import annotations
-
 import csv
 import io
 import json
@@ -82,7 +80,9 @@ def select_giant_orbits(rows: list[dict[str, str]]) -> list[dict[str, Any]]:
     """Keep giant planets that have a measured orbital distance."""
     kept: list[dict[str, Any]] = []
     for row in rows:
-        distance = _measured(_float(row.get("pl_orbsmax")), _limit_flag(row.get("pl_orbsmaxlim")))
+        distance = _measured(
+            _float(row.get("pl_orbsmax")), _limit_flag(row.get("pl_orbsmaxlim"))
+        )
         if distance is None or distance <= 0:
             continue
         if not is_giant_planet(
@@ -98,7 +98,9 @@ def select_giant_orbits(rows: list[dict[str, str]]) -> list[dict[str, Any]]:
                 "pl_name": _blank(row.get("pl_name")) or "",
                 "hostname": _blank(row.get("hostname")) or "",
                 "pl_orbsmax": round(distance, 5),
-                "pl_orbper": None if period is None or period <= 0 else round(period, 3),
+                "pl_orbper": None
+                if period is None or period <= 0
+                else round(period, 3),
             }
         )
     kept.sort(key=lambda planet: (planet["pl_orbsmax"], planet["pl_name"]))
@@ -108,7 +110,9 @@ def select_giant_orbits(rows: list[dict[str, str]]) -> list[dict[str, Any]]:
 def fetch_composite_parameters() -> list[dict[str, str]]:
     """Download one row per confirmed planet from the NASA TAP service."""
     url = f"{NASA_TAP_URL}?{urlencode({'query': _QUERY, 'format': 'csv'})}"
-    request = Request(url, headers={"User-Agent": "gaia-export/0.1 (educational catalogue)"})
+    request = Request(
+        url, headers={"User-Agent": "gaia-export/0.1 (educational catalogue)"}
+    )
     with urlopen(request, timeout=180) as response:
         payload = response.read().decode("utf-8")
     reader = csv.DictReader(io.StringIO(payload))
@@ -147,7 +151,9 @@ def write_giant_orbits(path: Path, planets: list[dict[str, Any]]) -> int:
 def export_giant_orbits(path: Path) -> int:
     planets = select_giant_orbits(fetch_composite_parameters())
     if not planets:
-        msg = "NASA Exoplanet Archive returned no giant planets with an orbital distance"
+        msg = (
+            "NASA Exoplanet Archive returned no giant planets with an orbital distance"
+        )
         raise RuntimeError(msg)
     count = write_giant_orbits(path, planets)
     return count

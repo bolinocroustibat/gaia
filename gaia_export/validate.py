@@ -1,7 +1,5 @@
 """Validation helpers for processed JSON assets."""
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from gaia_export.constants import MAX_JSON_BYTES

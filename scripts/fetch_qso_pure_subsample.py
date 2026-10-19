@@ -1,7 +1,5 @@
 """Fetch Gaia DR3 quasar candidates at ~95% purity (Table 11 selection)."""
 
-from __future__ import annotations
-
 import argparse
 from pathlib import Path
 

@@ -1,7 +1,5 @@
 """Summary JSON exports (tier A)."""
 
-from __future__ import annotations
-
 import json
 from datetime import UTC, datetime
 from pathlib import Path
@@ -74,7 +72,9 @@ def write_catalog_totals(
         ],
     }
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
 
 
 def write_galaxy_funnel(path: Path, funnel: dict[str, int], *, source: str) -> None:
@@ -85,13 +85,17 @@ def write_galaxy_funnel(path: Path, funnel: dict[str, int], *, source: str) -> N
         ),
         (
             "galaxy_candidates_with_redshift",
-            "Dont la distance est estimée\n"
-            "Leur lumière est étirée vers le rouge : plus elle l'est, plus elles sont loin.",
+            (
+                "Dont la distance est estimée\n"
+                "Leur lumière est étirée vers le rouge : plus elle l'est, plus elles sont loin."
+            ),
         ),
         (
             "galaxy_candidates_with_shape",
-            "Dont la forme est aussi mesurée\n"
-            "Depuis l'espace, sans le flou de l'atmosphère, Gaia reconstruit leur profil de lumière.",
+            (
+                "Dont la forme est aussi mesurée\n"
+                "Depuis l'espace, sans le flou de l'atmosphère, Gaia reconstruit leur profil de lumière."
+            ),
         ),
         ("galaxy_candidates_without_redshift", "Sans distance lointaine connue"),
         ("strict_galaxies_nss", "Voisinage : autres sources repérées (~58 k)"),
@@ -110,7 +114,9 @@ def write_galaxy_funnel(path: Path, funnel: dict[str, int], *, source: str) -> N
         ],
     }
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
 
 
 def object_type_display_rows(
@@ -182,7 +188,11 @@ def fetch_catalog_total_from_gaia() -> int:
 
 def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
     summary_dir = processed_dir / "summary"
-    source = "gaiadr3.gaia_source via astroquery" if fetch_gaia else "snapshot:explore_gaia_archive.ipynb"
+    source = (
+        "gaiadr3.gaia_source via astroquery"
+        if fetch_gaia
+        else "snapshot:explore_gaia_archive.ipynb"
+    )
 
     totals = dict(SNAPSHOT_CATALOG_TOTALS)
     funnel = dict(SNAPSHOT_GALAXY_FUNNEL)
@@ -193,7 +203,9 @@ def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
         try:
             totals["objects_total"] = fetch_catalog_total_from_gaia()
             group_counts = fetch_object_type_counts_from_gaia()
-            totals["likely_single_stars"] = group_counts.get(None, 0) + group_counts.get(0, 0)
+            totals["likely_single_stars"] = group_counts.get(
+                None, 0
+            ) + group_counts.get(0, 0)
             totals["strict_galaxies_nss"] = group_counts.get(3, 0)
             qso_candidates_total = count_pure_qso_candidates()
         except Exception as exc:  # noqa: BLE001 — fall back to snapshot
