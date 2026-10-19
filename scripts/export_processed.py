@@ -100,7 +100,7 @@ def main() -> int:
             "tier": "A",
             "format": "summary",
             "label": "Jusqu'où voit-on les galaxies ?",
-            "helpText": "Des millions de galaxies probables. Pour une partie d'entre elles seulement, Gaia estime à quelle distance elles se trouvent.",
+            "helpText": "Des millions de galaxies probables. Pour une partie d'entre elles seulement, Gaia estime à quelle distance elles se trouvent. Pour certaines, elle mesure aussi leur forme.",
         },
         {
             "id": "hr_diagram_bins",

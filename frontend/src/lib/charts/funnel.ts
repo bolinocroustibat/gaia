@@ -1,6 +1,10 @@
 import type { CountRow } from "../types";
 
-const FUNNEL_IDS = ["galaxy_candidates_total", "galaxy_candidates_with_redshift"];
+const FUNNEL_IDS = [
+  "galaxy_candidates_total",
+  "galaxy_candidates_with_redshift",
+  "galaxy_candidates_with_shape",
+];
 
 export function funnelRows(steps: CountRow[]): CountRow[] {
   const byId = new Map(steps.map((step) => [step.id, step]));

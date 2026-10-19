@@ -13,7 +13,7 @@ const datasetEn: Record<
   galaxy_funnel: {
     label: "How far do we see the galaxies?",
     helpText:
-      "Millions of likely galaxies. Only for some of them does Gaia also estimate how far away they are.",
+      "Millions of likely galaxies. Only for some of them does Gaia also estimate how far away they are. For some of those, it also measures their shape.",
   },
   hr_diagram_bins: {
     label: "When you observe this many celestial bodies, do families show up?",
@@ -42,6 +42,8 @@ const rowEn: Record<string, string> = {
   galaxy_candidates_total: "Likely galaxies\nThe ones Gaia tells apart from stars.",
   galaxy_candidates_with_redshift:
     "With an estimated distance\nTheir light is stretched toward red: the more it stretches, the farther they are.",
+  galaxy_candidates_with_shape:
+    "With a measured shape\nFrom space, without the blur of the atmosphere, Gaia reconstructs their light profile.",
   galaxy_candidates_without_redshift: "No known far distance",
   strict_galaxies_nss: "Nearby: other flagged sources (~58k)",
   strict_galaxies_nearby_parallax: "With measured distance (parallax, 3D map)",

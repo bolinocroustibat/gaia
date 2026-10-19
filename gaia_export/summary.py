@@ -88,6 +88,11 @@ def write_galaxy_funnel(path: Path, funnel: dict[str, int], *, source: str) -> N
             "Dont la distance est estimée\n"
             "Leur lumière est étirée vers le rouge : plus elle l'est, plus elles sont loin.",
         ),
+        (
+            "galaxy_candidates_with_shape",
+            "Dont la forme est aussi mesurée\n"
+            "Depuis l'espace, sans le flou de l'atmosphère, Gaia reconstruit leur profil de lumière.",
+        ),
         ("galaxy_candidates_without_redshift", "Sans distance lointaine connue"),
         ("strict_galaxies_nss", "Voisinage : autres sources repérées (~58 k)"),
         (

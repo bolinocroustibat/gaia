@@ -19,6 +19,11 @@
       "count": 1367153
     },
     {
+      "id": "galaxy_candidates_with_shape",
+      "label": "Dont la forme est aussi mesurée\nDepuis l'espace, sans le flou de l'atmosphère, Gaia reconstruit leur profil de lumière.",
+      "count": 388552
+    },
+    {
       "id": "galaxy_candidates_without_redshift",
       "label": "Sans distance lointaine connue",
       "count": 3475189

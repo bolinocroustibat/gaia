@@ -24,6 +24,8 @@ SNAPSHOT_GALAXY_FUNNEL = {
     "galaxy_candidates_total": 4_842_342,
     "galaxy_candidates_with_redshift": 1_367_153,
     "galaxy_candidates_without_redshift": 3_475_189,
+    # Surface-brightness sample ∩ UGC redshifts. Gaia DR3 documentation, Table 12.6.
+    "galaxy_candidates_with_shape": 388_552,
 }
 
 # gaiadr3.qso_candidates, Table 11 purer subsample (~95% estimated purity).
