@@ -1,89 +1,91 @@
 <script lang="ts">
-  import { formatCount } from "../format";
-  import { localeState } from "../i18n/locale.svelte";
-  import { t } from "../i18n/messages";
-  import type { CountRow } from "../types";
+import { formatCount } from "../format"
+import { localeState } from "../i18n/locale.svelte"
+import { t } from "../i18n/messages"
+import type { CountRow } from "../types"
 
-  let { rows }: { rows: CountRow[] } = $props();
+let { rows }: { rows: CountRow[] } = $props()
 
-  const BAND = 9.25;
-  const TAPER = 6;
-  const VB = 100;
+const BAND = 9.25
+const TAPER = 6
+const VB = 100
 
-  function splitLabel(label: string): { title: string; detail: string } {
-    const [title, ...rest] = label.split("\n");
-    return { title: title ?? "", detail: rest.join("\n") };
-  }
+function splitLabel(label: string): { title: string; detail: string } {
+	const [title, ...rest] = label.split("\n")
+	return { title: title ?? "", detail: rest.join("\n") }
+}
 
-  function shareText(ratio: number): string {
-    const loc = localeState.value;
-    const share = new Intl.NumberFormat(loc === "fr" ? "fr-FR" : "en-US", {
-      style: "percent",
-      maximumFractionDigits: 0,
-    }).format(ratio);
-    return t(loc, "funnelShare").replace("{share}", share);
-  }
+function shareText(ratio: number): string {
+	const loc = localeState.value
+	const share = new Intl.NumberFormat(loc === "fr" ? "fr-FR" : "en-US", {
+		style: "percent",
+		maximumFractionDigits: 0,
+	}).format(ratio)
+	return t(loc, "funnelShare").replace("{share}", share)
+}
 
-  const steps = $derived.by(() => {
-    const top = rows[0]?.count ?? 0;
-    return rows.map((row) => ({
-      ...row,
-      ...splitLabel(row.label),
-      share: top > 0 && row.count < top ? row.count / top : 0,
-    }));
-  });
+const steps = $derived.by(() => {
+	const top = rows[0]?.count ?? 0
+	return rows.map((row) => ({
+		...row,
+		...splitLabel(row.label),
+		share: top > 0 && row.count < top ? row.count / top : 0,
+	}))
+})
 
-  const rowTemplate = $derived(
-    steps
-      .flatMap((_, index) => (index === 0 ? [`${BAND}rem`] : [`${TAPER}rem`, `${BAND}rem`]))
-      .join(" "),
-  );
+const rowTemplate = $derived(
+	steps
+		.flatMap((_, index) =>
+			index === 0 ? [`${BAND}rem`] : [`${TAPER}rem`, `${BAND}rem`],
+		)
+		.join(" "),
+)
 
-  const outline = $derived.by(() => {
-    const n = steps.length;
-    if (n === 0) return "";
-    const top = steps[0].count;
-    if (top <= 0) return "";
-    const total = n * BAND + (n - 1) * TAPER;
-    const band = (BAND / total) * VB;
-    const taper = n > 1 ? (TAPER / total) * VB : 0;
-    const bands = steps.map((step, index) => {
-      const width = Math.min(VB, Math.max((step.count / top) * VB, 3.2));
-      const x0 = (VB - width) / 2;
-      const y0 = index * (band + taper);
-      return { x0, x1: x0 + width, y0, y1: y0 + band };
-    });
-    const first = bands[0];
-    const last = bands[n - 1];
-    const parts = [`M ${first.x0} ${first.y0}`, `H ${first.x1}`, `V ${first.y1}`];
-    for (let index = 0; index < n - 1; index++) {
-      const above = bands[index];
-      const below = bands[index + 1];
-      const dy = (below.y0 - above.y1) * 0.48;
-      parts.push(
-        `C ${above.x1} ${above.y1 + dy}, ${below.x1} ${below.y0 - dy}, ${below.x1} ${below.y0}`,
-        `V ${below.y1}`,
-      );
-    }
-    parts.push(`H ${last.x0}`);
-    for (let index = n - 1; index > 0; index--) {
-      const below = bands[index];
-      const above = bands[index - 1];
-      const dy = (below.y0 - above.y1) * 0.48;
-      parts.push(
-        `V ${below.y0}`,
-        `C ${below.x0} ${below.y0 - dy}, ${above.x0} ${above.y1 + dy}, ${above.x0} ${above.y1}`,
-      );
-    }
-    parts.push(`V ${first.y0}`, "Z");
-    return parts.join(" ");
-  });
+const outline = $derived.by(() => {
+	const n = steps.length
+	if (n === 0) return ""
+	const top = steps[0].count
+	if (top <= 0) return ""
+	const total = n * BAND + (n - 1) * TAPER
+	const band = (BAND / total) * VB
+	const taper = n > 1 ? (TAPER / total) * VB : 0
+	const bands = steps.map((step, index) => {
+		const width = Math.min(VB, Math.max((step.count / top) * VB, 3.2))
+		const x0 = (VB - width) / 2
+		const y0 = index * (band + taper)
+		return { x0, x1: x0 + width, y0, y1: y0 + band }
+	})
+	const first = bands[0]
+	const last = bands[n - 1]
+	const parts = [`M ${first.x0} ${first.y0}`, `H ${first.x1}`, `V ${first.y1}`]
+	for (let index = 0; index < n - 1; index++) {
+		const above = bands[index]
+		const below = bands[index + 1]
+		const dy = (below.y0 - above.y1) * 0.48
+		parts.push(
+			`C ${above.x1} ${above.y1 + dy}, ${below.x1} ${below.y0 - dy}, ${below.x1} ${below.y0}`,
+			`V ${below.y1}`,
+		)
+	}
+	parts.push(`H ${last.x0}`)
+	for (let index = n - 1; index > 0; index--) {
+		const below = bands[index]
+		const above = bands[index - 1]
+		const dy = (below.y0 - above.y1) * 0.48
+		parts.push(
+			`V ${below.y0}`,
+			`C ${below.x0} ${below.y0 - dy}, ${above.x0} ${above.y1 + dy}, ${above.x0} ${above.y1}`,
+		)
+	}
+	parts.push(`V ${first.y0}`, "Z")
+	return parts.join(" ")
+})
 
-  const ghost = $derived.by(() => {
-    const top = steps[0];
-    if (!top || top.count <= 0 || steps.length < 2) return null;
-    return { x: 0, width: VB };
-  });
+const ghost = $derived.by(() => {
+	const top = steps[0]
+	if (!top || top.count <= 0 || steps.length < 2) return null
+	return { x: 0, width: VB }
+})
 </script>
 
 <div class="funnel">

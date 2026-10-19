@@ -1,19 +1,19 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+import type { Snippet } from "svelte"
 
-  let {
-    index,
-    title,
-    help,
-    caption,
-    children,
-  }: {
-    index: string;
-    title: string;
-    help: string;
-    caption?: string;
-    children: Snippet;
-  } = $props();
+let {
+	index,
+	title,
+	help,
+	caption,
+	children,
+}: {
+	index: string
+	title: string
+	help: string
+	caption?: string
+	children: Snippet
+} = $props()
 </script>
 
 <section aria-labelledby="section-{index}">

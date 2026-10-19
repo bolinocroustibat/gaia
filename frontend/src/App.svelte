@@ -1,38 +1,39 @@
 <script lang="ts">
-  import { formatDate } from "./lib/format";
-  import { localizedDataset } from "./lib/i18n/data";
-  import { localeState } from "./lib/i18n/locale.svelte";
-  import { footerLinks, t } from "./lib/i18n/messages";
-  import { loadManifest } from "./lib/load";
-  import { storySections } from "./lib/sections";
-  import LanguageSwitch from "./lib/components/LanguageSwitch.svelte";
-  import Section from "./lib/components/Section.svelte";
-  import StoryPanel from "./lib/components/StoryPanel.svelte";
-  import type { Manifest } from "./lib/types";
+import LanguageSwitch from "./lib/components/LanguageSwitch.svelte"
+import Section from "./lib/components/Section.svelte"
+import StoryPanel from "./lib/components/StoryPanel.svelte"
+import { formatDate } from "./lib/format"
+import { localizedDataset } from "./lib/i18n/data"
+import { localeState } from "./lib/i18n/locale.svelte"
+import { footerLinks, t } from "./lib/i18n/messages"
+import { loadManifest } from "./lib/load"
+import { storySections } from "./lib/sections"
+import type { Manifest } from "./lib/types"
 
-  let manifest = $state.raw<Manifest | null>(null);
-  let failed = $state(false);
+let manifest = $state.raw<Manifest | null>(null)
+let failed = $state(false)
 
-  $effect(() => {
-    let cancelled = false;
-    loadManifest()
-      .then((value) => {
-        if (!cancelled) manifest = value;
-      })
-      .catch(() => {
-        if (!cancelled) failed = true;
-      });
-    return () => {
-      cancelled = true;
-    };
-  });
+$effect(() => {
+	let cancelled = false
+	loadManifest()
+		.then((value) => {
+			if (!cancelled) manifest = value
+		})
+		.catch(() => {
+			if (!cancelled) failed = true
+		})
+	return () => {
+		cancelled = true
+	}
+})
 
-  const byId = $derived(new Map(manifest?.datasets.map((dataset) => [dataset.id, dataset]) ?? []));
+const byId = $derived(
+	new Map(manifest?.datasets.map((dataset) => [dataset.id, dataset]) ?? []),
+)
 
-  $effect(() => {
-    document.title = t(localeState.value, "siteTitle");
-  });
-
+$effect(() => {
+	document.title = t(localeState.value, "siteTitle")
+})
 </script>
 
 <LanguageSwitch />

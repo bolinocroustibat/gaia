@@ -1,5 +1,5 @@
-import { vitePreprocess, type SvelteConfig } from "@sveltejs/vite-plugin-svelte";
+import { type SvelteConfig, vitePreprocess } from "@sveltejs/vite-plugin-svelte"
 
 export default {
-  preprocess: vitePreprocess(),
-} satisfies SvelteConfig;
+	preprocess: vitePreprocess(),
+} satisfies SvelteConfig

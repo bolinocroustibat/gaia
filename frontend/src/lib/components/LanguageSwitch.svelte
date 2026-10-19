@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { localeState, setLocale, type Locale } from "../i18n/locale.svelte";
-  import { t } from "../i18n/messages";
+import { type Locale, localeState, setLocale } from "../i18n/locale.svelte"
+import { t } from "../i18n/messages"
 
-  const options: { value: Locale; labelKey: "langFr" | "langEn" }[] = [
-    { value: "en", labelKey: "langEn" },
-    { value: "fr", labelKey: "langFr" },
-  ];
+const options: { value: Locale; labelKey: "langFr" | "langEn" }[] = [
+	{ value: "en", labelKey: "langEn" },
+	{ value: "fr", labelKey: "langFr" },
+]
 </script>
 
 <nav class="lang-switch" aria-label={t(localeState.value, "langSwitch")}>

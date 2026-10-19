@@ -31,6 +31,7 @@ When entry points exist, prefer `uv run export-processed` and `uv run fetch-qso-
 
 - App in `frontend/` (Svelte + Vite). Processed data is served from `data/processed/` at build/dev time.
 - Use **Bun** in `frontend/` for `install` / `build` when changing the UI.
+- Lint and format the frontend with **Biome**: `bun run lint` / `bun run format`.
 
 ## Data licence
 

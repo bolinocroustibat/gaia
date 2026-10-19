@@ -1,140 +1,145 @@
 <script lang="ts">
-  import { formatCount } from "../format";
-  import { localeState } from "../i18n/locale.svelte";
-  import { t } from "../i18n/messages";
-  import type { CountRow } from "../types";
+import { formatCount } from "../format"
+import { localeState } from "../i18n/locale.svelte"
+import { t } from "../i18n/messages"
+import type { CountRow } from "../types"
 
-  let { rows, barRows = [] }: { rows: CountRow[]; barRows?: CountRow[] } = $props();
+let { rows, barRows = [] }: { rows: CountRow[]; barRows?: CountRow[] } =
+	$props()
 
-  const ORDER = [
-    "galaxy_candidates",
-    "qso_candidates",
-    "binary_stars",
-    "other_sources",
-  ] as const;
+const ORDER = [
+	"galaxy_candidates",
+	"qso_candidates",
+	"binary_stars",
+	"other_sources",
+] as const
 
-  const SWATCH: Record<string, string> = {
-    galaxy_candidates: "#f472b6",
-    qso_candidates: "#4ec4ff",
-    binary_stars: "#ff8f4a",
-    other_sources: "#e0c07a",
-  };
+const SWATCH: Record<string, string> = {
+	galaxy_candidates: "#f472b6",
+	qso_candidates: "#4ec4ff",
+	binary_stars: "#ff8f4a",
+	other_sources: "#e0c07a",
+}
 
-  type Connector = { key: string; d: string; color: string };
+type Connector = { key: string; d: string; color: string }
 
-  let chartEl = $state<HTMLDivElement | undefined>();
-  let connectors = $state.raw<Connector[]>([]);
+let chartEl = $state<HTMLDivElement | undefined>()
+let connectors = $state.raw<Connector[]>([])
 
-  function rowKey(row: CountRow): string {
-    return row.object_type ?? row.id ?? row.label;
-  }
+function rowKey(row: CountRow): string {
+	return row.object_type ?? row.id ?? row.label
+}
 
-  const totalRow = $derived(rows.find((row) => row.id === "objects_total") ?? null);
+const totalRow = $derived(
+	rows.find((row) => row.id === "objects_total") ?? null,
+)
 
-  const labelById = $derived.by(() => {
-    const map = new Map<string, string>();
-    for (const row of rows) {
-      if (row.id) map.set(row.id, row.label);
-    }
-    return map;
-  });
+const labelById = $derived.by(() => {
+	const map = new Map<string, string>()
+	for (const row of rows) {
+		if (row.id) map.set(row.id, row.label)
+	}
+	return map
+})
 
-  const segments = $derived.by(() => {
-    const total = barRows.reduce((sum, row) => sum + row.count, 0);
-    if (total <= 0) return [];
-    const byKey = new Map(barRows.map((row) => [rowKey(row), row]));
-    const ordered = ORDER.map((key) => byKey.get(key)).filter(
-      (row): row is CountRow => row != null,
-    );
-    const seen = new Set(ordered.map(rowKey));
-    for (const row of barRows) {
-      const key = rowKey(row);
-      if (!seen.has(key)) ordered.push(row);
-    }
+const segments = $derived.by(() => {
+	const total = barRows.reduce((sum, row) => sum + row.count, 0)
+	if (total <= 0) return []
+	const byKey = new Map(barRows.map((row) => [rowKey(row), row]))
+	const ordered = ORDER.map((key) => byKey.get(key)).filter(
+		(row): row is CountRow => row != null,
+	)
+	const seen = new Set(ordered.map(rowKey))
+	for (const row of barRows) {
+		const key = rowKey(row)
+		if (!seen.has(key)) ordered.push(row)
+	}
 
-    const mapped = ordered.map((row) => {
-      const key = rowKey(row);
-      return {
-        key,
-        label: labelById.get(key) ?? row.label,
-        count: row.count,
-        share: row.count / total,
-        color: SWATCH[key] ?? "var(--muted)",
-        isRest: key === "other_sources",
-      };
-    });
+	const mapped = ordered.map((row) => {
+		const key = rowKey(row)
+		return {
+			key,
+			label: labelById.get(key) ?? row.label,
+			count: row.count,
+			share: row.count / total,
+			color: SWATCH[key] ?? "var(--muted)",
+			isRest: key === "other_sources",
+		}
+	})
 
-    const MIN_PCT = 0.18;
-    let reserved = 0;
-    for (const seg of mapped) {
-      if (!seg.isRest) reserved += Math.max(seg.share * 100, MIN_PCT);
-    }
-    return mapped.map((seg) => ({
-      ...seg,
-      widthPct: seg.isRest ? Math.max(100 - reserved, 0) : Math.max(seg.share * 100, MIN_PCT),
-    }));
-  });
+	const MIN_PCT = 0.18
+	let reserved = 0
+	for (const seg of mapped) {
+		if (!seg.isRest) reserved += Math.max(seg.share * 100, MIN_PCT)
+	}
+	return mapped.map((seg) => ({
+		...seg,
+		widthPct: seg.isRest
+			? Math.max(100 - reserved, 0)
+			: Math.max(seg.share * 100, MIN_PCT),
+	}))
+})
 
-  function measureConnectors() {
-    const chart = chartEl;
-    if (!chart || segments.length === 0) {
-      connectors = [];
-      return;
-    }
+function measureConnectors() {
+	const chart = chartEl
+	if (!chart || segments.length === 0) {
+		connectors = []
+		return
+	}
 
-    const chartRect = chart.getBoundingClientRect();
-    if (chartRect.width <= 0 || chartRect.height <= 0) {
-      connectors = [];
-      return;
-    }
+	const chartRect = chart.getBoundingClientRect()
+	if (chartRect.width <= 0 || chartRect.height <= 0) {
+		connectors = []
+		return
+	}
 
-    const next: Connector[] = [];
-    for (const seg of segments) {
-      const bar = chart.querySelector<HTMLElement>(`[data-seg="${seg.key}"]`);
-      const item = chart.querySelector<HTMLElement>(`[data-legend="${seg.key}"]`);
-      const swatch = item?.querySelector<HTMLElement>(".swatch");
-      if (!bar || !item || !swatch) continue;
+	const next: Connector[] = []
+	for (const seg of segments) {
+		const bar = chart.querySelector<HTMLElement>(`[data-seg="${seg.key}"]`)
+		const item = chart.querySelector<HTMLElement>(`[data-legend="${seg.key}"]`)
+		const swatch = item?.querySelector<HTMLElement>(".swatch")
+		if (!bar || !item || !swatch) continue
 
-      const barRect = bar.getBoundingClientRect();
-      const swatchRect = swatch.getBoundingClientRect();
+		const barRect = bar.getBoundingClientRect()
+		const swatchRect = swatch.getBoundingClientRect()
 
-      // Tiny slices: aim at the centre. Wide remainder: aim near its left edge.
-      const targetX = seg.isRest
-        ? barRect.left + Math.min(48, barRect.width * 0.08) - chartRect.left
-        : barRect.left + barRect.width / 2 - chartRect.left;
-      const targetY = barRect.bottom - chartRect.top;
-      const startX = swatchRect.left + swatchRect.width / 2 - chartRect.left;
-      const startY = swatchRect.top - chartRect.top;
-      const midY = startY + (targetY - startY) * 0.45;
+		// Tiny slices: aim at the centre. Wide remainder: aim near its left edge.
+		const targetX = seg.isRest
+			? barRect.left + Math.min(48, barRect.width * 0.08) - chartRect.left
+			: barRect.left + barRect.width / 2 - chartRect.left
+		const targetY = barRect.bottom - chartRect.top
+		const startX = swatchRect.left + swatchRect.width / 2 - chartRect.left
+		const startY = swatchRect.top - chartRect.top
+		const midY = startY + (targetY - startY) * 0.45
 
-      next.push({
-        key: seg.key,
-        color: seg.color,
-        d: `M ${startX.toFixed(1)} ${startY.toFixed(1)} C ${startX.toFixed(1)} ${midY.toFixed(1)}, ${targetX.toFixed(1)} ${midY.toFixed(1)}, ${targetX.toFixed(1)} ${targetY.toFixed(1)}`,
-      });
-    }
-    connectors = next;
-  }
+		next.push({
+			key: seg.key,
+			color: seg.color,
+			d: `M ${startX.toFixed(1)} ${startY.toFixed(1)} C ${startX.toFixed(1)} ${midY.toFixed(1)}, ${targetX.toFixed(1)} ${midY.toFixed(1)}, ${targetX.toFixed(1)} ${targetY.toFixed(1)}`,
+		})
+	}
+	connectors = next
+}
 
-  $effect(() => {
-    // Re-measure when layout inputs change.
-    void segments;
-    void localeState.value;
-    const chart = chartEl;
-    if (!chart) return;
+$effect(() => {
+	// Re-measure when layout inputs change.
+	void segments
+	void localeState.value
+	const chart = chartEl
+	if (!chart) return
 
-    measureConnectors();
-    const frame = requestAnimationFrame(measureConnectors);
-    const observer = new ResizeObserver(() => measureConnectors());
-    observer.observe(chart);
-    window.addEventListener("resize", measureConnectors);
+	measureConnectors()
+	const frame = requestAnimationFrame(measureConnectors)
+	const observer = new ResizeObserver(() => measureConnectors())
+	observer.observe(chart)
+	window.addEventListener("resize", measureConnectors)
 
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("resize", measureConnectors);
-    };
-  });
+	return () => {
+		cancelAnimationFrame(frame)
+		observer.disconnect()
+		window.removeEventListener("resize", measureConnectors)
+	}
+})
 </script>
 
 <div class="block">

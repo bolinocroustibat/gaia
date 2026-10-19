@@ -1,42 +1,58 @@
 <script lang="ts">
-  import { mountGalaxyCloud } from "../charts/cloud";
-  import { formatField } from "../format";
-  import { localeState } from "../i18n/locale.svelte";
-  import { t } from "../i18n/messages";
-  import type { ColumnarTable } from "../types";
+import { mountGalaxyCloud } from "../charts/cloud"
+import { formatField } from "../format"
+import { localeState } from "../i18n/locale.svelte"
+import { t } from "../i18n/messages"
+import type { ColumnarTable } from "../types"
 
-  let { table }: { table: ColumnarTable } = $props();
+let { table }: { table: ColumnarTable } = $props()
 
-  let canvas = $state<HTMLCanvasElement | undefined>();
-  let marker = $state<HTMLElement | undefined>();
-  let tip = $state<{ x: number; y: number; lines: { field: string; text: string }[] } | null>(null);
+let canvas = $state<HTMLCanvasElement | undefined>()
+let marker = $state<HTMLElement | undefined>()
+let tip = $state<{
+	x: number
+	y: number
+	lines: { field: string; text: string }[]
+} | null>(null)
 
-  const fields = ["source_id", "x_gc", "y_gc", "z_gc", "distance_pc", "phot_g_mean_mag"];
+const fields = [
+	"source_id",
+	"x_gc",
+	"y_gc",
+	"z_gc",
+	"distance_pc",
+	"phot_g_mean_mag",
+]
 
-  $effect(() => {
-    const node = canvas;
-    const label = marker;
-    const data = table;
-    const loc = localeState.value;
-    if (!node || !label) return;
-    return mountGalaxyCloud(node, data, (hover) => {
-      if (!hover) {
-        tip = null;
-        return;
-      }
-      tip = {
-        x: hover.x,
-        y: hover.y,
-        lines: fields.map((name) => {
-          const value =
-            name === "source_id"
-              ? (data.strings.source_id?.[hover.index] ?? "")
-              : (data.numbers[name]?.[hover.index] ?? Number.NaN);
-          return { field: name, text: formatField(name, value, loc) };
-        }),
-      };
-    }, label);
-  });
+$effect(() => {
+	const node = canvas
+	const label = marker
+	const data = table
+	const loc = localeState.value
+	if (!node || !label) return
+	return mountGalaxyCloud(
+		node,
+		data,
+		(hover) => {
+			if (!hover) {
+				tip = null
+				return
+			}
+			tip = {
+				x: hover.x,
+				y: hover.y,
+				lines: fields.map((name) => {
+					const value =
+						name === "source_id"
+							? (data.strings.source_id?.[hover.index] ?? "")
+							: (data.numbers[name]?.[hover.index] ?? Number.NaN)
+					return { field: name, text: formatField(name, value, loc) }
+				}),
+			}
+		},
+		label,
+	)
+})
 </script>
 
 <div class="cloud">

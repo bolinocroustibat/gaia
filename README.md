@@ -4,14 +4,19 @@ Notebooks and export tooling for Gaia DR3 data used in frontend dataviz prototyp
 
 Contributor and agent setup (uv, scripts, frontend): see [AGENTS.md](AGENTS.md).
 
-## Lint and format (Ruff)
+## Lint and format
 
-[Ruff](https://docs.astral.sh/ruff/) is a dev dependency (`uv sync --all-groups`). The whole `notebooks/` tree (`.ipynb` and helper modules) is excluded; only `gaia_export/` and `scripts/` are linted and formatted.
+Python ([Ruff](https://docs.astral.sh/ruff/), `uv sync --all-groups`) — repo root; `notebooks/` excluded:
 
 ```bash
-uv run ruff check .
-uv run ruff check --fix .
-uv run ruff format .
+uv run ruff check . && uv run ruff format --check .
+```
+
+Frontend ([Biome](https://biomejs.dev/), `cd frontend && bun install`):
+
+```bash
+bun run lint    # check
+bun run format  # fix
 ```
 
 ## Frontend-ready JSON

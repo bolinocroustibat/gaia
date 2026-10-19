@@ -39,16 +39,19 @@ jobs:
   lint:
     name: Lint, format, and type check
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/astral-sh/uv:python3.12-trixie
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.14"
+
+      - name: Install Python dependencies
         run: uv sync --all-groups
 
-      - name: Lint and format code and sort imports
+      - name: Lint and format Python and sort imports
         # ruff check --extend-select I . : check linting and imports sorting without fixing (to fix, use --fix)
         # ruff format --check . : check code formatting without fixing (to fix, remove --check)
         run: |
@@ -56,8 +59,32 @@ jobs:
           uv run ruff check --extend-select I .
           uv run ruff format --check .
 
-      - name: Type check
+      - name: Type check Python
         run: uv run ty check
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('frontend/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: bun install --frozen-lockfile
+
+      - name: Lint and format frontend
+        # biome check . : lint, import sorting, and formatting without fixing (to fix, use biome check --write .)
+        working-directory: frontend
+        run: |
+          bunx biome --version
+          bun run lint
 
 
   build-and-deploy:

@@ -1,40 +1,40 @@
 :root {
-  --bg: #0c0c0c;
-  --paper: #f4f1ea;
-  --muted: #8a8680;
-  --line: #2a2a28;
-  --accent: #d6ff4a;
-  --ramp-start: #3d4a12;
-  --font: "Geist", "Avenir Next", "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
-  color-scheme: dark;
-  background: var(--bg);
-  color: var(--paper);
-  font-family: var(--font);
-  font-weight: 400;
+	--bg: #0c0c0c;
+	--paper: #f4f1ea;
+	--muted: #8a8680;
+	--line: #2a2a28;
+	--accent: #d6ff4a;
+	--ramp-start: #3d4a12;
+	--font: "Geist", "Avenir Next", "Segoe UI", sans-serif;
+	--font-mono: "Geist Mono", ui-monospace, monospace;
+	color-scheme: dark;
+	background: var(--bg);
+	color: var(--paper);
+	font-family: var(--font);
+	font-weight: 400;
 }
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html,
 body {
-  margin: 0;
-  background: var(--bg);
+	margin: 0;
+	background: var(--bg);
 }
 
 body {
-  min-height: 100vh;
+	min-height: 100vh;
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+	background: var(--accent);
+	color: var(--bg);
 }
 
 p,
 h1,
 h2 {
-  text-wrap: pretty;
+	text-wrap: pretty;
 }
