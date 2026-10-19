@@ -99,8 +99,8 @@ def main() -> int:
             "path": "summary/galaxy_funnel.json",
             "tier": "A",
             "format": "summary",
-            "label": "Galaxies : combien et où ?",
-            "helpText": "D'abord la liste des galaxies probables, puis les objets proches dont on peut estimer la distance.",
+            "label": "Jusqu'où voit-on les galaxies ?",
+            "helpText": "Des millions de galaxies probables. Pour une partie d'entre elles seulement, Gaia estime à quelle distance elles se trouvent.",
         },
         {
             "id": "hr_diagram_bins",
@@ -120,7 +120,7 @@ def main() -> int:
                 "path": "points/milky_way_space3d.json",
                 "tier": "C",
                 "format": "columnar",
-                "label": "Disque galactique — en volume",
+                "label": "En observant autant d'astres, voit-on une forme émerger ?",
                 "count": milky_space_count,
                 "tooltipFields": [
                     "source_id",
@@ -130,7 +130,7 @@ def main() -> int:
                     "distance_pc",
                     "phot_g_mean_mag",
                 ],
-                "helpText": "Un échantillon d'étoiles, doubles ou non, réparti tout autour du Soleil. De côté, on voit l'épaisseur du disque.",
+                "helpText": "Si l'on prend uniquement les objets qui sont assez proches, on voit la forme de la Voie lactée, notre galaxie, émerger.",
             }
         )
 

@@ -7,9 +7,9 @@
   import { loadPanel } from "../load";
   import type { SectionKind } from "../types";
   import type { PanelPayload } from "../types";
+  import Funnel from "./Funnel.svelte";
   import GalaxyCloud from "./GalaxyCloud.svelte";
   import KpiStrip from "./KpiStrip.svelte";
-  import LogBars from "./LogBars.svelte";
   import PlotFrame from "./PlotFrame.svelte";
 
   let { kind, path }: { kind: SectionKind; path: string } = $props();
@@ -74,7 +74,7 @@
   {#if payload?.kind === "kpi"}
     <KpiStrip rows={kpiRows} barRows={kpiBarRows} />
   {:else if payload?.kind === "funnel"}
-    <LogBars rows={funnel} />
+    <Funnel rows={funnel} />
   {:else if hrView}
     <PlotFrame data={hrView} render={hrPlot} />
   {:else if payload?.kind === "galaxy-3d"}

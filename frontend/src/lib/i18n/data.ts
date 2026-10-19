@@ -11,9 +11,9 @@ const datasetEn: Record<
       "Headline counts: a to-scale strip shows that almost everything is stars.",
   },
   galaxy_funnel: {
-    label: "Galaxies: how many and how far?",
+    label: "How far do we see the galaxies?",
     helpText:
-      "First the list of likely galaxies, then nearby objects whose distance we can estimate.",
+      "Millions of likely galaxies. Only for some of them does Gaia also estimate how far away they are.",
   },
   hr_diagram_bins: {
     label: "When you observe this many celestial bodies, do families show up?",
@@ -39,8 +39,9 @@ const rowEn: Record<string, string> = {
     "likely quasars\nquasars are ultra-bright galactic cores powered by a supermassive black hole",
   binary_stars: "likely binary stars",
   other_sources: "likely single stars and other objects",
-  galaxy_candidates_total: "Likely galaxies (Gaia list)",
-  galaxy_candidates_with_redshift: "Far away: distance measured",
+  galaxy_candidates_total: "Likely galaxies\nThe ones Gaia tells apart from stars.",
+  galaxy_candidates_with_redshift:
+    "With an estimated distance\nTheir light is stretched toward red: the more it stretches, the farther they are.",
   galaxy_candidates_without_redshift: "No known far distance",
   strict_galaxies_nss: "Nearby: other flagged sources (~58k)",
   strict_galaxies_nearby_parallax: "With measured distance (parallax, 3D map)",

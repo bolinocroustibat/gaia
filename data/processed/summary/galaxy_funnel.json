@@ -10,12 +10,12 @@
   "steps": [
     {
       "id": "galaxy_candidates_total",
-      "label": "Galaxies probables (liste Gaia)",
+      "label": "Galaxies probables\nCelles que Gaia distingue des étoiles.",
       "count": 4842342
     },
     {
       "id": "galaxy_candidates_with_redshift",
-      "label": "Lointaines : distance mesurée",
+      "label": "Dont la distance est estimée\nLeur lumière est étirée vers le rouge : plus elle l'est, plus elles sont loin.",
       "count": 1367153
     },
     {
