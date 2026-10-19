@@ -59,8 +59,8 @@ def write_catalog_totals(
                 "id": "qso_candidates",
                 "label": (
                     "quasars probables\n"
-                    "les quasars sont des cœurs ultra-brillants de galaxies, alimentés par un "
-                    "trou noir supermassif"
+                    "(les quasars sont des cœurs ultra-brillants de galaxies, alimentés par un "
+                    "trou noir supermassif)"
                 ),
                 "count": qso_candidates_total,
             },
