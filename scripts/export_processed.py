@@ -108,7 +108,7 @@ def main() -> int:
             "tier": "B",
             "format": "binned2d",
             "label": "En observant autant d'astres, voit-on des familles se dégager ?",
-            "helpText": "Oui ! La plupart des objets repérés par Gaia sont des étoiles. Pour chacune, lorsqu'elle le peut, la sonde mesure une luminosité et une couleur. En les plaçant sur un diagramme, trois groupes nets apparaissent : trois grandes familles, qui correspondent à trois stades de la vie des étoiles.",
+            "helpText": "Oui ! La plupart des objets repérés par Gaia sont des étoiles. Pour chacune, quand c'est possible, elle mesure une luminosité et une couleur. En les plaçant sur un diagramme, trois groupes nets apparaissent : trois grandes familles, qui correspondent à trois stades de la vie des étoiles.",
             "sourceNote": hr_source,
         },
     ]

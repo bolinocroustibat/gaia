@@ -18,8 +18,8 @@ const datasetEn: Record<
   hr_diagram_bins: {
     label: "When you observe this many celestial bodies, do families show up?",
     helpText:
-      "Yes! Most of the objects Gaia flags are stars. For each one, when it can, the probe measures a brightness and a color. Plot them on a diagram and three clear groups appear: three broad families, each tied to a stage in a star’s life.",
-    sourceNote: "Gaia DR3 absolute G magnitude for sources with a reliable parallax",
+      "Yes! Most of the objects Gaia flags are stars. For each one, when it can, it measures a brightness and a color. Plot them on a diagram and three clear groups appear: three broad families, each tied to a stage in a star’s life.",
+    sourceNote: "Absolute G magnitude for sources with a reliable parallax",
   },
   milky_way_space3d: {
     label: "Galactic disk — in 3D",

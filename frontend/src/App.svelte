@@ -29,13 +29,16 @@
 
   const byId = $derived(new Map(manifest?.datasets.map((dataset) => [dataset.id, dataset]) ?? []));
 
+  $effect(() => {
+    document.title = t(localeState.value, "siteTitle");
+  });
+
 </script>
 
 <LanguageSwitch />
 
 <main>
   <header class="mast">
-    <p class="index">DR3</p>
     <h1>{t(localeState.value, "siteTitle")}</h1>
     <div class="lede">
       <p>{t(localeState.value, "siteIntro1")}</p>
@@ -77,7 +80,7 @@
       </p>
       <p>
         {t(localeState.value, "footerExported")}
-        {formatDate(manifest.generated_at, localeState.value)} · {manifest.release} · {manifest.credit}
+        {formatDate(manifest.generated_at, localeState.value)} · {manifest.credit}
         · <a href={manifest.license.url}>{manifest.license.id}</a>
       </p>
     </footer>
@@ -95,16 +98,8 @@
     padding: clamp(4rem, 12vw, 8rem) clamp(1.25rem, 6vw, 5.5rem) clamp(3rem, 8vw, 5rem);
   }
 
-  .index {
-    margin: 0;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-  }
-
   h1 {
-    margin: 0.4rem 0 1.25rem;
+    margin: 0 0 1.25rem;
     max-width: 18em;
     font-size: clamp(2.1rem, 5.5vw, 3.6rem);
     font-weight: 500;
