@@ -14,6 +14,7 @@ const datasetEn: Record<
 		label: "How far away are they?",
 		helpText:
 			"For the 1,367,153 galaxies whose distance is estimated. The farther right a bar sits, the more its light is pulled toward red.",
+		sourceNote: "redshift_ugc, light-travel distance (Planck 2018)",
 	},
 	galaxy_funnel: {
 		label: "What does Gaia know about these millions of galaxies?",
@@ -47,7 +48,7 @@ const rowEn: Record<string, string> = {
 	objects_total: "Objects listed by Gaia, including…",
 	galaxy_candidates: "likely galaxies",
 	qso_candidates:
-		"likely quasars\nquasars are ultra-bright galactic cores powered by a supermassive black hole",
+		"likely quasars\n(quasars are ultra-bright galactic cores powered by a supermassive black hole)",
 	binary_stars: "likely binary stars",
 	other_sources: "likely single stars and other objects",
 	galaxy_candidates_total:
