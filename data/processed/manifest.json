@@ -26,6 +26,16 @@
       "helpText": "Des millions de galaxies probables. Pour une partie d'entre elles seulement, Gaia estime à quelle distance elles se trouvent. Pour certaines, elle mesure aussi leur forme."
     },
     {
+      "id": "galaxy_distances",
+      "path": "binned/galaxy_distances.json",
+      "tier": "B",
+      "format": "binned1d",
+      "label": "À quelle distance sont-elles ?",
+      "helpText": "Pour les 1 367 153 galaxies dont la distance est estimée. Plus la barre est à droite, plus leur lumière est tirée vers le rouge.",
+      "count": 1367120,
+      "sourceNote": "redshift_ugc, distance parcourue par la lumière (Planck 2018)"
+    },
+    {
       "id": "hr_diagram_bins",
       "path": "binned/hr_diagram_bins.json",
       "tier": "B",

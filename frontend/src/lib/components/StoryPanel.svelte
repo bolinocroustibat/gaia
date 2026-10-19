@@ -1,77 +1,90 @@
 <script lang="ts">
-  import { funnelRows } from "../charts/funnel";
-  import { hrPlot } from "../charts/hr";
-  import { orbitPlot } from "../charts/orbits";
-  import { localizedBins, localizedRows } from "../i18n/data";
-  import { localeState } from "../i18n/locale.svelte";
-  import { t } from "../i18n/messages";
-  import { loadPanel } from "../load";
-  import type { SectionKind } from "../types";
-  import type { PanelPayload } from "../types";
-  import Funnel from "./Funnel.svelte";
-  import GalaxyCloud from "./GalaxyCloud.svelte";
-  import KpiStrip from "./KpiStrip.svelte";
-  import PlotFrame from "./PlotFrame.svelte";
+import { funnelRows } from "../charts/funnel"
+import { galaxyDistancePlot } from "../charts/galaxyDistances"
+import { hrPlot } from "../charts/hr"
+import { orbitPlot } from "../charts/orbits"
+import { localizedBins, localizedRows } from "../i18n/data"
+import { localeState } from "../i18n/locale.svelte"
+import { t } from "../i18n/messages"
+import { loadPanel } from "../load"
+import type { PanelPayload, SectionKind } from "../types"
+import Funnel from "./Funnel.svelte"
+import GalaxyCloud from "./GalaxyCloud.svelte"
+import KpiStrip from "./KpiStrip.svelte"
+import PlotFrame from "./PlotFrame.svelte"
 
-  let { kind, path }: { kind: SectionKind; path: string } = $props();
+let { kind, path }: { kind: SectionKind; path: string } = $props()
 
-  let host = $state<HTMLDivElement | undefined>();
-  let payload = $state.raw<PanelPayload | null>(null);
-  let failed = $state(false);
+let host = $state<HTMLDivElement | undefined>()
+let payload = $state.raw<PanelPayload | null>(null)
+let failed = $state(false)
 
-  $effect(() => {
-    const node = host;
-    const target = path;
-    const panel = kind;
-    if (!node) return;
-    let cancelled = false;
-    let started = false;
-    payload = null;
-    failed = false;
+$effect(() => {
+	const node = host
+	const target = path
+	const panel = kind
+	if (!node) return
+	let cancelled = false
+	let started = false
+	payload = null
+	failed = false
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (started || !entries.some((entry) => entry.isIntersecting)) return;
-        started = true;
-        observer.disconnect();
-        loadPanel(panel, target)
-          .then((value) => {
-            if (!cancelled) payload = value;
-          })
-          .catch(() => {
-            if (!cancelled) failed = true;
-          });
-      },
-      { rootMargin: "320px" },
-    );
-    observer.observe(node);
+	const observer = new IntersectionObserver(
+		(entries) => {
+			if (started || !entries.some((entry) => entry.isIntersecting)) return
+			started = true
+			observer.disconnect()
+			loadPanel(panel, target)
+				.then((value) => {
+					if (!cancelled) payload = value
+				})
+				.catch(() => {
+					if (!cancelled) failed = true
+				})
+		},
+		{ rootMargin: "320px" },
+	)
+	observer.observe(node)
 
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-    };
-  });
+	return () => {
+		cancelled = true
+		observer.disconnect()
+	}
+})
 
-  const kpiRows = $derived(
-    payload?.kind === "kpi" ? localizedRows(localeState.value, payload.summary.rows ?? []) : [],
-  );
-  const kpiBarRows = $derived(
-    payload?.kind === "kpi" ? localizedRows(localeState.value, payload.summary.bar_rows ?? []) : [],
-  );
-  const funnel = $derived(
-    payload?.kind === "funnel"
-      ? localizedRows(localeState.value, funnelRows(payload.summary.steps ?? []))
-      : [],
-  );
-  const hrBins = $derived(
-    payload?.kind === "hr" ? localizedBins(localeState.value, payload.bins) : null,
-  );
-  const hrView = $derived(
-    hrBins ? { bins: hrBins, locale: localeState.value } : null,
-  );
-  const orbitView = $derived(
-    payload?.kind === "orbits" ? { planets: payload.planets, locale: localeState.value } : null,
-  );
+const kpiRows = $derived(
+	payload?.kind === "kpi"
+		? localizedRows(localeState.value, payload.summary.rows ?? [])
+		: [],
+)
+const kpiBarRows = $derived(
+	payload?.kind === "kpi"
+		? localizedRows(localeState.value, payload.summary.bar_rows ?? [])
+		: [],
+)
+const funnel = $derived(
+	payload?.kind === "funnel"
+		? localizedRows(localeState.value, funnelRows(payload.summary.steps ?? []))
+		: [],
+)
+const hrBins = $derived(
+	payload?.kind === "hr"
+		? localizedBins(localeState.value, payload.bins)
+		: null,
+)
+const hrView = $derived(
+	hrBins ? { bins: hrBins, locale: localeState.value } : null,
+)
+const orbitView = $derived(
+	payload?.kind === "orbits"
+		? { planets: payload.planets, locale: localeState.value }
+		: null,
+)
+const distanceView = $derived(
+	payload?.kind === "galaxy-distances"
+		? { bins: payload.bins, locale: localeState.value }
+		: null,
+)
 </script>
 
 <div bind:this={host}>
@@ -83,6 +96,8 @@
     <PlotFrame data={hrView} render={hrPlot} />
   {:else if orbitView}
     <PlotFrame data={orbitView} render={orbitPlot} />
+  {:else if distanceView}
+    <PlotFrame data={distanceView} render={galaxyDistancePlot} />
   {:else if payload?.kind === "galaxy-3d"}
     <GalaxyCloud table={payload.table} />
   {:else if failed}

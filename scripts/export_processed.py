@@ -16,6 +16,7 @@ from gaia_export.binned import (
 )
 from gaia_export.exoplanets import NASA_CREDIT, export_giant_orbits, giant_orbits_count
 from gaia_export.galaxies import export_local_galaxies
+from gaia_export.galaxy_distances import export_galaxy_distances, galaxy_distance_count
 from gaia_export.manifest import build_manifest, write_manifest
 from gaia_export.stars import (
     export_disk_stars_sample,
@@ -39,7 +40,7 @@ def main() -> int:
     parser.add_argument(
         "--fetch-gaia",
         action="store_true",
-        help="Refresh summary counts, disk samples, and the absolute-magnitude diagram from Gaia Archive",
+        help="Refresh summary counts, disk samples, the absolute-magnitude diagram, and galaxy distances from Gaia Archive",
     )
     parser.add_argument(
         "--fetch-exoplanets",
@@ -83,6 +84,7 @@ def main() -> int:
         counts = fetch_hr_absolute_histogram(hr_partial)
         write_hr_diagram_bins(hr_path, counts=counts, source=HR_ABSOLUTE_SOURCE)
         hr_partial.unlink(missing_ok=True)
+        export_galaxy_distances(binned_dir / "galaxy_distances.json")
 
     if args.fetch_exoplanets:
         orbit_count = export_giant_orbits(orbits_path)
@@ -110,6 +112,28 @@ def main() -> int:
             "label": "Jusqu'où voit-on les galaxies ?",
             "helpText": "Des millions de galaxies probables. Pour une partie d'entre elles seulement, Gaia estime à quelle distance elles se trouvent. Pour certaines, elle mesure aussi leur forme.",
         },
+    ]
+
+    distance_count = galaxy_distance_count(binned_dir / "galaxy_distances.json")
+    if distance_count:
+        datasets.append(
+            {
+                "id": "galaxy_distances",
+                "path": "binned/galaxy_distances.json",
+                "tier": "B",
+                "format": "binned1d",
+                "label": "À quelle distance sont-elles ?",
+                "helpText": (
+                    "Pour les 1 367 153 galaxies dont la distance est estimée. "
+                    "Plus la barre est à droite, plus leur lumière est tirée vers le rouge."
+                ),
+                "count": distance_count,
+                "sourceNote": "redshift_ugc, distance parcourue par la lumière (Planck 2018)",
+            }
+        )
+
+    datasets.extend(
+        [
         {
             "id": "hr_diagram_bins",
             "path": "binned/hr_diagram_bins.json",
@@ -119,7 +143,8 @@ def main() -> int:
             "helpText": "Oui ! La plupart des objets repérés par Gaia sont des étoiles. Pour chacune, quand c'est possible, elle mesure une luminosité et une couleur. En les plaçant sur un diagramme, trois groupes nets apparaissent : trois grandes familles, qui correspondent à trois stades de la vie des étoiles.",
             "sourceNote": hr_source,
         },
-    ]
+        ]
+    )
 
     orbit_count = giant_orbits_count(orbits_path)
     if orbit_count:
