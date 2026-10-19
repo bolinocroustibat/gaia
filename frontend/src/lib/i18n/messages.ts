@@ -5,9 +5,12 @@ export const messages = {
 		siteTitle: "Qu’a vu le télescope spatial Gaia ?",
 		siteIntro1:
 			"Depuis 2013, le télescope Gaia tourne autour de la Terre pour accomplir la plus grande mission de cartographie de l’histoire de l’humanité. Comme tous les explorateurs avant elle, elle répond à une envie très ancienne : dresser la carte de notre voisinage, de l’univers, à une échelle que personne n’avait encore atteinte avant.",
-		siteIntro2: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
+		siteIntro2:
+			"Ses mesures sont publiques, et de nouvelles données sont publiées régulièrement. Voici ce qu’on peut y voir aujourd’hui.",
+		siteMastMeta: "Cartographie ouverte · export du {date}",
 		sectionGalaxies: "Des galaxies",
-		ledeFallback: "Ses mesures sont publiques. Voici ce qu’on peut y voir.",
+		ledeFallback:
+			"Ses mesures sont publiques, et de nouvelles données sont publiées régulièrement. Voici ce qu’on peut y voir aujourd’hui.",
 		catalogLoadFailed: "Le catalogue n’a pas pu être chargé.",
 		panelLoadFailed: "Ces données n’ont pas pu être chargées.",
 		galaxyCanvasLabel:
@@ -66,10 +69,12 @@ export const messages = {
 		siteTitle: "What has the Gaia space telescope seen?",
 		siteIntro1:
 			"Since 2013, the Gaia telescope has orbited Earth to carry out the greatest mapping mission in human history. Like all explorers before it, it answers an old drive: to map our cosmic neighborhood and the universe at a scale no one had reached before.",
-		siteIntro2: "Its measurements are public. Here is what we can see in them.",
+		siteIntro2:
+			"Its measurements are public, and new data is published regularly. Here is what we can see in them today.",
+		siteMastMeta: "Open map · data from {date}",
 		sectionGalaxies: "Galaxies",
 		ledeFallback:
-			"Its measurements are public. Here is what we can see in them.",
+			"Its measurements are public, and new data is published regularly. Here is what we can see in them today.",
 		catalogLoadFailed: "The catalogue could not be loaded.",
 		panelLoadFailed: "This data could not be loaded.",
 		galaxyCanvasLabel:

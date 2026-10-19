@@ -43,6 +43,14 @@ $effect(() => {
 <main>
   <header class="mast">
     <h1>{t(localeState.value, "siteTitle")}</h1>
+    {#if manifest}
+      <p class="mast-meta">
+        {t(localeState.value, "siteMastMeta").replace(
+          "{date}",
+          formatDate(manifest.generated_at, localeState.value),
+        )}
+      </p>
+    {/if}
     <div class="lede">
       <p>{t(localeState.value, "siteIntro1")}</p>
       <p>{t(localeState.value, "siteIntro2")}</p>
@@ -113,6 +121,15 @@ $effect(() => {
 
   .mast {
     padding: clamp(4rem, 12vw, 8rem) clamp(1.25rem, 6vw, 5.5rem) clamp(3rem, 8vw, 5rem);
+  }
+
+  .mast-meta {
+    margin: 0 0 1.1rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   h1 {

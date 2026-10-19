@@ -20,7 +20,6 @@ export const storyItems: StoryItem[] = [
 	{ type: "panel", id: "catalog_totals", kind: "kpi" },
 	{ type: "panel", id: "hr_diagram_bins", kind: "hr" },
 	{ type: "panel", id: "giant_orbits", kind: "orbits" },
-	{ type: "panel", id: "milky_way_space3d", kind: "galaxy-3d" },
 	{
 		type: "group",
 		id: "galaxies",
@@ -30,4 +29,5 @@ export const storyItems: StoryItem[] = [
 			{ id: "galaxy_distances", kind: "galaxy-distances" },
 		],
 	},
+	{ type: "panel", id: "milky_way_space3d", kind: "galaxy-3d" },
 ]
