@@ -1,13 +1,13 @@
 """Binned JSON exports for heatmaps (tier B)."""
 
 import json
-import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 
+from gaia_export.archive import run_query
 from gaia_export.constants import (
     CREDIT,
     GAIA_RELEASE,
@@ -15,6 +15,7 @@ from gaia_export.constants import (
     LICENSE_URL,
     SNAPSHOT_CATALOG_TOTALS,
 )
+from gaia_export.release import DR3, Release
 
 # Colour BP-RP from -0.5 to 5, step 0.1 mag (55 bins).
 COLOR_MIN = -0.5
@@ -29,13 +30,20 @@ MAG_STEP = 0.25
 # random_index covers every DR3 source once. Chunks keep a failed job restartable.
 RANDOM_INDEX_CHUNK = 100_000_000
 
-HR_ABSOLUTE_SOURCE = f"""
-Absolute G magnitude for every gaiadr3.gaia_source row where it is defined.
+
+def hr_absolute_source(release: Release = DR3) -> str:
+    """Describe the absolute-magnitude histogram for one release."""
+    release.require("hr_diagram")
+    return f"""
+Absolute G magnitude for every {release.table("gaia_source")} row where it is defined.
 mg = phot_g_mean_mag + 5*LOG10(parallax_mas) - 10
 Kept when parallax > 0, parallax_over_error > 5, bp_rp and phot_g_mean_mag are set,
 bp_rp in [{COLOR_MIN}, {COLOR_MAX}), mg in [{MAG_MIN}, {MAG_MAX}).
 Counted in the archive over random_index chunks of {RANDOM_INDEX_CHUNK}.
 """.strip()
+
+
+HR_ABSOLUTE_SOURCE = hr_absolute_source()
 
 
 def _meta(*, source: str) -> dict[str, Any]:
@@ -72,13 +80,14 @@ def random_index_chunks(
     return chunks
 
 
-def hr_chunk_query(index_min: int, index_max: int) -> str:
+def hr_chunk_query(index_min: int, index_max: int, release: Release = DR3) -> str:
     """Aggregate one random_index slice into colour and absolute-magnitude bins.
 
     The logarithm is computed only after a nested filter on positive parallax.
     Putting LOG10 in the same WHERE as that test makes the archive evaluate it
     on negative parallaxes and abort the job.
     """
+    release.require("hr_diagram")
     return f"""
 SELECT color_bin, mag_bin, COUNT(*) AS n
 FROM (
@@ -89,7 +98,7 @@ FROM (
     SELECT
       bp_rp,
       phot_g_mean_mag + 5 * LOG10(parallax) - 10 AS mg
-    FROM gaiadr3.gaia_source
+    FROM {release.table("gaia_source")}
     WHERE parallax > 0
       AND parallax_over_error > 5
       AND bp_rp IS NOT NULL
@@ -101,27 +110,6 @@ FROM (
 ) AS bins
 GROUP BY color_bin, mag_bin
 """.strip()
-
-
-def _run_archive_query(query: str):
-    """Submit one async archive job and return its table.
-
-    Polling keeps the real archive error. ``get_results`` on a failed job often
-    comes back as an empty HTTP 500.
-    """
-    from astroquery.gaia import Gaia
-
-    job = Gaia.launch_job_async(query, background=True)
-    while True:
-        phase = job.get_phase(update=True)
-        if phase in {"COMPLETED", "ERROR", "ABORTED"}:
-            break
-        time.sleep(15)
-    if phase != "COMPLETED":
-        detail = job.get_error()
-        msg = f"Gaia job {job.jobid} {phase}: {detail}"
-        raise RuntimeError(msg)
-    return job.get_results()
 
 
 def _as_int(value: Any) -> int:
@@ -157,51 +145,49 @@ def _write_partial(path: Path, counts: np.ndarray, done: set[tuple[int, int]]) -
     temporary.replace(path)
 
 
-def fetch_hr_absolute_histogram(partial_path: Path) -> np.ndarray:
-    """Sum archive histograms for every DR3 source with a usable absolute magnitude.
+def fetch_hr_absolute_histogram(
+    partial_path: Path, release: Release = DR3
+) -> np.ndarray:
+    """Sum archive histograms for every source with a usable absolute magnitude.
 
     Progress is stored in ``partial_path`` so a stopped run continues at the next chunk.
     """
-    from astroquery.gaia import Gaia
-
     n_mag = len(absolute_magnitude_edges()) - 1
     n_color = len(color_edges()) - 1
     counts, done = _read_partial(partial_path, (n_mag, n_color))
     chunks = random_index_chunks()
+    main_table = release.table("gaia_source")
 
-    Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
-    previous_limit = Gaia.ROW_LIMIT
-    Gaia.ROW_LIMIT = -1
-    try:
-        for index, (index_min, index_max) in enumerate(chunks, start=1):
-            if (index_min, index_max) in done:
-                print(
-                    f"HR chunk {index}/{len(chunks)} {index_min}..{index_max} already done",
-                    flush=True,
-                )
+    for index, (index_min, index_max) in enumerate(chunks, start=1):
+        if (index_min, index_max) in done:
+            print(
+                f"HR chunk {index}/{len(chunks)} {index_min}..{index_max} already done",
+                flush=True,
+            )
+            continue
+        print(
+            f"HR chunk {index}/{len(chunks)} random_index {index_min}..{index_max}",
+            flush=True,
+        )
+        table = run_query(
+            hr_chunk_query(index_min, index_max, release),
+            main_table=main_table,
+        )
+        added = 0
+        for row in table:
+            color_bin = _as_int(row["color_bin"])
+            mag_bin = _as_int(row["mag_bin"])
+            count = _as_int(row["n"])
+            if not (0 <= color_bin < n_color and 0 <= mag_bin < n_mag):
                 continue
-            print(
-                f"HR chunk {index}/{len(chunks)} random_index {index_min}..{index_max}",
-                flush=True,
-            )
-            table = _run_archive_query(hr_chunk_query(index_min, index_max))
-            added = 0
-            for row in table:
-                color_bin = _as_int(row["color_bin"])
-                mag_bin = _as_int(row["mag_bin"])
-                count = _as_int(row["n"])
-                if not (0 <= color_bin < n_color and 0 <= mag_bin < n_mag):
-                    continue
-                counts[mag_bin, color_bin] += count
-                added += count
-            done.add((index_min, index_max))
-            _write_partial(partial_path, counts, done)
-            print(
-                f"  sources in chunk: {added:,}; total so far: {int(counts.sum()):,}",
-                flush=True,
-            )
-    finally:
-        Gaia.ROW_LIMIT = previous_limit
+            counts[mag_bin, color_bin] += count
+            added += count
+        done.add((index_min, index_max))
+        _write_partial(partial_path, counts, done)
+        print(
+            f"  sources in chunk: {added:,}; total so far: {int(counts.sum()):,}",
+            flush=True,
+        )
     return counts
 
 

@@ -1,20 +1,28 @@
 """Light-travel distance histogram for galaxy candidates with a redshift."""
 
 import json
-import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from gaia_export.archive import run_query
 from gaia_export.constants import CREDIT, GAIA_RELEASE, LICENSE_ID, LICENSE_URL
+from gaia_export.release import DR3, Release
 
 # Equal steps in redshift. Distance edges are the light-travel distance of each edge.
 Z_STEP = 0.02
 
-SOURCE = (
-    "gaiadr3.galaxy_candidates with redshift_ugc set, counted in steps of "
-    f"{Z_STEP}. Distance is the Planck18 light-travel distance."
-)
+
+def galaxy_distance_source(release: Release = DR3) -> str:
+    """Describe the redshift histogram for one release."""
+    release.require("galaxy_distances")
+    return (
+        f"{release.table('galaxy_candidates')} with redshift_ugc set, counted in steps of "
+        f"{Z_STEP}. Distance is the Planck18 light-travel distance."
+    )
+
+
+SOURCE = galaxy_distance_source()
 
 
 def _meta(*, source: str) -> dict[str, Any]:
@@ -27,17 +35,18 @@ def _meta(*, source: str) -> dict[str, Any]:
     }
 
 
-def galaxy_distance_query() -> str:
+def galaxy_distance_query(release: Release = DR3) -> str:
     """Count galaxy candidates in redshift bins.
 
     ``redshift_ugc * 50`` is the bin index for a step of 0.02. Grouping by the
     expression keeps the archive from rejecting an alias in GROUP BY.
     """
-    return """
+    release.require("galaxy_distances")
+    return f"""
 SELECT z_bin, COUNT(*) AS n
 FROM (
   SELECT FLOOR(redshift_ugc * 50) AS z_bin
-  FROM gaiadr3.galaxy_candidates
+  FROM {release.table("galaxy_candidates")}
   WHERE redshift_ugc IS NOT NULL
 ) AS binned
 GROUP BY z_bin
@@ -92,39 +101,18 @@ def histogram_from_bins(raw: dict[int, int]) -> dict[str, Any]:
     }
 
 
-def _run_archive_query(query: str):
-    """Submit one async archive job and return its table."""
-    from astroquery.gaia import Gaia
-
-    job = Gaia.launch_job_async(query, background=True)
-    while True:
-        phase = job.get_phase(update=True)
-        if phase in {"COMPLETED", "ERROR", "ABORTED"}:
-            break
-        time.sleep(15)
-    if phase != "COMPLETED":
-        detail = job.get_error()
-        msg = f"Gaia job {job.jobid} {phase}: {detail}"
-        raise RuntimeError(msg)
-    return job.get_results()
-
-
 def _as_int(value: Any) -> int:
     if hasattr(value, "item"):
         value = value.item()
     return int(value)
 
 
-def fetch_galaxy_distance_bins() -> dict[int, int]:
+def fetch_galaxy_distance_bins(release: Release = DR3) -> dict[int, int]:
     """Return ``{bin index: count}`` for every galaxy candidate with a redshift."""
-    from astroquery.gaia import Gaia
-
-    previous_limit = Gaia.ROW_LIMIT
-    Gaia.ROW_LIMIT = -1
-    try:
-        table = _run_archive_query(galaxy_distance_query())
-    finally:
-        Gaia.ROW_LIMIT = previous_limit
+    table = run_query(
+        galaxy_distance_query(release),
+        main_table=release.table("galaxy_candidates"),
+    )
 
     counts: dict[int, int] = {}
     for row in table:

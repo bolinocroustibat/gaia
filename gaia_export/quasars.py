@@ -1,10 +1,10 @@
-"""Gaia DR3 quasar candidate subsamples (qso_candidates)."""
+"""Quasar candidate subsamples (qso_candidates)."""
 
-import time
 from pathlib import Path
 from typing import Any, Literal
 
-from gaia_export.binned import _run_archive_query
+from gaia_export.archive import run_query
+from gaia_export.release import DR3, Release
 
 # Table 11, Gaia Collaboration — extragalactic content (DR3); ~95% purity, ~1.9M sources.
 QSO_PURE_SUBSAMPLE_PREDICATE = """
@@ -44,8 +44,10 @@ def pure_subsample_select(
     columns: str | tuple[str, ...] = DEFAULT_LIST_COLUMNS,
     *,
     join_gaia_source: bool = False,
+    release: Release = DR3,
 ) -> str:
     """ADQL SELECT for the recommended purer quasar subsample."""
+    release.require("qso_pure")
     if join_gaia_source:
         cols = (
             ", ".join(SKY_COLUMNS)
@@ -54,8 +56,8 @@ def pure_subsample_select(
         )
         return f"""
 SELECT {cols}
-FROM gaiadr3.qso_candidates AS q
-JOIN gaiadr3.gaia_source AS g USING (source_id)
+FROM {release.table("qso_candidates")} AS q
+JOIN {release.table("gaia_source")} AS g USING (source_id)
 WHERE {QSO_PURE_SUBSAMPLE_PREDICATE}
 """.strip()
 
@@ -65,19 +67,20 @@ WHERE {QSO_PURE_SUBSAMPLE_PREDICATE}
         cols = columns
     return f"""
 SELECT {cols}
-FROM gaiadr3.qso_candidates
+FROM {release.table("qso_candidates")}
 WHERE {QSO_PURE_SUBSAMPLE_PREDICATE}
 """.strip()
 
 
-def count_pure_qso_candidates() -> int:
+def count_pure_qso_candidates(release: Release = DR3) -> int:
     """Return the number of sources in the ~95% purity subsample."""
+    release.require("qso_pure")
     query = f"""
 SELECT COUNT(*) AS n
-FROM gaiadr3.qso_candidates
+FROM {release.table("qso_candidates")}
 WHERE {QSO_PURE_SUBSAMPLE_PREDICATE}
 """.strip()
-    table = _run_archive_query(query)
+    table = run_query(query, main_table=release.table("qso_candidates"))
     return int(table["n"][0])
 
 
@@ -88,46 +91,20 @@ def fetch_pure_qso_candidates(
     dump_to_file: bool = False,
     output_format: Literal["votable", "csv", "ecsv", "fits"] = "csv",
     output_path: Path | None = None,
+    release: Release = DR3,
 ) -> Any:
     """Download the purer quasar list from the Gaia archive.
 
     With ~1.9M rows, prefer ``dump_to_file=True`` and pass ``output_path`` so
     results stream to disk instead of loading entirely into memory.
     """
-    from astroquery.gaia import Gaia
-
-    query = pure_subsample_select(columns, join_gaia_source=join_gaia_source)
-    Gaia.MAIN_GAIA_TABLE = "gaiadr3.qso_candidates"
-    previous_limit = Gaia.ROW_LIMIT
-    Gaia.ROW_LIMIT = -1
-    try:
-        if dump_to_file:
-            job = Gaia.launch_job_async(
-                query,
-                background=True,
-                dump_to_file=True,
-                output_format=output_format,
-            )
-            while True:
-                phase = job.get_phase(update=True)
-                if phase in {"COMPLETED", "ERROR", "ABORTED"}:
-                    break
-                time.sleep(15)
-            if phase != "COMPLETED":
-                detail = job.get_error()
-                msg = f"Gaia job {job.jobid} {phase}: {detail}"
-                raise RuntimeError(msg)
-            result_file = job.outputFile
-            if not result_file:
-                raise RuntimeError(
-                    f"Gaia job {job.jobid} completed but no outputFile was set"
-                )
-            result_path = Path(result_file)
-            if output_path is not None:
-                output_path.parent.mkdir(parents=True, exist_ok=True)
-                result_path.replace(output_path)
-                return output_path
-            return result_path
-        return _run_archive_query(query)
-    finally:
-        Gaia.ROW_LIMIT = previous_limit
+    query = pure_subsample_select(
+        columns, join_gaia_source=join_gaia_source, release=release
+    )
+    return run_query(
+        query,
+        main_table=release.table("qso_candidates"),
+        dump_to_file=dump_to_file,
+        output_format=output_format,
+        output_path=output_path,
+    )

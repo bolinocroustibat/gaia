@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from gaia_export.quasars import count_pure_qso_candidates, fetch_pure_qso_candidates
+from gaia_export.release import get_release
 
 
 def main() -> None:
@@ -26,9 +27,15 @@ def main() -> None:
         help="Output path when downloading (default: data/qso_candidates_pure_dr3.csv)",
     )
     parser.add_argument(
+        "--release",
+        choices=["dr3", "dr4"],
+        default="dr3",
+        help="Archive schema. dr4 refuses this extract until its columns are remapped",
+    )
+    parser.add_argument(
         "--with-skycoords",
         action="store_true",
-        help="JOIN gaiadr3.gaia_source for ra, dec, and G magnitude (heavier query)",
+        help="JOIN gaia_source for ra, dec, and G magnitude (heavier query)",
     )
     parser.add_argument(
         "--in-memory",
@@ -36,14 +43,17 @@ def main() -> None:
         help="Load the full table into memory (not recommended for ~1.9M rows)",
     )
     args = parser.parse_args()
+    release = get_release(args.release)
 
     if args.count_only:
-        n = count_pure_qso_candidates()
+        n = count_pure_qso_candidates(release)
         print(f"Purer quasar subsample: {n:,} sources")
         return
 
     if args.in_memory:
-        table = fetch_pure_qso_candidates(join_gaia_source=args.with_skycoords)
+        table = fetch_pure_qso_candidates(
+            join_gaia_source=args.with_skycoords, release=release
+        )
         print(f"Fetched {len(table):,} rows")
         table.write(args.output, format="csv", overwrite=True)
         print(f"Wrote {args.output}")
@@ -54,6 +64,7 @@ def main() -> None:
         dump_to_file=True,
         output_format="csv",
         output_path=args.output,
+        release=release,
     )
     print(f"Wrote {path}")
 

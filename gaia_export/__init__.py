@@ -1,4 +1,4 @@
-"""Export Gaia DR3 datasets as frontend-ready JSON."""
+"""Export Gaia datasets as frontend-ready JSON."""
 
 from gaia_export.columnar import write_columnar_json
 from gaia_export.manifest import build_manifest, write_manifest

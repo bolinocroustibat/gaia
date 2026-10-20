@@ -3,6 +3,7 @@
 LICENSE_ID = "CC BY-NC 3.0 IGO"
 LICENSE_URL = "https://www.cosmos.esa.int/web/gaia-users/license"
 CREDIT = "ESA, Gaia DPAC"
+# Label stored on the processed DR3 assets. Live queries use gaia_export.release.
 GAIA_RELEASE = "Gaia DR3"
 
 MAX_JSON_BYTES = 15 * 1024 * 1024

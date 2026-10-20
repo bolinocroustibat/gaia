@@ -9,15 +9,21 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from gaia_export.archive import ArchiveError
 from gaia_export.binned import (
     HR_ABSOLUTE_SOURCE,
     fetch_hr_absolute_histogram,
     write_hr_diagram_bins,
 )
+from gaia_export.companions import (
+    export_planet_candidates,
+    export_prerelease_along_scan,
+)
 from gaia_export.exoplanets import NASA_CREDIT, export_giant_orbits, giant_orbits_count
 from gaia_export.galaxies import export_local_galaxies
 from gaia_export.galaxy_distances import export_galaxy_distances, galaxy_distance_count
 from gaia_export.manifest import build_manifest, write_manifest
+from gaia_export.release import DR4, UnmappedExtract, get_release
 from gaia_export.stars import (
     export_disk_stars_sample,
     export_milky_way_disk,
@@ -35,8 +41,44 @@ def _columnar_count(path: Path) -> int:
     return int(payload["count"])
 
 
-def main() -> int:
+def _export_dr4(processed_dir: Path, *, fetch_companions: bool) -> int:
+    """Write DR4 companion files. Leave the DR3 manifest untouched."""
+    print(
+        "DR4 extracts for stars, galaxies, quasars, and the HR diagram are not "
+        "remapped yet. They were not run, and manifest.json was left unchanged."
+    )
+    if not fetch_companions:
+        print("Pass --fetch-companions to write the DR4 companion files.")
+        return 0
+
+    companions_dir = processed_dir / "companions"
+    cache_dir = processed_dir.parent / "cache"
+    along_path = companions_dir / "prerelease_along_scan.json"
+    along_count = export_prerelease_along_scan(along_path, cache_dir=cache_dir)
+    print(f"Prerelease along-scan rows: {along_count:,}")
+
+    planets_path = companions_dir / "planet_candidates.json"
+    try:
+        planet_count = export_planet_candidates(planets_path, release=DR4)
+    except (ArchiveError, UnmappedExtract) as exc:
+        print(
+            "DR4 companion tables were not read from the archive. "
+            f"The prerelease series is on disk. Archive error: {exc}",
+            file=sys.stderr,
+        )
+        return 1
+    print(f"Planet candidates: {planet_count:,}")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--release",
+        choices=["dr3", "dr4"],
+        default="dr3",
+        help="Archive schema. dr4 only runs companion extracts that are mapped",
+    )
     parser.add_argument(
         "--fetch-gaia",
         action="store_true",
@@ -48,6 +90,11 @@ def main() -> int:
         help="Refresh confirmed giant-planet orbits from the NASA Exoplanet Archive",
     )
     parser.add_argument(
+        "--fetch-companions",
+        action="store_true",
+        help="Refresh DR4 planet candidates and the pre-release along-scan series",
+    )
+    parser.add_argument(
         "--processed-dir",
         type=Path,
         default=ROOT / "data" / "processed",
@@ -57,7 +104,21 @@ def main() -> int:
         type=Path,
         default=ROOT / "data" / "local_galaxies_dr3.csv",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    release = get_release(args.release)
+    if release.id == "dr4":
+        if args.fetch_gaia or args.fetch_exoplanets:
+            print(
+                "Ignoring --fetch-gaia and --fetch-exoplanets on DR4. "
+                "Those extracts still read DR3 tables or the NASA archive."
+            )
+        return _export_dr4(args.processed_dir, fetch_companions=args.fetch_companions)
+    if args.fetch_companions:
+        print(
+            "Companion extracts are defined for Gaia DR4. Pass --release dr4.",
+            file=sys.stderr,
+        )
+        return 2
 
     processed_dir = args.processed_dir
     binned_dir = processed_dir / "binned"

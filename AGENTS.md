@@ -44,6 +44,7 @@ Until CLI entry points are registered in `pyproject.toml`, run scripts explicitl
 ```bash
 uv run python scripts/export_processed.py
 uv run python scripts/export_processed.py --fetch-gaia
+uv run python scripts/export_processed.py --release dr4 --fetch-companions
 uv run python scripts/fetch_qso_pure_subsample.py --count-only
 uv run python scripts/fetch_qso_pure_subsample.py -o data/qso_candidates_pure_dr3.csv
 ```

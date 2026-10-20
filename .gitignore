@@ -17,6 +17,9 @@ node_modules/
 # Interrupted archive histogram; safe to delete
 data/processed/binned/*.partial.json
 
+# Downloaded Gaia pre-release zip and extracted VOTable
+data/cache/
+
 # Editor / tooling
 .ipynb_checkpoints/
 .ruff_cache/

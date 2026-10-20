@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from gaia_export.archive import run_query
 from gaia_export.constants import (
     CREDIT,
     GAIA_RELEASE,
@@ -15,6 +16,7 @@ from gaia_export.constants import (
     SNAPSHOT_QSO_PURE_SUBSAMPLE_TOTAL,
 )
 from gaia_export.quasars import count_pure_qso_candidates
+from gaia_export.release import DR3, Release
 
 
 def _meta(*, source: str) -> dict[str, Any]:
@@ -156,17 +158,29 @@ def object_type_display_rows(
     ]
 
 
-def fetch_object_type_counts_from_gaia() -> dict[int | None, int]:
-    from astroquery.gaia import Gaia
+def object_type_counts_query(release: Release = DR3) -> str:
+    """ADQL grouping of ``non_single_star`` codes."""
+    release.require("catalog_counts")
+    return f"""
+SELECT non_single_star, COUNT(*) AS n
+FROM {release.table("gaia_source")}
+GROUP BY non_single_star
+""".strip()
 
-    Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
-    query = """
-    SELECT non_single_star, COUNT(*) AS n
-    FROM gaiadr3.gaia_source
-    GROUP BY non_single_star
-    """
-    job = Gaia.launch_job_async(query)
-    table = job.get_results()
+
+def catalog_total_query(release: Release = DR3) -> str:
+    """ADQL count of every source in the main catalogue table."""
+    release.require("catalog_counts")
+    return f"SELECT COUNT(*) AS n FROM {release.table('gaia_source')}"
+
+
+def fetch_object_type_counts_from_gaia(
+    release: Release = DR3,
+) -> dict[int | None, int]:
+    table = run_query(
+        object_type_counts_query(release),
+        main_table=release.table("gaia_source"),
+    )
     counts: dict[int | None, int] = {}
     for row in table:
         code = row["non_single_star"]
@@ -178,18 +192,18 @@ def fetch_object_type_counts_from_gaia() -> dict[int | None, int]:
     return counts
 
 
-def fetch_catalog_total_from_gaia() -> int:
-    from astroquery.gaia import Gaia
-
-    Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
-    job = Gaia.launch_job_async("SELECT COUNT(*) AS n FROM gaiadr3.gaia_source")
-    return int(job.get_results()["n"][0])
+def fetch_catalog_total_from_gaia(release: Release = DR3) -> int:
+    table = run_query(
+        catalog_total_query(release),
+        main_table=release.table("gaia_source"),
+    )
+    return int(table["n"][0])
 
 
 def export_summary(processed_dir: Path, *, fetch_gaia: bool) -> dict[str, str]:
     summary_dir = processed_dir / "summary"
     source = (
-        "gaiadr3.gaia_source via astroquery"
+        f"{DR3.table('gaia_source')} via astroquery"
         if fetch_gaia
         else "snapshot:explore_gaia_archive.ipynb"
     )

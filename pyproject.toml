@@ -1,7 +1,7 @@
 [project]
 name = "gaia"
 version = "0.1.0"
-description = "Notebooks and export tooling for Gaia DR3 data used in frontend dataviz prototypes."
+description = "Notebooks and export tooling for Gaia data used in frontend dataviz prototypes."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -12,6 +12,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pytest>=9.1.1",
     "ruff>=0.15.22",
     "ty>=0.0.62",
 ]

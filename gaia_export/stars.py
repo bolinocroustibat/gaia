@@ -6,7 +6,9 @@ from typing import Any
 
 import numpy as np
 
+from gaia_export.archive import run_query
 from gaia_export.columnar import field_specs, write_columnar_json
+from gaia_export.release import DR3, Release
 from gaia_export.validate import check_file_size, check_unique_source_ids
 
 # Stellar disk of the Milky Way, measured from the Galactic center.
@@ -18,7 +20,11 @@ MILKY_WAY_PARALLAX_MIN_MAS = 0.05
 MILKY_WAY_RANDOM_INDEX_MAX = 5_000_000
 MILKY_WAY_SAMPLE_CAP = 80_000
 
-DISK_STARS_QUERY = """
+
+def disk_stars_query(release: Release = DR3) -> str:
+    """ADQL for a pseudo-random sample of likely single stars."""
+    release.require("disk_stars")
+    return f"""
 SELECT TOP 50000
     source_id,
     ra,
@@ -27,22 +33,19 @@ SELECT TOP 50000
     bp_rp,
     parallax,
     parallax_over_error
-FROM gaiadr3.gaia_source
+FROM {release.table("gaia_source")}
 WHERE (non_single_star IS NULL OR non_single_star = 0)
   AND parallax_over_error > 5
   AND parallax > 0.01
   AND bp_rp IS NOT NULL
   AND phot_g_mean_mag IS NOT NULL
   AND MOD(source_id, 36000) = 0
-"""
+""".strip()
 
 
-def fetch_disk_stars_table():
-    from astroquery.gaia import Gaia
-
-    Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
-    job = Gaia.launch_job_async(DISK_STARS_QUERY)
-    return job.get_results()
+def fetch_disk_stars_table(release: Release = DR3):
+    query = disk_stars_query(release)
+    return run_query(query, main_table=release.table("gaia_source"))
 
 
 def export_disk_stars_sample(points_dir: Path, table) -> dict[str, Any]:
@@ -98,7 +101,10 @@ def export_disk_stars_sample(points_dir: Path, table) -> dict[str, Any]:
     return {"path": path, "count": count}
 
 
-MILKY_WAY_DISK_QUERY = f"""
+def milky_way_disk_query(release: Release = DR3) -> str:
+    """ADQL for a random sample of sources inside the stellar disk."""
+    release.require("milky_way_disk")
+    return f"""
 SELECT TOP {MILKY_WAY_SAMPLE_CAP}
     source_id,
     ra,
@@ -106,22 +112,18 @@ SELECT TOP {MILKY_WAY_SAMPLE_CAP}
     parallax,
     parallax_over_error,
     phot_g_mean_mag
-FROM gaiadr3.gaia_source
+FROM {release.table("gaia_source")}
 WHERE random_index < {MILKY_WAY_RANDOM_INDEX_MAX}
   AND parallax_over_error > 5
   AND parallax > {MILKY_WAY_PARALLAX_MIN_MAS}
   AND phot_g_mean_mag IS NOT NULL
 ORDER BY random_index
-"""
+""".strip()
 
 
-def fetch_milky_way_disk_table():
-    from astroquery.gaia import Gaia
-
-    Gaia.MAIN_GAIA_TABLE = "gaiadr3.gaia_source"
-    Gaia.ROW_LIMIT = -1
-    job = Gaia.launch_job_async(MILKY_WAY_DISK_QUERY)
-    return job.get_results()
+def fetch_milky_way_disk_table(release: Release = DR3):
+    query = milky_way_disk_query(release)
+    return run_query(query, main_table=release.table("gaia_source"))
 
 
 def _add_galactocentric_coords(table):
