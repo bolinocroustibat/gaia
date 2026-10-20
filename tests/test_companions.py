@@ -22,11 +22,13 @@ def _solar(mjup: float) -> float:
 
 
 def test_point_mass_at_the_deuterium_limit_is_a_planet() -> None:
-    mass, flag = planetary_mass(
+    result = planetary_mass(
         m2_solar=_solar(PLANET_MASS_LIMIT_JUP),
         m2_lower_solar=None,
         m2_upper_solar=None,
     )
+    assert result is not None
+    mass, flag = result
     assert mass == pytest.approx(PLANET_MASS_LIMIT_JUP)
     assert flag == "value"
 
@@ -43,11 +45,13 @@ def test_point_mass_above_the_limit_is_not_a_planet() -> None:
 
 
 def test_upper_bound_at_the_limit_is_a_planet() -> None:
-    mass, flag = planetary_mass(
+    result = planetary_mass(
         m2_solar=None,
         m2_lower_solar=_solar(1.0),
         m2_upper_solar=_solar(PLANET_MASS_LIMIT_JUP),
     )
+    assert result is not None
+    mass, flag = result
     assert mass == pytest.approx(PLANET_MASS_LIMIT_JUP)
     assert flag == "upper"
 
