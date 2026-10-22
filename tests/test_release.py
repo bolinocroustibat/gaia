@@ -2,6 +2,7 @@
 
 import pytest
 
+from gaia_export.binaries import binary_period_query, binary_source_count_query
 from gaia_export.binned import hr_chunk_query
 from gaia_export.galaxy_distances import galaxy_distance_query
 from gaia_export.quasars import pure_subsample_select
@@ -26,6 +27,8 @@ def test_dr3_queries_use_the_dr3_schema() -> None:
         milky_way_disk_query(),
         hr_chunk_query(0, 10),
         galaxy_distance_query(),
+        binary_period_query(),
+        binary_source_count_query(),
         pure_subsample_select(),
         pure_subsample_select(join_gaia_source=True),
         catalog_total_query(),
@@ -41,6 +44,8 @@ def test_dr4_refuses_unmapped_dr3_extracts() -> None:
         disk_stars_query,
         milky_way_disk_query,
         galaxy_distance_query,
+        binary_period_query,
+        binary_source_count_query,
         catalog_total_query,
         object_type_counts_query,
     ]

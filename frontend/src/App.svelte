@@ -82,17 +82,20 @@ $effect(() => {
           </Section>
         {/if}
       {:else}
-        <SectionGroup id={item.id} title={t(localeState.value, item.titleKey)}>
-          {#each item.children as child (child.id)}
-            {@const meta = byId.get(child.id)}
-            {#if meta}
-              {@const copy = localizedDataset(localeState.value, meta)}
-              <Subsection id={child.id} title={copy.label} help={copy.helpText}>
-                <StoryPanel kind={child.kind} path={meta.path} />
-              </Subsection>
-            {/if}
-          {/each}
-        </SectionGroup>
+        {@const children = item.children.filter((child) => byId.has(child.id))}
+        {#if children.length}
+          <SectionGroup id={item.id} title={t(localeState.value, item.titleKey)}>
+            {#each children as child (child.id)}
+              {@const meta = byId.get(child.id)}
+              {#if meta}
+                {@const copy = localizedDataset(localeState.value, meta)}
+                <Subsection id={child.id} title={copy.label} help={copy.helpText}>
+                  <StoryPanel kind={child.kind} path={meta.path} />
+                </Subsection>
+              {/if}
+            {/each}
+          </SectionGroup>
+        {/if}
       {/if}
     {/each}
 

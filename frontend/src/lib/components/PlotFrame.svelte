@@ -55,6 +55,7 @@ $effect(() => {
 
   .plot-host :global(.orbit-figure figcaption),
   .plot-host :global(.distance-figure figcaption),
+  .plot-host :global(.binary-figure figcaption),
   .plot-host :global(.orbit-credit) {
     margin: 0.9rem 0 0;
     max-width: 36rem;
@@ -62,6 +63,31 @@ $effect(() => {
     font-family: var(--font-mono);
     font-size: 0.78rem;
     line-height: 1.45;
+  }
+
+  .plot-host :global(.binary-legend) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.15rem;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+
+  .plot-host :global(.binary-legend li) {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .plot-host :global(.binary-swatch) {
+    width: 0.7rem;
+    height: 0.7rem;
+    flex: none;
   }
 
   .plot-host :global(.orbit-credit) {

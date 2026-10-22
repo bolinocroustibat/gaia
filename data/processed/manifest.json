@@ -45,6 +45,16 @@
       "sourceNote": "gaiadr3 absolute G magnitude for sources with a reliable parallax"
     },
     {
+      "id": "binary_periods",
+      "path": "binned/binary_periods.json",
+      "tier": "B",
+      "format": "binned1d",
+      "label": "Des étoiles qui tournent l’une autour de l’autre",
+      "helpText": "Pour une partie des étoiles doubles, Gaia a mesuré combien de temps elles mettent à faire un tour. Les tours courts se voient quand la lumière baisse, les tours moyens quand la vitesse oscille, les tours longs quand l’étoile zigzague dans le ciel.\n\nLe bandeau compte 813 687 étoiles doubles. Beaucoup n’ont qu’un signe de mouvement : Gaia n’a pas encore fermé leur orbite, et elles n’apparaissent pas ici.",
+      "count": 442043,
+      "sourceNote": "gaiadr3.nss_two_body_orbit, période orbitale"
+    },
+    {
       "id": "giant_orbits",
       "path": "exoplanets/giant_orbits.json",
       "tier": "C",

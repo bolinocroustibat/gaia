@@ -86,5 +86,8 @@ export async function loadPanel(
 	if (kind === "galaxy-distances") {
 		return { kind, bins: await loadJson(relativePath) }
 	}
+	if (kind === "binary-periods") {
+		return { kind, bins: await loadJson(relativePath) }
+	}
 	return { kind, table: await loadColumnar(relativePath) }
 }

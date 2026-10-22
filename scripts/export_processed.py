@@ -10,6 +10,16 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from gaia_export.archive import ArchiveError
+from gaia_export.binaries import (
+    HELP as BINARY_PERIODS_HELP,
+)
+from gaia_export.binaries import (
+    LABEL as BINARY_PERIODS_LABEL,
+)
+from gaia_export.binaries import (
+    binary_period_count,
+    export_binary_periods,
+)
 from gaia_export.binned import (
     HR_ABSOLUTE_SOURCE,
     fetch_hr_absolute_histogram,
@@ -82,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--fetch-gaia",
         action="store_true",
-        help="Refresh summary counts, disk samples, the absolute-magnitude diagram, and galaxy distances from Gaia Archive",
+        help="Refresh summary counts, disk samples, the absolute-magnitude diagram, galaxy distances, and binary periods from Gaia Archive",
     )
     parser.add_argument(
         "--fetch-exoplanets",
@@ -146,6 +156,7 @@ def main(argv: list[str] | None = None) -> int:
         write_hr_diagram_bins(hr_path, counts=counts, source=HR_ABSOLUTE_SOURCE)
         hr_partial.unlink(missing_ok=True)
         export_galaxy_distances(binned_dir / "galaxy_distances.json")
+        export_binary_periods(binned_dir / "binary_periods.json")
 
     if args.fetch_exoplanets:
         orbit_count = export_giant_orbits(orbits_path)
@@ -206,6 +217,21 @@ def main(argv: list[str] | None = None) -> int:
             },
         ]
     )
+
+    binary_count = binary_period_count(binned_dir / "binary_periods.json")
+    if binary_count:
+        datasets.append(
+            {
+                "id": "binary_periods",
+                "path": "binned/binary_periods.json",
+                "tier": "B",
+                "format": "binned1d",
+                "label": BINARY_PERIODS_LABEL,
+                "helpText": BINARY_PERIODS_HELP,
+                "count": binary_count,
+                "sourceNote": "gaiadr3.nss_two_body_orbit, période orbitale",
+            }
+        )
 
     orbit_count = giant_orbits_count(orbits_path)
     if orbit_count:

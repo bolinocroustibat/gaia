@@ -89,6 +89,18 @@ export type DistanceHistogram = {
 	counts: number[]
 }
 
+export type PeriodSeries = {
+	id: string
+	counts: number[]
+}
+
+export type PeriodHistogram = {
+	period: { id: string; unit: string; edges: number[] }
+	series: PeriodSeries[]
+	solutions: number
+	sources?: number
+}
+
 export type SectionKind =
 	| "kpi"
 	| "hr"
@@ -96,6 +108,7 @@ export type SectionKind =
 	| "funnel"
 	| "orbits"
 	| "galaxy-distances"
+	| "binary-periods"
 
 export type PanelPayload =
 	| { kind: "kpi" | "funnel"; summary: SummaryFile }
@@ -103,3 +116,4 @@ export type PanelPayload =
 	| { kind: "galaxy-3d"; table: ColumnarTable }
 	| { kind: "orbits"; planets: OrbitPlanet[] }
 	| { kind: "galaxy-distances"; bins: DistanceHistogram }
+	| { kind: "binary-periods"; bins: PeriodHistogram }

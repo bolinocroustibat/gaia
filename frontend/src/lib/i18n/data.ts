@@ -27,6 +27,12 @@ const datasetEn: Record<
 			"On its own, the Gaia telescope says a little about exoplanets, and almost nothing about the smaller ones. It only records how stars move and how bright they are, and from that one can sometimes infer that an exoplanet is there. Gaia’s data can be filled in with NASA’s catalogue of confirmed exoplanets.\n\nHow far from their star do giant exoplanets orbit?",
 		sourceNote: "NASA Exoplanet Archive, confirmed planets (pscomppars)",
 	},
+	binary_periods: {
+		label: "Stars that orbit one another",
+		helpText:
+			"For some of the binary stars, Gaia measured how long they take to complete one orbit. Short orbits show up when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.\n\nThe strip counts 813,687 binary stars. For many of them Gaia has only seen a hint of motion: the orbit is not closed yet, and they stay out of this diagram.",
+		sourceNote: "gaiadr3.nss_two_body_orbit, orbital period",
+	},
 	hr_diagram_bins: {
 		label: "Three star families",
 		helpText:

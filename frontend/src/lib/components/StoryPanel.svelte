@@ -1,4 +1,5 @@
 <script lang="ts">
+import { binaryPeriodPlot } from "../charts/binaryPeriods"
 import { funnelRows } from "../charts/funnel"
 import { galaxyDistancePlot } from "../charts/galaxyDistances"
 import { hrPlot } from "../charts/hr"
@@ -85,6 +86,11 @@ const distanceView = $derived(
 		? { bins: payload.bins, locale: localeState.value }
 		: null,
 )
+const binaryView = $derived(
+	payload?.kind === "binary-periods"
+		? { bins: payload.bins, locale: localeState.value }
+		: null,
+)
 </script>
 
 <div bind:this={host}>
@@ -98,6 +104,8 @@ const distanceView = $derived(
     <PlotFrame data={orbitView} render={orbitPlot} />
   {:else if distanceView}
     <PlotFrame data={distanceView} render={galaxyDistancePlot} />
+  {:else if binaryView}
+    <PlotFrame data={binaryView} render={binaryPeriodPlot} />
   {:else if payload?.kind === "galaxy-3d"}
     <GalaxyCloud table={payload.table} />
   {:else if failed}

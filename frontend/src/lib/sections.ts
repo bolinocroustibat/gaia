@@ -10,7 +10,7 @@ export type StoryPanel = {
 export type StoryGroup = {
 	type: "group"
 	id: string
-	titleKey: "sectionGalaxies"
+	titleKey: "sectionGalaxies" | "sectionBinaries"
 	children: Omit<StoryPanel, "type">[]
 }
 
@@ -19,6 +19,12 @@ export type StoryItem = StoryPanel | StoryGroup
 export const storyItems: StoryItem[] = [
 	{ type: "panel", id: "catalog_totals", kind: "kpi" },
 	{ type: "panel", id: "hr_diagram_bins", kind: "hr" },
+	{
+		type: "group",
+		id: "binaries",
+		titleKey: "sectionBinaries",
+		children: [{ id: "binary_periods", kind: "binary-periods" }],
+	},
 	{ type: "panel", id: "giant_orbits", kind: "orbits" },
 	{
 		type: "group",

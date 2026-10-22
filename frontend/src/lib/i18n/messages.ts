@@ -11,6 +11,7 @@ export const messages = {
 		siteHeroAlt:
 			"Le télescope spatial Gaia, vu de trois quarts sur fond d’étoiles",
 		sectionGalaxies: "Des galaxies",
+		sectionBinaries: "Étoiles binaires",
 		ledeFallback:
 			"Ses mesures sont publiques, et de nouvelles données sont publiées régulièrement. Voici ce qu’on peut y voir aujourd’hui.",
 		catalogLoadFailed: "Le catalogue n’a pas pu être chargé.",
@@ -66,6 +67,13 @@ export const messages = {
 		galaxyNearby: "Galaxies voisines",
 		galaxyDistanceLegend:
 			"0,2 veut dire que la lumière est étirée d'un cinquième. La foule lointaine est celle que Gaia arrive encore à situer, pas un recensement de l'Univers.",
+		binaryPeriodAxis: "Durée d’un tour",
+		binaryEclipse: "Éclipse",
+		binarySpectrum: "Spectre",
+		binaryBoth: "Les deux",
+		binaryPosition: "Position",
+		binaryPeriodLegend:
+			"{count} orbites dont Gaia a publié la durée d’un tour. Le bandeau compte aussi les étoiles doubles dont on ne voit encore qu’un signe de mouvement.",
 	},
 	en: {
 		siteTitle: "What has the Gaia space telescope seen?",
@@ -77,6 +85,7 @@ export const messages = {
 		siteHeroAlt:
 			"The Gaia space telescope, seen from an angle against a star field",
 		sectionGalaxies: "Galaxies",
+		sectionBinaries: "Binary stars",
 		ledeFallback:
 			"Its measurements are public, and new data is published regularly. Here is what we can see in them today.",
 		catalogLoadFailed: "The catalogue could not be loaded.",
@@ -129,6 +138,13 @@ export const messages = {
 		galaxyNearby: "Nearby galaxies",
 		galaxyDistanceLegend:
 			"0.2 means the light is stretched by a fifth. The distant crowd is the one Gaia can still place, not a census of the Universe.",
+		binaryPeriodAxis: "Time for one orbit",
+		binaryEclipse: "Eclipse",
+		binarySpectrum: "Spectrum",
+		binaryBoth: "Both",
+		binaryPosition: "Position",
+		binaryPeriodLegend:
+			"{count} orbits whose length Gaia published. The strip also counts binary stars that only show a hint of motion.",
 	},
 } as const
 

@@ -19,6 +19,7 @@ DR3_EXTRACTS = frozenset(
         "milky_way_disk",
         "hr_diagram",
         "galaxy_distances",
+        "binary_periods",
         "qso_pure",
         "catalog_counts",
     }

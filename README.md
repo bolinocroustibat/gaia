@@ -27,7 +27,7 @@ Regenerate locally:
 
 ```bash
 uv run scripts/export_processed.py              # galaxies; keeps the colour–luminosity diagram already on disk
-uv run scripts/export_processed.py --fetch-gaia # + archive counts, disk star sample, absolute-magnitude diagram
+uv run scripts/export_processed.py --fetch-gaia # + archive counts, disk star sample, absolute-magnitude diagram, galaxy distances, binary periods
 uv run scripts/export_processed.py --release dr4 --fetch-companions
 ```
 
