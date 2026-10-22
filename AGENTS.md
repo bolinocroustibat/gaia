@@ -23,9 +23,9 @@ Fix first, then confirm the same checks as CI pass. Do not commit with remaining
 ### Python (Ruff, repo root)
 
 ```bash
-uv run ruff check --extend-select I --fix .
+uv run ruff check --fix .
 uv run ruff format .
-uv run ruff check --extend-select I .
+uv run ruff check .
 uv run ruff format --check .
 ```
 

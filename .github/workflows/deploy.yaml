@@ -52,11 +52,11 @@ jobs:
         run: uv sync --all-groups
 
       - name: Lint and format Python and sort imports
-        # ruff check --extend-select I . : check linting and imports sorting without fixing (to fix, use --fix)
+        # ruff check . : check linting, including import sorting, without fixing (to fix, use --fix)
         # ruff format --check . : check code formatting without fixing (to fix, remove --check)
         run: |
           uv run ruff --version
-          uv run ruff check --extend-select I .
+          uv run ruff check .
           uv run ruff format --check .
 
       - name: Type check Python
