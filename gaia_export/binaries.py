@@ -18,16 +18,12 @@ from gaia_export.validate import check_file_size
 # 0.1 dex in log10(period in days). Bin i covers [10^(i/10), 10^((i+1)/10)).
 BIN_PER_DEX = 10
 
-LABEL = "Des étoiles qui tournent l’une autour de l’autre"
+LABEL = "Comment Gaia les voit-elle tourner ?"
 HELP = (
-    "Pour une partie des étoiles binaires, Gaia a mesuré combien de temps les deux "
-    "étoiles mettent à faire un tour l’une autour de l’autre. Les tours courts se "
-    "voient quand la lumière baisse, les tours moyens quand la vitesse oscille, "
-    "les tours longs quand l’étoile zigzague dans le ciel.\n\n"
-    "Gaia a repéré 813\u202f687 étoiles binaires probables. "
-    "Pour beaucoup d’entre elles, elle a seulement vu l’étoile dévier de sa "
-    "trajectoire, sans l’observer assez longtemps pour mesurer un tour complet. "
-    "Ces étoiles n’apparaissent pas ici."
+    "Une étoile binaire, ce sont deux étoiles liées par la gravité, qui tournent "
+    "l’une autour de l’autre. Gaia les voit tourner de trois façons, selon la "
+    "durée d’un tour : les tours courts quand la lumière baisse, les tours moyens "
+    "quand la vitesse oscille, les tours longs quand l’étoile zigzague dans le ciel."
 )
 
 # Stack order in the chart: short eclipses at the bottom, slow sky wobble above,

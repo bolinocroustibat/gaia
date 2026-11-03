@@ -45,9 +45,9 @@ const datasetEn: Record<
 			"When a planet passes in front of its star, the light dips: the deeper the dip, the bigger the planet. Gaia can only size this way the planets that pass in front of their star as seen from Earth.",
 	},
 	binary_periods: {
-		label: "Stars that orbit one another",
+		label: "How does Gaia see them orbit?",
 		helpText:
-			"For some of the binary stars, Gaia measured how long the two stars take to go once around each other. Short orbits show up when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.\n\nGaia spotted 813,687 likely binary stars. For many of them, it has only seen the star drift off its path, without watching it long enough to measure a full orbit. Those stars do not appear here.",
+			"A binary star is two stars bound by gravity, orbiting each other. Gaia sees them orbit in three ways, depending on how long one orbit takes: short orbits when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.",
 		sourceNote: "gaiadr3.nss_two_body_orbit, orbital period",
 	},
 	hr_diagram_bins: {
