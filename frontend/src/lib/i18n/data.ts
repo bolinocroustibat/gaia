@@ -30,7 +30,7 @@ const datasetEn: Record<
 	binary_periods: {
 		label: "Stars that orbit one another",
 		helpText:
-			"For some of the binary stars, Gaia measured how long the two stars take to go once around each other. Short orbits show up when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.\n\nThe first chart on the page counts 813,687 likely binary stars. For many of them, Gaia has only seen the star drift off its path: it has not watched it long enough to measure a full orbit, so it does not appear here.",
+			"For some of the binary stars, Gaia measured how long the two stars take to go once around each other. Short orbits show up when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.\n\nGaia spotted 813,687 likely binary stars. For many of them, it has only seen the star drift off its path, without watching it long enough to measure a full orbit. Those stars do not appear here.",
 		sourceNote: "gaiadr3.nss_two_body_orbit, orbital period",
 	},
 	hr_diagram_bins: {
