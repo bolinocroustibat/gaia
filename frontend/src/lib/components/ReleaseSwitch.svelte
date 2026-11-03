@@ -1,35 +1,46 @@
 <script lang="ts">
 import { localeState } from "../i18n/locale.svelte"
 import { t } from "../i18n/messages"
-import type { ReleaseId } from "../types"
 
-const RELEASES: { id: ReleaseId; label: string }[] = [
+/** One position of the switch. `hint` is shown on hover even when enabled. */
+export type SwitchOption = { id: string; label: string; hint?: string }
+
+const RELEASES: SwitchOption[] = [
 	{ id: "dr3", label: "DR3" },
 	{ id: "dr4", label: "DR4" },
 ]
 
 let {
+	options = RELEASES,
 	available,
 	value,
 	onchange,
 }: {
-	available: ReleaseId[]
-	value: ReleaseId
-	onchange: (release: ReleaseId) => void
+	options?: SwitchOption[]
+	available: string[]
+	value: string
+	onchange: (id: string) => void
 } = $props()
 
 const uid = $props.id()
 
 // Tooltip opened by a tap, for touch screens without hover.
-let tapped = $state<ReleaseId | null>(null)
+let tapped = $state<string | null>(null)
 
-function unavailableText(release: { id: ReleaseId; label: string }): string {
+function unavailableText(option: SwitchOption): string {
 	const loc = localeState.value
-	if (release.id === "dr4") return t(loc, "releaseDr4Pending")
+	if (option.id === "dr4") return t(loc, "releaseDr4Pending")
 	return t(loc, "releaseUnavailable").replace(
 		"{release}",
-		`Gaia ${release.label}`,
+		`Gaia ${option.label}`,
 	)
+}
+
+function tooltipText(
+	option: SwitchOption,
+	enabled: boolean,
+): string | undefined {
+	return enabled ? option.hint : unavailableText(option)
 }
 </script>
 
@@ -38,32 +49,31 @@ function unavailableText(release: { id: ReleaseId; label: string }): string {
   role="group"
   aria-label={t(localeState.value, "releaseSwitch")}
 >
-  {#each RELEASES as release (release.id)}
-    {@const enabled = available.includes(release.id)}
-    {@const tipId = `${uid}-${release.id}-tip`}
+  {#each options as option (option.id)}
+    {@const enabled = available.includes(option.id)}
+    {@const tip = tooltipText(option, enabled)}
+    {@const tipId = `${uid}-${option.id}-tip`}
     <button
       type="button"
-      class:active={value === release.id}
-      class:tapped={tapped === release.id}
-      aria-pressed={value === release.id}
+      class:active={value === option.id}
+      class:tapped={tapped === option.id}
+      aria-pressed={value === option.id}
       aria-disabled={enabled ? undefined : "true"}
-      aria-describedby={enabled ? undefined : tipId}
+      aria-describedby={tip ? tipId : undefined}
       onclick={() => {
         if (!enabled) {
-          tapped = tapped === release.id ? null : release.id
+          tapped = tapped === option.id ? null : option.id
           return
         }
-        if (release.id !== value) onchange(release.id)
+        if (option.id !== value) onchange(option.id)
       }}
       onblur={() => {
-        if (tapped === release.id) tapped = null
+        if (tapped === option.id) tapped = null
       }}
     >
-      {release.label}
-      {#if !enabled}
-        <span class="tooltip" role="tooltip" id={tipId}>
-          {unavailableText(release)}
-        </span>
+      {option.label}
+      {#if tip}
+        <span class="tooltip" role="tooltip" id={tipId}>{tip}</span>
       {/if}
     </button>
   {/each}

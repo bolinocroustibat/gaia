@@ -10,7 +10,7 @@ import { localizedDataset } from "./lib/i18n/data"
 import { localeState } from "./lib/i18n/locale.svelte"
 import { footerLinks, t } from "./lib/i18n/messages"
 import { loadManifest } from "./lib/load"
-import { storyItems } from "./lib/sections"
+import { type StoryViews, storyItems } from "./lib/sections"
 import type { DatasetMeta, Manifest, ReleaseId } from "./lib/types"
 
 let manifest = $state.raw<Manifest | null>(null)
@@ -41,7 +41,7 @@ const variants = $derived.by(() => {
 	return byId
 })
 
-let selected = $state<Record<string, ReleaseId>>({})
+let selected = $state<Record<string, string>>({})
 
 function releasesOf(id: string): ReleaseId[] {
 	return (variants.get(id) ?? []).flatMap((dataset) =>
@@ -58,8 +58,32 @@ function pick(id: string): DatasetMeta | undefined {
 	)
 }
 
-function choose(id: string, release: ReleaseId): void {
+function choose(id: string, release: string): void {
 	selected = { ...selected, [id]: release }
+}
+
+// Section-wide switch: a position is available once one of its charts is.
+function viewsAvailable(item: StoryViews): string[] {
+	return item.options
+		.filter((option) =>
+			(item.views[option.id] ?? []).some((child) => variants.has(child.id)),
+		)
+		.map((option) => option.id)
+}
+
+function currentView(item: StoryViews): string {
+	const available = viewsAvailable(item)
+	const chosen = selected[item.id]
+	if (chosen && available.includes(chosen)) return chosen
+	return available[0] ?? item.options[0]?.id ?? ""
+}
+
+function viewOptions(item: StoryViews) {
+	return item.options.map((option) => ({
+		id: option.id,
+		label: t(localeState.value, option.labelKey),
+		hint: option.hintKey ? t(localeState.value, option.hintKey) : undefined,
+	}))
 }
 
 $effect(() => {
@@ -106,7 +130,7 @@ $effect(() => {
   {#if failed}
     <p class="pending">{t(localeState.value, "catalogLoadFailed")}</p>
   {:else if manifest}
-    {#each storyItems as item (item.type === "group" ? item.id : item.id)}
+    {#each storyItems as item (item.id)}
       {#if item.type === "panel"}
         {@const meta = pick(item.id)}
         {#if meta}
@@ -121,6 +145,56 @@ $effect(() => {
               {@render releaseControls(item.id, meta)}
             {/snippet}
             <StoryPanel kind={item.kind} path={meta.path} />
+          </Section>
+        {/if}
+      {:else if item.type === "views"}
+        {@const lead = pick(item.lead)}
+        {#if lead}
+          {@const view = currentView(item)}
+          {@const leadCopy = localizedDataset(localeState.value, lead)}
+          {@const helpKey = item.helpKeys[view]}
+          {@const children = (item.views[view] ?? []).filter((child) =>
+            variants.has(child.id),
+          )}
+          <Section
+            id={item.id}
+            title={leadCopy.label}
+            help={helpKey ? t(localeState.value, helpKey) : leadCopy.helpText}
+          >
+            {#snippet controls()}
+              <ReleaseSwitch
+                options={viewOptions(item)}
+                available={viewsAvailable(item)}
+                value={view}
+                onchange={(next) => choose(item.id, next)}
+              />
+            {/snippet}
+            {#if (item.views[view] ?? []).length === 1 && children[0]}
+              {@const meta = pick(children[0].id)}
+              {#if meta}
+                <StoryPanel
+                  kind={children[0].kind}
+                  path={meta.path}
+                  comparePath={meta.comparePath}
+                />
+              {/if}
+            {:else}
+              <div class="views">
+                {#each children as child (child.id)}
+                  {@const meta = pick(child.id)}
+                  {#if meta}
+                    {@const copy = localizedDataset(localeState.value, meta)}
+                    <Subsection id={child.id} title={copy.label} help={copy.helpText}>
+                      <StoryPanel
+                        kind={child.kind}
+                        path={meta.path}
+                        comparePath={meta.comparePath}
+                      />
+                    </Subsection>
+                  {/if}
+                {/each}
+              </div>
+            {/if}
           </Section>
         {/if}
       {:else}
@@ -273,6 +347,11 @@ $effect(() => {
     color: var(--muted);
     font-family: var(--font-mono);
     letter-spacing: 0.14em;
+  }
+
+  .views {
+    display: grid;
+    gap: clamp(3rem, 7vw, 4.5rem);
   }
 
   footer {

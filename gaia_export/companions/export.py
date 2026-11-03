@@ -25,6 +25,10 @@ _ROUND = {
     "companion_mass_mjup": 4,
     "radial_semi_amplitude": 4,
     "transit_depth_mmag": 3,
+    "host_mass_msun": 4,
+    "host_radius_rsun": 4,
+    "semi_major_axis_au": 4,
+    "planet_radius_rjup": 4,
 }
 
 
@@ -76,12 +80,21 @@ def write_companions(
     return count
 
 
-def export_planet_candidates(path: Path, *, release: Release = DR4) -> int:
-    """Query the three DR4 tables and write the planetary subset."""
-    records = [
+def fetch_planet_candidates(release: Release = DR4) -> list[dict[str, Any]]:
+    """Query the three DR4 tables and keep the planetary subset."""
+    records: list[dict[str, Any]] = [
         *select_planets(fetch_astrometry_rows(release)),
         *select_planets(fetch_radial_rows(release)),
         *fetch_transit_records(release),
     ]
     records.sort(key=sort_key)
-    return write_companions(path, records, release=release)
+    return records
+
+
+def export_planet_candidates(
+    path: Path, *, release: Release = DR4
+) -> list[dict[str, Any]]:
+    """Write the planetary subset and return its rows."""
+    records = fetch_planet_candidates(release)
+    write_companions(path, records, release=release)
+    return records

@@ -2,7 +2,8 @@
 
 Column names follow the Gaia DR4 draft data model of 2026-06-26, sections 10.8
 (``nss_two_body_orbit``) and 10.3 (``nss_masses``). ``semi_major_axis`` is the
-angular size of the photocentre orbit, in mas. ``OrbitalPoorlyConstrained`` and
+angular size of the photocentre orbit, in mas. ``m1`` is the host mass in solar
+masses; the draft model lists it next to ``m2``. ``OrbitalPoorlyConstrained`` and
 ``OrbitalAlternative`` are omitted: the draft model describes them as
 low-significance or alternative solutions.
 """
@@ -48,6 +49,7 @@ SELECT
   o.period,
   o.semi_major_axis,
   m.combination_method,
+  m.m1,
   m.m2,
   m.m2_lower,
   m.m2_upper
@@ -91,6 +93,7 @@ def fetch_astrometry_rows(release: Release = DR4) -> list[dict[str, Any]]:
                 "period_day": optional_float(row["period"]),
                 "separation": optional_float(row["semi_major_axis"]),
                 "separation_unit": "mas",
+                "m1_solar": optional_float(row["m1"]),
                 "m2_solar": optional_float(row["m2"]),
                 "m2_lower_solar": optional_float(row["m2_lower"]),
                 "m2_upper_solar": optional_float(row["m2_upper"]),

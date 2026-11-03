@@ -41,6 +41,7 @@ SELECT
   r.period,
   r.semi_amplitude_primary,
   m.combination_method,
+  m.m1,
   m.m2,
   m.m2_lower,
   m.m2_upper
@@ -69,6 +70,7 @@ def fetch_radial_rows(release: Release = DR4) -> list[dict[str, Any]]:
                 "solution_type": "LIA",
                 "combination_method": optional_text(row["combination_method"]),
                 "period_day": optional_float(row["period"]),
+                "m1_solar": optional_float(row["m1"]),
                 "m2_solar": optional_float(row["m2"]),
                 "m2_lower_solar": optional_float(row["m2_lower"]),
                 "m2_upper_solar": optional_float(row["m2_upper"]),

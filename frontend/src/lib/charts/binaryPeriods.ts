@@ -12,26 +12,43 @@ const marginBottom = 58
 const marginLeft = 52
 const marginTop = 28
 
-// Stack and legend order, bottom to top: the three signs, then their mix.
-const seriesOrder = ["eclipse", "spectrum", "position", "both"] as const
+/** One stacked series: its id in the data file, its colour, its legend. */
+export type PeriodSeries = { id: string; fill: string; labelKey: MessageKey }
 
-type SeriesId = (typeof seriesOrder)[number]
-
-// Site neons. Violet and cyan are close for deuteranopes, so violet goes on
-// eclipses: lime always sits between them in the stack. Every pair that
-// touches is >= 10 OKLab ΔE apart under colour blindness.
-const seriesFill: Record<SeriesId, string> = {
-	eclipse: theme.violet,
-	spectrum: theme.accent,
-	position: theme.cyan,
-	both: theme.pink,
+export type StackedPeriodConfig = {
+	/** Stack and legend order, bottom to top. */
+	series: PeriodSeries[]
+	countAxisKey: MessageKey
+	captionKey: MessageKey
 }
 
-const seriesLabel: Record<SeriesId, MessageKey> = {
-	eclipse: "binaryEclipse",
-	spectrum: "binarySpectrum",
-	both: "binaryBoth",
-	position: "binaryPosition",
+// Site neons, bottom to top: the three signs, then their mix. Violet and cyan
+// are close for deuteranopes, so violet goes first: lime always sits between
+// them in the stack. Every pair that touches is >= 10 OKLab ΔE apart under
+// colour blindness.
+const binaryConfig: StackedPeriodConfig = {
+	series: [
+		{ id: "eclipse", fill: theme.violet, labelKey: "binaryEclipse" },
+		{ id: "spectrum", fill: theme.accent, labelKey: "binarySpectrum" },
+		{ id: "position", fill: theme.cyan, labelKey: "binaryPosition" },
+		{ id: "both", fill: theme.pink, labelKey: "binaryBoth" },
+	],
+	countAxisKey: "binaryCountAxis",
+	captionKey: "binaryPeriodLegend",
+}
+
+/** Gaia DR4 planet detection methods: the binary-star signs, colours, order. */
+export const planetSeries: PeriodSeries[] = [
+	{ id: "transit", fill: theme.violet, labelKey: "planetTransit" },
+	{ id: "radial", fill: theme.accent, labelKey: "binarySpectrum" },
+	{ id: "astrometry", fill: theme.cyan, labelKey: "binaryPosition" },
+	{ id: "both", fill: theme.pink, labelKey: "binaryBoth" },
+]
+
+const planetConfig: StackedPeriodConfig = {
+	series: planetSeries,
+	countAxisKey: "planetCountAxis",
+	captionKey: "planetPeriodLegend",
 }
 
 type Bar = {
@@ -40,8 +57,7 @@ type Bar = {
 	y0: number
 	y1: number
 	count: number
-	series: SeriesId
-	fill: string
+	series: PeriodSeries
 }
 
 export type BinaryPeriodPlotInput = {
@@ -50,6 +66,7 @@ export type BinaryPeriodPlotInput = {
 }
 
 const tickMarks = [
+	{ days: 1 / 24, fr: "1 heure", en: "1 hour" },
 	{ days: 1, fr: "1 jour", en: "1 day" },
 	{ days: 10, fr: "10 jours", en: "10 days" },
 	{ days: YEAR_DAYS, fr: "1 an", en: "1 year" },
@@ -67,7 +84,7 @@ function formatAmount(value: number, locale: Locale, digits: number): string {
 	}).format(value)
 }
 
-function formatPeriod(days: number, locale: Locale): string {
+export function formatPeriod(days: number, locale: Locale): string {
 	if (days >= YEAR_DAYS) {
 		const years = days / YEAR_DAYS
 		const text = formatAmount(years, locale, years >= 10 ? 0 : 1)
@@ -83,7 +100,7 @@ function formatPeriod(days: number, locale: Locale): string {
 	return `${text} ${days >= 2 ? "days" : "day"}`
 }
 
-function barsFrom(bins: PeriodHistogram): Bar[] {
+function barsFrom(bins: PeriodHistogram, order: PeriodSeries[]): Bar[] {
 	const edges = bins.period.edges
 	const byId = new Map(bins.series.map((series) => [series.id, series.counts]))
 	const bars: Bar[] = []
@@ -93,18 +110,10 @@ function barsFrom(bins: PeriodHistogram): Bar[] {
 		const p1 = edges[index + 1] ?? p0
 		if (p0 <= 0 || p1 <= p0) continue
 		let y0 = 0
-		for (const series of seriesOrder) {
-			const count = byId.get(series)?.[index] ?? 0
+		for (const series of order) {
+			const count = byId.get(series.id)?.[index] ?? 0
 			if (count <= 0) continue
-			bars.push({
-				p0,
-				p1,
-				y0,
-				y1: y0 + count,
-				count,
-				series,
-				fill: seriesFill[series],
-			})
+			bars.push({ p0, p1, y0, y1: y0 + count, count, series })
 			y0 += count
 		}
 	}
@@ -117,7 +126,7 @@ function stackedMax(bars: Bar[]): number {
 
 function tip(bar: Bar, locale: Locale): string {
 	const count = formatCount(bar.count, locale)
-	const label = t(locale, seriesLabel[bar.series])
+	const label = t(locale, bar.series.labelKey)
 	const span = `${formatPeriod(bar.p0, locale)} – ${formatPeriod(bar.p1, locale)}`
 	return `${count} · ${label} · ${span}`
 }
@@ -126,10 +135,25 @@ export function binaryPeriodPlot(
 	input: BinaryPeriodPlotInput,
 	width: number,
 ): HTMLElement {
+	return stackedPeriodPlot(input, width, binaryConfig)
+}
+
+export function planetPeriodPlot(
+	input: BinaryPeriodPlotInput,
+	width: number,
+): HTMLElement {
+	return stackedPeriodPlot(input, width, planetConfig)
+}
+
+function stackedPeriodPlot(
+	input: BinaryPeriodPlotInput,
+	width: number,
+	config: StackedPeriodConfig,
+): HTMLElement {
 	const { bins, locale } = input
 	const edges = bins.period.edges
 	const height = Math.round(Math.min(440, Math.max(300, width * 0.48)))
-	const bars = barsFrom(bins)
+	const bars = barsFrom(bins, config.series)
 	const domainMin = edges[0] ?? 0.1
 	const domainMax = edges[edges.length - 1] ?? 1
 	const ticks = tickMarks.filter(
@@ -156,7 +180,7 @@ export function binaryPeriodPlot(
 		},
 		y: {
 			domain: [0, maxCount * 1.08],
-			label: t(locale, "binaryCountAxis"),
+			label: t(locale, config.countAxisKey),
 			labelArrow: false,
 			grid: false,
 			tickFormat: (value: number) => formatCompact(value, locale),
@@ -184,7 +208,7 @@ export function binaryPeriodPlot(
 				x2: (bar: Bar) => Math.log10(bar.p1),
 				y1: "y0",
 				y2: "y1",
-				fill: "fill",
+				fill: (bar: Bar) => bar.series.fill,
 				insetLeft: 0.4,
 				insetRight: 0.4,
 				title: (bar: Bar) => tip(bar, locale),
@@ -196,16 +220,16 @@ export function binaryPeriodPlot(
 	figure.className = "binary-figure"
 	const legend = document.createElement("ul")
 	legend.className = "binary-legend"
-	for (const series of seriesOrder) {
+	for (const series of config.series) {
 		const item = document.createElement("li")
 		const swatch = document.createElement("span")
 		swatch.className = "binary-swatch"
-		swatch.style.background = seriesFill[series]
-		item.append(swatch, document.createTextNode(t(locale, seriesLabel[series])))
+		swatch.style.background = series.fill
+		item.append(swatch, document.createTextNode(t(locale, series.labelKey)))
 		legend.append(item)
 	}
 	const caption = document.createElement("figcaption")
-	caption.textContent = t(locale, "binaryPeriodLegend").replace(
+	caption.textContent = t(locale, config.captionKey).replace(
 		"{count}",
 		formatCount(bins.solutions, locale),
 	)

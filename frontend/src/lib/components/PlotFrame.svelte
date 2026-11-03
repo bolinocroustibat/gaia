@@ -56,6 +56,7 @@ $effect(() => {
   .plot-host :global(.orbit-figure figcaption),
   .plot-host :global(.distance-figure figcaption),
   .plot-host :global(.binary-figure figcaption),
+  .plot-host :global(.transit-figure figcaption),
   .plot-host :global(.orbit-credit) {
     margin: 0.9rem 0 0;
     max-width: 36rem;

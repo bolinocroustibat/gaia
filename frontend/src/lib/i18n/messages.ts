@@ -51,6 +51,28 @@ export const messages = {
 		orbitLegend:
 			"La foule proche de l’étoile est celle qu’on découvre le plus facilement, pas un recensement du ciel.",
 		orbitCredit: "NASA Exoplanet Archive",
+		viewNasa: "NASA",
+		viewNasaHint:
+			"Planètes confirmées par tous les télescopes, d’après le NASA Exoplanet Archive",
+		viewDr4: "DR4",
+		exoplanetsDr4Help:
+			"Gaia DR4 publie ses propres candidates : des planètes que Gaia a trouvées seule, en voyant leur étoile zigzaguer dans le ciel, s’approcher et s’éloigner, ou perdre un peu de lumière. D’autres télescopes devront encore les confirmer.",
+		orbitLaneNasa: "Confirmées (NASA)",
+		orbitLaneGaia: "Candidates Gaia DR4",
+		orbitCompareLegend:
+			"{nasa} planètes confirmées et {gaia} candidates Gaia DR4 dont on a pu estimer la distance à leur étoile.",
+		planetMass: "{mass} masses de Jupiter",
+		planetTransit: "La lumière baisse",
+		planetCountAxis: "Nombre de planètes",
+		planetPeriodLegend:
+			"Ce graphique montre les {count} candidates dont Gaia a mesuré la durée d’un tour.",
+		transitRadiusAxis: "Rayon (rayons de Jupiter)",
+		transitJupiter: "Jupiter",
+		transitNeptune: "Neptune",
+		transitEarth: "Terre",
+		transitRadius: "{radius} rayons de Jupiter",
+		transitLegend:
+			"{count} planètes qui passent devant leur étoile, dont Gaia a pu estimer la taille.",
 		langSwitch: "Langue",
 		langFr: "Français",
 		langEn: "English",
@@ -128,6 +150,28 @@ export const messages = {
 		orbitLegend:
 			"The crowd close to the star is the one we find most easily, not a census of the sky.",
 		orbitCredit: "NASA Exoplanet Archive",
+		viewNasa: "NASA",
+		viewNasaHint:
+			"Planets confirmed by all telescopes, from the NASA Exoplanet Archive",
+		viewDr4: "DR4",
+		exoplanetsDr4Help:
+			"Gaia DR4 publishes its own candidates: planets Gaia found on its own, by seeing their star zigzag across the sky, move toward and away from us, or lose a little light. Other telescopes still have to confirm them.",
+		orbitLaneNasa: "Confirmed (NASA)",
+		orbitLaneGaia: "Gaia DR4 candidates",
+		orbitCompareLegend:
+			"{nasa} confirmed planets and {gaia} Gaia DR4 candidates whose distance to their star could be estimated.",
+		planetMass: "{mass} Jupiter masses",
+		planetTransit: "The light dips",
+		planetCountAxis: "Number of planets",
+		planetPeriodLegend:
+			"This chart shows the {count} candidates whose orbit length Gaia measured.",
+		transitRadiusAxis: "Radius (Jupiter radii)",
+		transitJupiter: "Jupiter",
+		transitNeptune: "Neptune",
+		transitEarth: "Earth",
+		transitRadius: "{radius} Jupiter radii",
+		transitLegend:
+			"{count} planets that pass in front of their star, whose size Gaia could estimate.",
 		langSwitch: "Language",
 		langFr: "Français",
 		langEn: "English",

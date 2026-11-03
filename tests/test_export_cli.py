@@ -43,3 +43,18 @@ def test_dr3_manifest_tags_gaia_datasets(tmp_path) -> None:
     assert releases.pop("giant_orbits") is None
     assert releases
     assert set(releases.values()) == {"dr3"}
+
+
+def test_dr3_export_keeps_dr4_entries(tmp_path) -> None:
+    orbits = (
+        _SCRIPT.parents[1] / "data" / "processed" / "exoplanets" / "giant_orbits.json"
+    )
+    (tmp_path / "exoplanets").mkdir()
+    shutil.copy(orbits, tmp_path / "exoplanets" / "giant_orbits.json")
+    dr4 = {"id": "planet_periods", "release": "dr4", "path": "dr4/x.json"}
+    (tmp_path / "manifest.json").write_text(json.dumps({"datasets": [dr4]}))
+
+    assert _MODULE.main(["--processed-dir", str(tmp_path)]) == 0
+    manifest = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))
+    assert dr4 in manifest["datasets"]
+    assert any(d["id"] == "giant_orbits" for d in manifest["datasets"])

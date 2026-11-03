@@ -1,8 +1,10 @@
 import * as Plot from "@observablehq/plot"
+import { formatCount } from "../format"
 import type { Locale } from "../i18n/locale.svelte"
 import { t } from "../i18n/messages"
 import { plotStyle, theme } from "../theme"
-import type { OrbitPlanet } from "../types"
+import type { OrbitCandidate, OrbitPlanet } from "../types"
+import { formatPeriod, planetSeries } from "./binaryPeriods"
 
 /** Solar-system semi-major axes, in astronomical units. */
 const landmarks = [
@@ -27,8 +29,19 @@ const monoWidth = 6.6
 
 export type OrbitPlotInput = {
 	planets: OrbitPlanet[]
+	/** Gaia DR4 candidates: drawn on a second lane under the NASA planets. */
+	candidates?: OrbitCandidate[]
 	locale: Locale
 }
+
+/** Lane centres when NASA planets and Gaia candidates share the axis. */
+const LANE_NASA = 0.6
+const LANE_GAIA = -0.6
+const LANE_SPREAD = 0.3
+/** Lane names sit above each lane's dots, clear of them. */
+const LANE_LABEL = 0.47
+
+const methodSeries = new Map(planetSeries.map((series) => [series.id, series]))
 
 function jitter(name: string): number {
 	let hash = 2166136261
@@ -92,6 +105,27 @@ function labelRows(
 	})
 }
 
+function candidateTip(candidate: OrbitCandidate, locale: Locale): string {
+	const format = new Intl.NumberFormat(localeTag(locale), {
+		maximumSignificantDigits: 3,
+	})
+	const unit = locale === "fr" ? "ua" : "AU"
+	const method = methodSeries.get(candidate.method)
+	const parts = [
+		`Gaia DR4 ${candidate.id}`,
+		`${format.format(candidate.au)} ${unit}`,
+	]
+	if (candidate.period != null)
+		parts.push(formatPeriod(candidate.period, locale))
+	if (candidate.mass != null) {
+		parts.push(
+			t(locale, "planetMass").replace("{mass}", format.format(candidate.mass)),
+		)
+	}
+	if (method) parts.push(t(locale, method.labelKey))
+	return parts.join(" · ")
+}
+
 function tip(planet: OrbitPlanet, locale: Locale): string {
 	const format = new Intl.NumberFormat(localeTag(locale), {
 		maximumSignificantDigits: 3,
@@ -105,9 +139,23 @@ function tip(planet: OrbitPlanet, locale: Locale): string {
 }
 
 export function orbitPlot(input: OrbitPlotInput, width: number): HTMLElement {
-	const { planets, locale } = input
-	const dots = planets.map((planet) => ({ ...planet, y: jitter(planet.name) }))
-	const distances = planets.map((planet) => planet.au).filter((au) => au > 0)
+	const { planets, candidates, locale } = input
+	const compare = candidates !== undefined
+	// Alone, NASA planets fill the frame; compared, they share it with Gaia.
+	const dots = planets.map((planet) => ({
+		...planet,
+		y: compare
+			? LANE_NASA + (jitter(planet.name) * LANE_SPREAD) / 0.825
+			: jitter(planet.name),
+	}))
+	const gaiaDots = (candidates ?? []).map((candidate) => ({
+		...candidate,
+		y: LANE_GAIA + (jitter(candidate.id) * LANE_SPREAD) / 0.825,
+		fill: methodSeries.get(candidate.method)?.fill ?? theme.paper,
+	}))
+	const distances = [...planets, ...(candidates ?? [])]
+		.map((planet) => planet.au)
+		.filter((au) => au > 0)
 	const lowest = Math.min(...distances, landmarks[0].au)
 	const highest = Math.max(...distances, landmarks[landmarks.length - 1].au)
 	const domain: [number, number] = [lowest / 1.35, highest * 1.35]
@@ -164,14 +212,50 @@ export function orbitPlot(input: OrbitPlotInput, width: number): HTMLElement {
 				strokeOpacity: 0.55,
 				strokeWidth: 1,
 			}),
+			// Compared, NASA planets turn neutral so lime only means one method.
 			Plot.dot(dots, {
 				x: "au",
 				y: "y",
 				r: width < 560 ? 2.1 : 2.5,
-				fill: theme.accent,
-				fillOpacity: 0.42,
+				fill: compare ? theme.paper : theme.accent,
+				fillOpacity: compare ? 0.32 : 0.42,
 				title: (planet: OrbitPlanet) => tip(planet, locale),
 			}),
+			...(compare
+				? [
+						Plot.ruleY([0], { stroke: theme.line }),
+						Plot.dot(gaiaDots, {
+							x: "au",
+							y: "y",
+							r: width < 560 ? 2.1 : 2.5,
+							fill: "fill",
+							fillOpacity: 0.75,
+							title: (candidate: OrbitCandidate) =>
+								candidateTip(candidate, locale),
+						}),
+						Plot.text(
+							[
+								{
+									label: t(locale, "orbitLaneNasa"),
+									y: LANE_NASA + LANE_LABEL,
+								},
+								{
+									label: t(locale, "orbitLaneGaia"),
+									y: LANE_GAIA + LANE_LABEL,
+								},
+							],
+							{
+								x: domain[0],
+								y: "y",
+								text: "label",
+								textAnchor: "start",
+								dx: 6,
+								fill: theme.muted,
+								fontSize: labelSize,
+							},
+						),
+					]
+				: []),
 			...marks.map((mark) =>
 				Plot.text([mark], {
 					x: "au",
@@ -211,10 +295,28 @@ export function orbitPlot(input: OrbitPlotInput, width: number): HTMLElement {
 	const figure = document.createElement("figure")
 	figure.className = "orbit-figure"
 	const caption = document.createElement("figcaption")
-	caption.textContent = t(locale, "orbitLegend")
+	caption.textContent = compare
+		? t(locale, "orbitCompareLegend")
+				.replace("{nasa}", formatCount(planets.length, locale))
+				.replace("{gaia}", formatCount(candidates.length, locale))
+		: t(locale, "orbitLegend")
 	const credit = document.createElement("p")
 	credit.className = "orbit-credit"
 	credit.textContent = t(locale, "orbitCredit")
+	if (compare) {
+		const legend = document.createElement("ul")
+		legend.className = "binary-legend"
+		for (const series of planetSeries) {
+			const item = document.createElement("li")
+			const swatch = document.createElement("span")
+			swatch.className = "binary-swatch"
+			swatch.style.background = series.fill
+			item.append(swatch, document.createTextNode(t(locale, series.labelKey)))
+			legend.append(item)
+		}
+		figure.append(svg, legend, caption, credit)
+		return figure
+	}
 	figure.append(svg, caption, credit)
 	return figure
 }

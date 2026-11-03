@@ -1,3 +1,4 @@
+import type { MessageKey } from "./i18n/messages"
 import type { SectionKind } from "./types"
 
 export type StoryPanel = {
@@ -14,7 +15,19 @@ export type StoryGroup = {
 	children: Omit<StoryPanel, "type">[]
 }
 
-export type StoryItem = StoryPanel | StoryGroup
+/** One switch for a whole section: each position shows its own charts. */
+export type StoryViews = {
+	type: "views"
+	id: string
+	/** Dataset whose label titles the section. */
+	lead: string
+	options: { id: string; labelKey: MessageKey; hintKey?: MessageKey }[]
+	/** Section help per position; the lead dataset's help when absent. */
+	helpKeys: Partial<Record<string, MessageKey>>
+	views: Record<string, Omit<StoryPanel, "type">[]>
+}
+
+export type StoryItem = StoryPanel | StoryGroup | StoryViews
 
 export const storyItems: StoryItem[] = [
 	{ type: "panel", id: "catalog_totals", kind: "kpi" },
@@ -25,7 +38,24 @@ export const storyItems: StoryItem[] = [
 		titleKey: "sectionBinaries",
 		children: [{ id: "binary_periods", kind: "binary-periods" }],
 	},
-	{ type: "panel", id: "giant_orbits", kind: "orbits" },
+	{
+		type: "views",
+		id: "exoplanets",
+		lead: "giant_orbits",
+		options: [
+			{ id: "nasa", labelKey: "viewNasa", hintKey: "viewNasaHint" },
+			{ id: "dr4", labelKey: "viewDr4" },
+		],
+		helpKeys: { dr4: "exoplanetsDr4Help" },
+		views: {
+			nasa: [{ id: "giant_orbits", kind: "orbits" }],
+			dr4: [
+				{ id: "planet_distances", kind: "planet-distances" },
+				{ id: "planet_periods", kind: "planet-periods" },
+				{ id: "transit_sizes", kind: "transit-sizes" },
+			],
+		},
+	},
 	{
 		type: "group",
 		id: "galaxies",

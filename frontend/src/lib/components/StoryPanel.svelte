@@ -1,9 +1,10 @@
 <script lang="ts">
-import { binaryPeriodPlot } from "../charts/binaryPeriods"
+import { binaryPeriodPlot, planetPeriodPlot } from "../charts/binaryPeriods"
 import { funnelRows } from "../charts/funnel"
 import { galaxyDistancePlot } from "../charts/galaxyDistances"
 import { hrPlot } from "../charts/hr"
 import { orbitPlot } from "../charts/orbits"
+import { transitSizePlot } from "../charts/transitSizes"
 import { localizedBins, localizedRows } from "../i18n/data"
 import { localeState } from "../i18n/locale.svelte"
 import { t } from "../i18n/messages"
@@ -14,7 +15,11 @@ import GalaxyCloud from "./GalaxyCloud.svelte"
 import KpiStrip from "./KpiStrip.svelte"
 import PlotFrame from "./PlotFrame.svelte"
 
-let { kind, path }: { kind: SectionKind; path: string } = $props()
+let {
+	kind,
+	path,
+	comparePath,
+}: { kind: SectionKind; path: string; comparePath?: string } = $props()
 
 let host = $state<HTMLDivElement | undefined>()
 let payload = $state.raw<PanelPayload | null>(null)
@@ -23,6 +28,7 @@ let failed = $state(false)
 $effect(() => {
 	const node = host
 	const target = path
+	const compare = comparePath
 	const panel = kind
 	if (!node) return
 	let cancelled = false
@@ -35,7 +41,7 @@ $effect(() => {
 			if (started || !entries.some((entry) => entry.isIntersecting)) return
 			started = true
 			observer.disconnect()
-			loadPanel(panel, target)
+			loadPanel(panel, target, compare)
 				.then((value) => {
 					if (!cancelled) payload = value
 				})
@@ -79,6 +85,22 @@ const hrView = $derived(
 const orbitView = $derived(
 	payload?.kind === "orbits"
 		? { planets: payload.planets, locale: localeState.value }
+		: payload?.kind === "planet-distances"
+			? {
+					planets: payload.planets,
+					candidates: payload.candidates,
+					locale: localeState.value,
+				}
+			: null,
+)
+const planetPeriodView = $derived(
+	payload?.kind === "planet-periods"
+		? { bins: payload.bins, locale: localeState.value }
+		: null,
+)
+const transitView = $derived(
+	payload?.kind === "transit-sizes"
+		? { planets: payload.planets, locale: localeState.value }
 		: null,
 )
 const distanceView = $derived(
@@ -106,6 +128,10 @@ const binaryView = $derived(
     <PlotFrame data={distanceView} render={galaxyDistancePlot} />
   {:else if binaryView}
     <PlotFrame data={binaryView} render={binaryPeriodPlot} />
+  {:else if planetPeriodView}
+    <PlotFrame data={planetPeriodView} render={planetPeriodPlot} />
+  {:else if transitView}
+    <PlotFrame data={transitView} render={transitSizePlot} />
   {:else if payload?.kind === "galaxy-3d"}
     <GalaxyCloud table={payload.table} />
   {:else if failed}

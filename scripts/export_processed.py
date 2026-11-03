@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -29,10 +30,25 @@ from gaia_export.companions import (
     export_planet_candidates,
     export_prerelease_along_scan,
 )
+from gaia_export.companions.site import (
+    PLANET_DISTANCES_PATH,
+    PLANET_PERIODS_PATH,
+    TRANSIT_SIZES_PATH,
+    dr4_exoplanet_entries,
+    site_planets,
+    write_planet_distances,
+    write_planet_periods,
+    write_transit_sizes,
+)
 from gaia_export.exoplanets import NASA_CREDIT, export_giant_orbits, giant_orbits_count
 from gaia_export.galaxies import export_local_galaxies
 from gaia_export.galaxy_distances import export_galaxy_distances, galaxy_distance_count
-from gaia_export.manifest import build_manifest, write_manifest
+from gaia_export.manifest import (
+    build_manifest,
+    entries_of_other_releases,
+    merge_release_entries,
+    write_manifest,
+)
 from gaia_export.release import DR3, DR4, UnmappedExtract, get_release
 from gaia_export.stars import (
     export_disk_stars_sample,
@@ -55,10 +71,10 @@ def _columnar_count(path: Path) -> int:
 
 
 def _export_dr4(processed_dir: Path, *, fetch_companions: bool) -> int:
-    """Write DR4 companion files. Leave the DR3 manifest untouched."""
+    """Write DR4 companion files and add their site entries to the manifest."""
     print(
         "DR4 extracts for stars, galaxies, quasars, and the HR diagram are not "
-        "remapped yet. They were not run, and manifest.json was left unchanged."
+        "remapped yet. They were not run."
     )
     if not fetch_companions:
         print("Pass --fetch-companions to write the DR4 companion files.")
@@ -72,7 +88,7 @@ def _export_dr4(processed_dir: Path, *, fetch_companions: bool) -> int:
 
     planets_path = companions_dir / "planet_candidates.json"
     try:
-        planet_count = export_planet_candidates(planets_path, release=DR4)
+        records = export_planet_candidates(planets_path, release=DR4)
     except (ArchiveError, UnmappedExtract) as exc:
         print(
             "DR4 companion tables were not read from the archive. "
@@ -80,7 +96,25 @@ def _export_dr4(processed_dir: Path, *, fetch_companions: bool) -> int:
             file=sys.stderr,
         )
         return 1
-    print(f"Planet candidates: {planet_count:,}")
+    print(f"Planet candidates: {len(records):,}")
+    return _write_dr4_exoplanet_view(processed_dir, records)
+
+
+def _write_dr4_exoplanet_view(
+    processed_dir: Path, records: list[dict[str, Any]]
+) -> int:
+    """Write the three DR4 exoplanet charts and merge their manifest entries."""
+    planets = site_planets(records)
+    distances = write_planet_distances(processed_dir / PLANET_DISTANCES_PATH, planets)
+    periods = write_planet_periods(processed_dir / PLANET_PERIODS_PATH, planets)
+    sizes = write_transit_sizes(processed_dir / TRANSIT_SIZES_PATH, planets)
+    print(
+        f"DR4 exoplanet view: {distances:,} distances, {periods:,} periods, "
+        f"{sizes:,} transit sizes"
+    )
+    entries = dr4_exoplanet_entries(distances=distances, periods=periods, sizes=sizes)
+    merge_release_entries(processed_dir / "manifest.json", DR4.id, entries)
+    print(f"Merged {len(entries)} DR4 entries into {processed_dir / 'manifest.json'}")
     return 0
 
 
@@ -297,6 +331,8 @@ def main(argv: list[str] | None = None) -> int:
         if dataset["id"] not in NON_GAIA_DATASETS:
             dataset["release"] = DR3.id
 
+    # Keep entries another release's export wrote, such as the DR4 exoplanet view.
+    datasets.extend(entries_of_other_releases(processed_dir / "manifest.json", DR3.id))
     manifest = build_manifest(datasets=datasets)
     write_manifest(processed_dir / "manifest.json", manifest)
 

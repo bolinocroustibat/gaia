@@ -27,6 +27,23 @@ const datasetEn: Record<
 			"On its own, the Gaia telescope says a little about exoplanets, and almost nothing about the smaller ones. It only records how stars move and how bright they are, and from that one can sometimes infer that an exoplanet is there. Gaia’s data can be filled in with NASA’s catalogue of confirmed exoplanets.\n\nHow far from their star do giant exoplanets orbit?",
 		sourceNote: "NASA Exoplanet Archive, confirmed planets (pscomppars)",
 	},
+	planet_distances: {
+		label: "How far from their star?",
+		helpText:
+			"At the top, giant planets confirmed by all telescopes. Below, the candidates Gaia found on its own. Gaia mostly spots planets that orbit far from their star: that is where the star zigzags the most.",
+		sourceNote:
+			"nss_two_body_orbit, rvs_two_body_orbit, vari_planetary_transit; distance from Kepler’s third law",
+	},
+	planet_periods: {
+		label: "How long does one orbit take?",
+		helpText:
+			"How long one orbit takes says how Gaia spotted the planet. Short orbits show up when the planet passes in front of its star and the light dips, long ones when the star zigzags across the sky.",
+	},
+	transit_sizes: {
+		label: "How big are they?",
+		helpText:
+			"When a planet passes in front of its star, the light dips: the deeper the dip, the bigger the planet. Gaia can only size this way the planets that pass in front of their star as seen from Earth.",
+	},
 	binary_periods: {
 		label: "Stars that orbit one another",
 		helpText:

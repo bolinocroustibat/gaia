@@ -5,6 +5,8 @@ export type ReleaseId = "dr3" | "dr4"
 export type DatasetMeta = {
 	id: string
 	release?: ReleaseId
+	/** A second file the chart compares against, such as the NASA orbits. */
+	comparePath?: string
 	path: string
 	tier: string
 	format: DatasetFormat | string
@@ -84,6 +86,24 @@ export type OrbitPlanet = {
 	period: number | null
 }
 
+/** One Gaia DR4 planet candidate placed by its distance to its star. */
+export type OrbitCandidate = {
+	id: string
+	method: string
+	au: number
+	period: number | null
+	mass: number | null
+	radius: number | null
+}
+
+/** One transiting Gaia DR4 candidate with an estimated radius. */
+export type TransitPlanet = {
+	id: string
+	au: number
+	period: number | null
+	radius: number
+}
+
 export type DistanceHistogram = {
 	cosmology: string
 	distance_kind: string
@@ -112,6 +132,9 @@ export type SectionKind =
 	| "orbits"
 	| "galaxy-distances"
 	| "binary-periods"
+	| "planet-distances"
+	| "planet-periods"
+	| "transit-sizes"
 
 export type PanelPayload =
 	| { kind: "kpi" | "funnel"; summary: SummaryFile }
@@ -120,3 +143,10 @@ export type PanelPayload =
 	| { kind: "orbits"; planets: OrbitPlanet[] }
 	| { kind: "galaxy-distances"; bins: DistanceHistogram }
 	| { kind: "binary-periods"; bins: PeriodHistogram }
+	| {
+			kind: "planet-distances"
+			planets: OrbitPlanet[]
+			candidates: OrbitCandidate[]
+	  }
+	| { kind: "planet-periods"; bins: PeriodHistogram }
+	| { kind: "transit-sizes"; planets: TransitPlanet[] }

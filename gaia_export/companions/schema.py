@@ -16,6 +16,9 @@ import numpy as np
 JUPITER_MASS_SOLAR = 9.5458e-4
 PLANET_MASS_LIMIT_JUP = 13.0
 PLANET_MASS_LIMIT_SOLAR = PLANET_MASS_LIMIT_JUP * JUPITER_MASS_SOLAR
+# IAU nominal solar and Jovian (equatorial) radii, Resolution B3 (2015).
+SOLAR_RADIUS_RJUP = 695_700 / 71_492
+YEAR_DAYS = 365.25
 
 DRAFT_DATA_MODEL = "Gaia DR4 draft data model, 2026-06-26"
 
@@ -32,6 +35,10 @@ COMPANION_COLUMNS = (
     "combined",
     "radial_semi_amplitude",
     "transit_depth_mmag",
+    "host_mass_msun",
+    "host_radius_rsun",
+    "semi_major_axis_au",
+    "planet_radius_rjup",
 )
 
 _STRING_COLUMNS = {
@@ -119,6 +126,35 @@ def planetary_mass(
     return None
 
 
+def semi_major_axis_au(
+    period_day: float | None,
+    host_mass_solar: float | None,
+    companion_mass_solar: float | None = None,
+) -> float | None:
+    """Kepler's third law: a³ = (M1 + M2) P², with a in au, P in years, M in Msun.
+
+    The companion mass is optional: a planet adds at most about 1 % to the sum.
+    """
+    if period_day is None or host_mass_solar is None:
+        return None
+    if period_day <= 0 or host_mass_solar <= 0:
+        return None
+    total = host_mass_solar + max(0.0, companion_mass_solar or 0.0)
+    return (total * (period_day / YEAR_DAYS) ** 2) ** (1 / 3)
+
+
+def planet_radius_rjup(
+    depth_mmag: float | None, host_radius_solar: float | None
+) -> float | None:
+    """Planet radius from a transit depth: Rp = R★ √δ, with δ = 1 − 10^(−mmag/2500)."""
+    if depth_mmag is None or host_radius_solar is None:
+        return None
+    if depth_mmag <= 0 or host_radius_solar <= 0:
+        return None
+    depth = 1 - 10 ** (-depth_mmag / 2500)
+    return host_radius_solar * math.sqrt(depth) * SOLAR_RADIUS_RJUP
+
+
 def solution_is_combined(solution_type: str, combination_method: str) -> bool:
     """True when the published solution mixes astrometry with spectroscopy or eclipses."""
     if solution_type.startswith(("AstroSpectro", "EclipsingSpectro")):
@@ -157,13 +193,15 @@ def select_planets(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
         solution_type = optional_text(row.get("solution_type"))
         combination_method = optional_text(row.get("combination_method"))
         separation = optional_float(row.get("separation"))
+        period_day = optional_float(row.get("period_day"))
+        host_mass = optional_float(row.get("m1_solar"))
         kept.append(
             companion_record(
                 source_id=str(row["source_id"]),
                 method=str(row["method"]),
                 solution_type=solution_type,
                 combination_method=combination_method,
-                period_day=optional_float(row.get("period_day")),
+                period_day=period_day,
                 separation=separation,
                 separation_unit=(
                     optional_text(row.get("separation_unit")) or None
@@ -174,6 +212,10 @@ def select_planets(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
                 mass_limit=mass_limit,
                 combined=solution_is_combined(solution_type, combination_method),
                 radial_semi_amplitude=optional_float(row.get("radial_semi_amplitude")),
+                host_mass_msun=host_mass,
+                semi_major_axis_au=semi_major_axis_au(
+                    period_day, host_mass, mass_mjup * JUPITER_MASS_SOLAR
+                ),
             )
         )
     return kept
@@ -184,6 +226,8 @@ def transit_candidate(
     source_id: str,
     period_day: float | None,
     depth_mmag: float | None,
+    host_mass_solar: float | None = None,
+    host_radius_solar: float | None = None,
 ) -> dict[str, Any]:
     """One row of ``vari_planetary_transit``. The table is already a candidate list."""
     return companion_record(
@@ -192,6 +236,10 @@ def transit_candidate(
         solution_type="PlanetaryTransit",
         period_day=period_day,
         transit_depth_mmag=depth_mmag,
+        host_mass_msun=host_mass_solar,
+        host_radius_rsun=host_radius_solar,
+        semi_major_axis_au=semi_major_axis_au(period_day, host_mass_solar),
+        planet_radius_rjup=planet_radius_rjup(depth_mmag, host_radius_solar),
     )
 
 
@@ -213,5 +261,13 @@ def companion_fields() -> list[dict[str, str]]:
             field["unit"] = "km/s"
         elif name == "transit_depth_mmag":
             field["unit"] = "mmag"
+        elif name == "host_mass_msun":
+            field["unit"] = "Msun"
+        elif name == "host_radius_rsun":
+            field["unit"] = "Rsun"
+        elif name == "semi_major_axis_au":
+            field["unit"] = "au"
+        elif name == "planet_radius_rjup":
+            field["unit"] = "Rjup"
         fields.append(field)
     return fields
