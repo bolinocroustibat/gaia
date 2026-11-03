@@ -17,11 +17,12 @@ const seriesOrder = ["eclipse", "spectrum", "position", "both"] as const
 
 type SeriesId = (typeof seriesOrder)[number]
 
+// Site neons, checked for colour-blind separation on every pair (OKLab ΔE ≥ 10).
 const seriesFill: Record<SeriesId, string> = {
-	eclipse: "#c4272f",
+	eclipse: theme.orange,
 	spectrum: theme.accent,
-	both: theme.muted,
-	position: theme.paper,
+	position: theme.cyan,
+	both: theme.pink,
 }
 
 const seriesLabel: Record<SeriesId, MessageKey> = {
