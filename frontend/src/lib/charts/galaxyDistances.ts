@@ -87,8 +87,7 @@ function barsFrom(bins: DistanceHistogram): Bar[] {
 		const z0 = zEdges[index] ?? 0
 		const z1 = zEdges[index + 1] ?? z0
 		const midZ = (z0 + z1) / 2
-		const linear =
-			FULL_RED_AT_Z === 0 ? 0 : Math.min(1, Math.max(0, midZ / FULL_RED_AT_Z))
+		const linear = Math.min(1, Math.max(0, midZ / FULL_RED_AT_Z))
 		const stretch = linear ** RED_RAMP_POWER
 		bars.push({
 			gly0,
