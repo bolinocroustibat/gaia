@@ -6,12 +6,14 @@ let {
 	title,
 	help,
 	caption,
+	controls,
 	children,
 }: {
 	id: string
 	title: string
 	help: string
 	caption?: string
+	controls?: Snippet
 	children: Snippet
 } = $props()
 
@@ -34,6 +36,7 @@ const paragraphs = $derived(
     {#if caption}
       <p class="caption">{caption}</p>
     {/if}
+    {@render controls?.()}
   </header>
   <div class="stage">
     {@render children()}

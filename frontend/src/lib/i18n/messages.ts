@@ -54,6 +54,10 @@ export const messages = {
 		langSwitch: "Langue",
 		langFr: "Français",
 		langEn: "English",
+		releaseSwitch: "Version du catalogue Gaia",
+		releaseUnavailable: "Pas de données {release} pour cette visualisation.",
+		releaseDr4Pending:
+			"Les données Gaia DR4 ne sont pas encore publiées. Elles le seront à partir de décembre 2026.",
 		footerSourceCode: "Code source",
 		footerGaiaCatalog: "Catalogue Gaia",
 		footerByBolino: "par bolino",
@@ -126,6 +130,10 @@ export const messages = {
 		langSwitch: "Language",
 		langFr: "Français",
 		langEn: "English",
+		releaseSwitch: "Gaia catalogue release",
+		releaseUnavailable: "No {release} data for this visualization.",
+		releaseDr4Pending:
+			"Gaia DR4 data is not published yet. It will be from December 2026.",
 		footerSourceCode: "Source code",
 		footerGaiaCatalog: "Gaia catalogue",
 		footerByBolino: "by bolino",

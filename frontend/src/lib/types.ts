@@ -1,7 +1,10 @@
 export type DatasetFormat = "summary" | "binned2d" | "columnar"
 
+export type ReleaseId = "dr3" | "dr4"
+
 export type DatasetMeta = {
 	id: string
+	release?: ReleaseId
 	path: string
 	tier: string
 	format: DatasetFormat | string

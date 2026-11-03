@@ -1,5 +1,6 @@
 <script lang="ts">
 import LanguageSwitch from "./lib/components/LanguageSwitch.svelte"
+import ReleaseSwitch from "./lib/components/ReleaseSwitch.svelte"
 import Section from "./lib/components/Section.svelte"
 import SectionGroup from "./lib/components/SectionGroup.svelte"
 import StoryPanel from "./lib/components/StoryPanel.svelte"
@@ -10,7 +11,7 @@ import { localeState } from "./lib/i18n/locale.svelte"
 import { footerLinks, t } from "./lib/i18n/messages"
 import { loadManifest } from "./lib/load"
 import { storyItems } from "./lib/sections"
-import type { Manifest } from "./lib/types"
+import type { DatasetMeta, Manifest, ReleaseId } from "./lib/types"
 
 let manifest = $state.raw<Manifest | null>(null)
 let failed = $state(false)
@@ -29,14 +30,52 @@ $effect(() => {
 	}
 })
 
-const byId = $derived(
-	new Map(manifest?.datasets.map((dataset) => [dataset.id, dataset]) ?? []),
-)
+// One manifest entry per (dataset, release); non-Gaia datasets have no release.
+const variants = $derived.by(() => {
+	const byId = new Map<string, DatasetMeta[]>()
+	for (const dataset of manifest?.datasets ?? []) {
+		const list = byId.get(dataset.id) ?? []
+		list.push(dataset)
+		byId.set(dataset.id, list)
+	}
+	return byId
+})
+
+let selected = $state<Record<string, ReleaseId>>({})
+
+function releasesOf(id: string): ReleaseId[] {
+	return (variants.get(id) ?? []).flatMap((dataset) =>
+		dataset.release ? [dataset.release] : [],
+	)
+}
+
+function pick(id: string): DatasetMeta | undefined {
+	const list = variants.get(id) ?? []
+	return (
+		list.find((dataset) => dataset.release === selected[id]) ??
+		list.find((dataset) => dataset.release === "dr3") ??
+		list[0]
+	)
+}
+
+function choose(id: string, release: ReleaseId): void {
+	selected = { ...selected, [id]: release }
+}
 
 $effect(() => {
 	document.title = t(localeState.value, "siteTitle")
 })
 </script>
+
+{#snippet releaseControls(id: string, meta: DatasetMeta)}
+  {#if meta.release}
+    <ReleaseSwitch
+      available={releasesOf(id)}
+      value={meta.release}
+      onchange={(release) => choose(id, release)}
+    />
+  {/if}
+{/snippet}
 
 <LanguageSwitch />
 
@@ -69,7 +108,7 @@ $effect(() => {
   {:else if manifest}
     {#each storyItems as item (item.type === "group" ? item.id : item.id)}
       {#if item.type === "panel"}
-        {@const meta = byId.get(item.id)}
+        {@const meta = pick(item.id)}
         {#if meta}
           {@const copy = localizedDataset(localeState.value, meta)}
           <Section
@@ -78,18 +117,24 @@ $effect(() => {
             help={copy.helpText}
             caption={item.caption}
           >
+            {#snippet controls()}
+              {@render releaseControls(item.id, meta)}
+            {/snippet}
             <StoryPanel kind={item.kind} path={meta.path} />
           </Section>
         {/if}
       {:else}
-        {@const children = item.children.filter((child) => byId.has(child.id))}
+        {@const children = item.children.filter((child) => variants.has(child.id))}
         {#if children.length}
           <SectionGroup id={item.id} title={t(localeState.value, item.titleKey)}>
             {#each children as child (child.id)}
-              {@const meta = byId.get(child.id)}
+              {@const meta = pick(child.id)}
               {#if meta}
                 {@const copy = localizedDataset(localeState.value, meta)}
                 <Subsection id={child.id} title={copy.label} help={copy.helpText}>
+                  {#snippet controls()}
+                    {@render releaseControls(child.id, meta)}
+                  {/snippet}
                   <StoryPanel kind={child.kind} path={meta.path} />
                 </Subsection>
               {/if}

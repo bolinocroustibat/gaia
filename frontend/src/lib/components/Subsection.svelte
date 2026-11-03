@@ -5,11 +5,13 @@ let {
 	id,
 	title,
 	help,
+	controls,
 	children,
 }: {
 	id: string
 	title: string
 	help: string
+	controls?: Snippet
 	children: Snippet
 } = $props()
 
@@ -31,6 +33,7 @@ const paragraphs = $derived(
         {/each}
       </div>
     {/if}
+    {@render controls?.()}
   </header>
   <div class="stage">
     {@render children()}

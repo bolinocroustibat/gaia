@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "release": "Gaia DR3",
   "generated_at": "2026-10-17T21:23:12.899638+00:00",
   "license": {
@@ -15,7 +15,8 @@
       "tier": "A",
       "format": "summary",
       "label": "Surtout des étoiles",
-      "helpText": "Presque tout ce que Gaia a recensé, ce sont des étoiles. Le reste n’en représente qu’une infime fraction."
+      "helpText": "Presque tout ce que Gaia a recensé, ce sont des étoiles. Le reste n’en représente qu’une infime fraction.",
+      "release": "dr3"
     },
     {
       "id": "galaxy_funnel",
@@ -23,7 +24,8 @@
       "tier": "A",
       "format": "summary",
       "label": "Que sait Gaia de ces millions de galaxies ?",
-      "helpText": "Pour une partie des presque 5 millions de galaxies probables que Gaia a recensées, Gaia peut estimer à quelle distance elles se trouvent. Pour certaines, elle peut mesurer aussi leur forme."
+      "helpText": "Pour une partie des presque 5 millions de galaxies probables que Gaia a recensées, Gaia peut estimer à quelle distance elles se trouvent. Pour certaines, elle peut mesurer aussi leur forme.",
+      "release": "dr3"
     },
     {
       "id": "galaxy_distances",
@@ -33,7 +35,8 @@
       "label": "À quelle distance sont-elles ?",
       "helpText": "Pour les 1 367 153 galaxies dont la distance est estimée. Plus la barre est à droite, plus leur lumière est tirée vers le rouge.",
       "count": 1367120,
-      "sourceNote": "redshift_ugc, distance parcourue par la lumière (Planck 2018)"
+      "sourceNote": "redshift_ugc, distance parcourue par la lumière (Planck 2018)",
+      "release": "dr3"
     },
     {
       "id": "hr_diagram_bins",
@@ -42,7 +45,8 @@
       "format": "binned2d",
       "label": "Trois familles d'étoiles",
       "helpText": "En observant autant d'astres, voit-on des familles se dégager ? Oui ! La plupart des objets repérés par Gaia sont des étoiles. Pour chacune, quand c'est possible, elle mesure une luminosité et une couleur. En les plaçant sur un diagramme, trois groupes nets apparaissent : trois grandes familles, qui correspondent à trois stades de la vie des étoiles.",
-      "sourceNote": "gaiadr3 absolute G magnitude for sources with a reliable parallax"
+      "sourceNote": "gaiadr3 absolute G magnitude for sources with a reliable parallax",
+      "release": "dr3"
     },
     {
       "id": "binary_periods",
@@ -52,7 +56,8 @@
       "label": "Des étoiles qui tournent l’une autour de l’autre",
       "helpText": "Pour une partie des étoiles doubles, Gaia a mesuré combien de temps elles mettent à faire un tour. Les tours courts se voient quand la lumière baisse, les tours moyens quand la vitesse oscille, les tours longs quand l’étoile zigzague dans le ciel.\n\nLe bandeau compte 813 687 étoiles doubles. Beaucoup n’ont qu’un signe de mouvement : Gaia n’a pas encore fermé leur orbite, et elles n’apparaissent pas ici.",
       "count": 442043,
-      "sourceNote": "gaiadr3.nss_two_body_orbit, période orbitale"
+      "sourceNote": "gaiadr3.nss_two_body_orbit, période orbitale",
+      "release": "dr3"
     },
     {
       "id": "giant_orbits",
@@ -64,7 +69,12 @@
       "count": 1784,
       "credit": "NASA Exoplanet Archive",
       "sourceNote": "NASA Exoplanet Archive, confirmed planets (pscomppars)",
-      "tooltipFields": ["pl_name", "hostname", "pl_orbsmax", "pl_orbper"]
+      "tooltipFields": [
+        "pl_name",
+        "hostname",
+        "pl_orbsmax",
+        "pl_orbper"
+      ]
     },
     {
       "id": "milky_way_space3d",
@@ -81,7 +91,8 @@
         "distance_pc",
         "phot_g_mean_mag"
       ],
-      "helpText": "En observant autant d'astres, voit-on une forme émerger ?\n\nSi l'on prend uniquement les objets qui sont assez proches, on voit la forme de la Voie lactée, notre galaxie, émerger."
+      "helpText": "En observant autant d'astres, voit-on une forme émerger ?\n\nSi l'on prend uniquement les objets qui sont assez proches, on voit la forme de la Voie lactée, notre galaxie, émerger.",
+      "release": "dr3"
     }
   ]
 }

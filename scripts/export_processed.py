@@ -33,7 +33,7 @@ from gaia_export.exoplanets import NASA_CREDIT, export_giant_orbits, giant_orbit
 from gaia_export.galaxies import export_local_galaxies
 from gaia_export.galaxy_distances import export_galaxy_distances, galaxy_distance_count
 from gaia_export.manifest import build_manifest, write_manifest
-from gaia_export.release import DR4, UnmappedExtract, get_release
+from gaia_export.release import DR3, DR4, UnmappedExtract, get_release
 from gaia_export.stars import (
     export_disk_stars_sample,
     export_milky_way_disk,
@@ -42,6 +42,9 @@ from gaia_export.stars import (
 )
 from gaia_export.summary import export_summary
 from gaia_export.validate import check_file_size
+
+# Datasets that do not come from a Gaia catalogue, so they carry no release.
+NON_GAIA_DATASETS = frozenset({"giant_orbits"})
 
 
 def _columnar_count(path: Path) -> int:
@@ -289,6 +292,10 @@ def main(argv: list[str] | None = None) -> int:
                 "helpText": "Sous-ensemble d'étoiles avec distance fiable, pour nuages de points.",
             }
         )
+
+    for dataset in datasets:
+        if dataset["id"] not in NON_GAIA_DATASETS:
+            dataset["release"] = DR3.id
 
     manifest = build_manifest(datasets=datasets)
     write_manifest(processed_dir / "manifest.json", manifest)

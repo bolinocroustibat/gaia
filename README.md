@@ -33,4 +33,6 @@ uv run scripts/export_processed.py --release dr4 --fetch-companions
 
 `--release dr4` does not rerun the DR3 catalogue extracts. `--fetch-companions` writes planet candidates from the DR4 orbit, transit, and radial-velocity tables, plus the along-scan series of the June 2026 pre-release (12 sources, three of them with orbits). The archive tables open with the release on 2 December 2026; the pre-release series can be fetched before that.
 
+Each Gaia dataset in the manifest carries a `release` (`"dr3"`, later `"dr4"`); datasets from other sources, such as the NASA exoplanet orbits, have none. The site shows a `DR3 | DR4` switch on every Gaia visualization and enables a release once the manifest lists an entry with the same `id` and that `release`. DR4 files should go under `data/processed/dr4/`. The DR3 export currently rewrites `manifest.json` from scratch, so a future DR4 export must add its entries to the existing manifest rather than replace it.
+
 **Licence:** [CC BY-NC 3.0 IGO](https://www.cosmos.esa.int/web/gaia-users/license) — Credit: ESA, Gaia DPAC.

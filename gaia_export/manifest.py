@@ -12,7 +12,7 @@ def build_manifest(
     *, datasets: list[dict[str, Any]], generated_at: str | None = None
 ) -> dict[str, Any]:
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "release": GAIA_RELEASE,
         "generated_at": generated_at or datetime.now(UTC).isoformat(),
         "license": {"id": LICENSE_ID, "url": LICENSE_URL},
