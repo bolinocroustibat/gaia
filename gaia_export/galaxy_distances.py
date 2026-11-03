@@ -65,9 +65,12 @@ def light_travel_gly(redshift: float) -> float:
     import numpy as np
     from astropy.cosmology import Planck18
 
-    h0 = float(Planck18.H0.value)  # km/s/Mpc
-    matter = float(Planck18.Om0)
-    dark_energy = float(Planck18.Ode0)
+    # Type checkers see a generic Cosmology without FLRW attributes; at
+    # runtime Planck18 is a FlatLambdaCDM, which has H0, Om0 and Ode0.
+    cosmology: Any = Planck18
+    h0 = float(cosmology.H0.value)  # km/s/Mpc
+    matter = float(cosmology.Om0)
+    dark_energy = float(cosmology.Ode0)
     steps = np.linspace(0.0, redshift, 801)
     expansion = np.sqrt(matter * (1.0 + steps) ** 3 + dark_energy)
     # dt = dz / ((1+z) H(z)); distance = c * t.

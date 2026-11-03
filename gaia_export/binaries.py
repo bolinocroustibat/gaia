@@ -150,14 +150,15 @@ def histogram_from_rows(rows: list[tuple[str, int, int]]) -> dict[str, Any]:
     last = max(occupied)
     indexes = range(first, last + 1)
     edges = [_edge(index) for index in range(first, last + 2)]
-    series = [
-        {
-            "id": series_id,
-            "counts": [int(by_series[series_id].get(index, 0)) for index in indexes],
-        }
+    counts_by_series = {
+        series_id: [int(by_series[series_id].get(index, 0)) for index in indexes]
         for series_id in SERIES_ORDER
+    }
+    series = [
+        {"id": series_id, "counts": counts}
+        for series_id, counts in counts_by_series.items()
     ]
-    solutions = sum(sum(item["counts"]) for item in series)
+    solutions = sum(sum(counts) for counts in counts_by_series.values())
     return {
         "period": {"id": "period_day", "unit": "day", "edges": edges},
         "series": series,
