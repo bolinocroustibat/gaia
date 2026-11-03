@@ -24,7 +24,7 @@ HELP = (
     "étoiles mettent à faire un tour l’une autour de l’autre. Les tours courts se "
     "voient quand la lumière baisse, les tours moyens quand la vitesse oscille, "
     "les tours longs quand l’étoile zigzague dans le ciel.\n\n"
-    "Gaia a repéré 813 687 étoiles binaires probables. "
+    "Gaia a repéré 813\u202f687 étoiles binaires probables. "
     "Pour beaucoup d’entre elles, elle a seulement vu l’étoile dévier de sa "
     "trajectoire, sans l’observer assez longtemps pour mesurer un tour complet. "
     "Ces étoiles n’apparaissent pas ici."

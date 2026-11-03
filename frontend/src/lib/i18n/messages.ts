@@ -78,7 +78,7 @@ export const messages = {
 		binaryBoth: "Plusieurs de ces signes",
 		binaryPosition: "L’étoile zigzague dans le ciel",
 		binaryPeriodLegend:
-			"Ce graphique montre les {count} orbites dont Gaia a pu mesurer la durée.",
+			"Ce graphique montre les {count} orbites dont Gaia a pu mesurer la durée, parmi les 813\u202f687 étoiles binaires probables qu’elle a repérées.",
 	},
 	en: {
 		siteTitle: "What has the Gaia space telescope seen?",
@@ -154,7 +154,7 @@ export const messages = {
 		binaryBoth: "Several of these signs",
 		binaryPosition: "The star zigzags across the sky",
 		binaryPeriodLegend:
-			"This chart shows the {count} orbits whose length Gaia could measure.",
+			"This chart shows the {count} orbits whose length Gaia could measure, out of the 813,687 likely binary stars it spotted.",
 	},
 } as const
 

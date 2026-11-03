@@ -5,7 +5,7 @@ export const theme = {
 	line: "#2a2a28",
 	accent: "#d6ff4a",
 	// Neon hues shared with the catalogue totals (app.css --kpi-*) and the funnel.
-	orange: "#f97316",
+	violet: "#a78bfa",
 	cyan: "#4ec4ff",
 	pink: "#f472b6",
 } as const

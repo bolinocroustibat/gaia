@@ -199,7 +199,7 @@ def main(argv: list[str] | None = None) -> int:
                 "format": "binned1d",
                 "label": "À quelle distance sont-elles ?",
                 "helpText": (
-                    "Pour les 1 367 153 galaxies dont la distance est estimée. "
+                    "Pour les 1\u202f367\u202f153 galaxies dont la distance est estimée. "
                     "Plus la barre est à droite, plus leur lumière est tirée vers le rouge."
                 ),
                 "count": distance_count,

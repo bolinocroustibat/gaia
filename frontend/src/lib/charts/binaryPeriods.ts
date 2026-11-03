@@ -17,9 +17,11 @@ const seriesOrder = ["eclipse", "spectrum", "position", "both"] as const
 
 type SeriesId = (typeof seriesOrder)[number]
 
-// Site neons, checked for colour-blind separation on every pair (OKLab ΔE ≥ 10).
+// Site neons. Violet and cyan are close for deuteranopes, so violet goes on
+// eclipses: lime always sits between them in the stack. Every pair that
+// touches is >= 10 OKLab ΔE apart under colour blindness.
 const seriesFill: Record<SeriesId, string> = {
-	eclipse: theme.orange,
+	eclipse: theme.violet,
 	spectrum: theme.accent,
 	position: theme.cyan,
 	both: theme.pink,
