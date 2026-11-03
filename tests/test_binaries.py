@@ -59,8 +59,8 @@ def test_histogram_sorts_solution_types_into_series() -> None:
     assert [item["id"] for item in histogram["series"]] == [
         "eclipse",
         "spectrum",
-        "both",
         "position",
+        "both",
     ]
     edges = histogram["period"]["edges"]
     assert len(edges) == 30 - (-7) + 2

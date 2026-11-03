@@ -20,23 +20,25 @@ BIN_PER_DEX = 10
 
 LABEL = "Des étoiles qui tournent l’une autour de l’autre"
 HELP = (
-    "Pour une partie des étoiles doubles, Gaia a mesuré combien de temps elles "
-    "mettent à faire un tour. Les tours courts se voient quand la lumière baisse, "
-    "les tours moyens quand la vitesse oscille, les tours longs quand l’étoile "
-    "zigzague dans le ciel.\n\n"
-    "Le bandeau compte 813 687 étoiles doubles. Beaucoup n’ont qu’un signe de "
-    "mouvement : Gaia n’a pas encore fermé leur orbite, et elles n’apparaissent "
-    "pas ici."
+    "Pour une partie des étoiles binaires, Gaia a mesuré combien de temps les deux "
+    "étoiles mettent à faire un tour l’une autour de l’autre. Les tours courts se "
+    "voient quand la lumière baisse, les tours moyens quand la vitesse oscille, "
+    "les tours longs quand l’étoile zigzague dans le ciel.\n\n"
+    "Le premier graphique de la page compte 813 687 étoiles binaires probables. "
+    "Pour beaucoup d’entre elles, Gaia a seulement vu l’étoile dévier de sa "
+    "trajectoire : il ne l’a pas encore observée assez longtemps pour mesurer un "
+    "tour complet, et elle n’apparaît pas ici."
 )
 
-# Stack order in the chart: short eclipses at the bottom, slow sky wobble on top.
+# Stack order in the chart: short eclipses at the bottom, slow sky wobble above,
+# and orbits seen through two methods on top.
 SERIES_TYPES: dict[str, tuple[str, ...]] = {
     "eclipse": ("EclipsingBinary",),
     # SB1C and SB2C are the circular spectroscopic orbits. With SB1 and SB2
     # they are the 186,905 spectroscopic solutions of Gaia DR3.
     "spectrum": ("SB1", "SB1C", "SB2", "SB2C"),
-    "both": ("AstroSpectroSB1", "EclipsingSpectro"),
     "position": ("Orbital",),
+    "both": ("AstroSpectroSB1", "EclipsingSpectro"),
 }
 SERIES_ORDER = tuple(SERIES_TYPES)
 TYPE_TO_SERIES = {

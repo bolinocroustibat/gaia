@@ -33,9 +33,9 @@ SNAPSHOT_QSO_PURE_SUBSAMPLE_TOTAL = 1_942_825
 NON_SINGLE_STAR_LABELS: dict[int | None, tuple[str, str]] = {
     None: ("single_star", "Étoile seule"),
     0: ("single_star", "Étoile seule"),
-    1: ("binary_astrometric", "Étoile double (mouvement détecté)"),
-    2: ("binary_orbit", "Étoile double (orbite mesurée)"),
-    3: ("binary_astro_spectro", "Étoile double (position et spectre)"),
+    1: ("binary_astrometric", "Étoile binaire (mouvement détecté)"),
+    2: ("binary_orbit", "Étoile binaire (orbite mesurée)"),
+    3: ("binary_astro_spectro", "Étoile binaire (position et spectre)"),
     4: ("non_single_other", "Autre objet non isolé"),
 }
 

@@ -12,7 +12,8 @@ const marginBottom = 58
 const marginLeft = 52
 const marginTop = 28
 
-const seriesOrder = ["eclipse", "spectrum", "both", "position"] as const
+// Stack and legend order, bottom to top: the three signs, then their mix.
+const seriesOrder = ["eclipse", "spectrum", "position", "both"] as const
 
 type SeriesId = (typeof seriesOrder)[number]
 
@@ -152,7 +153,8 @@ export function binaryPeriodPlot(
 		},
 		y: {
 			domain: [0, maxCount * 1.08],
-			label: null,
+			label: t(locale, "binaryCountAxis"),
+			labelArrow: false,
 			grid: false,
 			tickFormat: (value: number) => formatCompact(value, locale),
 			nice: false,

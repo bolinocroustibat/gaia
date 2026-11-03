@@ -68,7 +68,10 @@ def write_catalog_totals(
             },
             {
                 "id": "binary_stars",
-                "label": "étoiles doubles probables",
+                "label": (
+                    "étoiles binaires probables\n"
+                    "(deux étoiles liées par la gravité, qui tournent l’une autour de l’autre)"
+                ),
                 "count": binary_stars_total,
             },
         ],
@@ -150,7 +153,7 @@ def object_type_display_rows(
         },
         {
             "object_type": "binary_stars",
-            "label": "Étoiles doubles probables",
+            "label": "Étoiles binaires probables",
             "count": int(binaries),
         },
         {

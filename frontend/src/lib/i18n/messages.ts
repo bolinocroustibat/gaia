@@ -11,7 +11,7 @@ export const messages = {
 		siteHeroAlt:
 			"Le télescope spatial Gaia, vu de trois quarts sur fond d’étoiles",
 		sectionGalaxies: "Des galaxies",
-		sectionBinaries: "Étoiles binaires",
+		sectionBinaries: "Des étoiles binaires",
 		ledeFallback:
 			"Ses mesures sont publiques, et de nouvelles données sont publiées régulièrement. Voici ce qu’on peut y voir aujourd’hui.",
 		catalogLoadFailed: "Le catalogue n’a pas pu être chargé.",
@@ -72,12 +72,13 @@ export const messages = {
 		galaxyDistanceLegend:
 			"0,2 veut dire que la lumière est étirée d'un cinquième. La foule lointaine est celle que Gaia arrive encore à situer, pas un recensement de l'Univers.",
 		binaryPeriodAxis: "Durée d’un tour",
-		binaryEclipse: "Éclipse",
-		binarySpectrum: "Spectre",
-		binaryBoth: "Les deux",
-		binaryPosition: "Position",
+		binaryCountAxis: "Nombre d’orbites",
+		binaryEclipse: "Une étoile cache l’autre",
+		binarySpectrum: "L’étoile s’approche et s’éloigne",
+		binaryBoth: "Plusieurs de ces signes",
+		binaryPosition: "L’étoile zigzague dans le ciel",
 		binaryPeriodLegend:
-			"{count} orbites dont Gaia a publié la durée d’un tour. Le bandeau compte aussi les étoiles doubles dont on ne voit encore qu’un signe de mouvement.",
+			"{count} orbites dont Gaia a publié la durée d’un tour. Le premier graphique de la page compte aussi les étoiles binaires dont Gaia n’a pas encore pu mesurer un tour complet.",
 	},
 	en: {
 		siteTitle: "What has the Gaia space telescope seen?",
@@ -147,12 +148,13 @@ export const messages = {
 		galaxyDistanceLegend:
 			"0.2 means the light is stretched by a fifth. The distant crowd is the one Gaia can still place, not a census of the Universe.",
 		binaryPeriodAxis: "Time for one orbit",
-		binaryEclipse: "Eclipse",
-		binarySpectrum: "Spectrum",
-		binaryBoth: "Both",
-		binaryPosition: "Position",
+		binaryCountAxis: "Number of orbits",
+		binaryEclipse: "One star hides the other",
+		binarySpectrum: "The star moves toward and away from us",
+		binaryBoth: "Several of these signs",
+		binaryPosition: "The star zigzags across the sky",
 		binaryPeriodLegend:
-			"{count} orbits whose length Gaia published. The strip also counts binary stars that only show a hint of motion.",
+			"{count} orbits whose length Gaia published. The first chart on the page also counts binary stars for which Gaia could not yet measure a full orbit.",
 	},
 } as const
 

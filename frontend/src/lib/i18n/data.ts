@@ -30,7 +30,7 @@ const datasetEn: Record<
 	binary_periods: {
 		label: "Stars that orbit one another",
 		helpText:
-			"For some of the binary stars, Gaia measured how long they take to complete one orbit. Short orbits show up when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.\n\nThe strip counts 813,687 binary stars. For many of them Gaia has only seen a hint of motion: the orbit is not closed yet, and they stay out of this diagram.",
+			"For some of the binary stars, Gaia measured how long the two stars take to go once around each other. Short orbits show up when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.\n\nThe first chart on the page counts 813,687 likely binary stars. For many of them, Gaia has only seen the star drift off its path: it has not watched it long enough to measure a full orbit, so it does not appear here.",
 		sourceNote: "gaiadr3.nss_two_body_orbit, orbital period",
 	},
 	hr_diagram_bins: {
@@ -55,7 +55,8 @@ const rowEn: Record<string, string> = {
 	galaxy_candidates: "likely galaxies",
 	qso_candidates:
 		"likely quasars\n(quasars are ultra-bright galactic cores powered by a supermassive black hole)",
-	binary_stars: "likely binary stars",
+	binary_stars:
+		"likely binary stars\n(two stars bound by gravity, orbiting each other)",
 	other_sources: "likely single stars and other objects",
 	galaxy_candidates_total:
 		"Likely galaxies\nThe ones Gaia tells apart from stars.",

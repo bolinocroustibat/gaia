@@ -54,7 +54,7 @@
       "tier": "B",
       "format": "binned1d",
       "label": "Des étoiles qui tournent l’une autour de l’autre",
-      "helpText": "Pour une partie des étoiles doubles, Gaia a mesuré combien de temps elles mettent à faire un tour. Les tours courts se voient quand la lumière baisse, les tours moyens quand la vitesse oscille, les tours longs quand l’étoile zigzague dans le ciel.\n\nLe bandeau compte 813 687 étoiles doubles. Beaucoup n’ont qu’un signe de mouvement : Gaia n’a pas encore fermé leur orbite, et elles n’apparaissent pas ici.",
+      "helpText": "Pour une partie des étoiles binaires, Gaia a mesuré combien de temps les deux étoiles mettent à faire un tour l’une autour de l’autre. Les tours courts se voient quand la lumière baisse, les tours moyens quand la vitesse oscille, les tours longs quand l’étoile zigzague dans le ciel.\n\nLe premier graphique de la page compte 813 687 étoiles binaires probables. Pour beaucoup d’entre elles, Gaia a seulement vu l’étoile dévier de sa trajectoire : il ne l’a pas encore observée assez longtemps pour mesurer un tour complet, et elle n’apparaît pas ici.",
       "count": 442043,
       "sourceNote": "gaiadr3.nss_two_body_orbit, période orbitale",
       "release": "dr3"
