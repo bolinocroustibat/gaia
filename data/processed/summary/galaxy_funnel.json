@@ -15,12 +15,12 @@
     },
     {
       "id": "galaxy_candidates_with_redshift",
-      "label": "Dont la distance est estimée\nLeur lumière est étirée vers le rouge : plus elle l'est, plus elles sont loin.",
+      "label": "Dont la distance est estimée\nGaia ne peut estimer la distance que des galaxies assez brillantes pour qu'elle puisse bien analyser leur lumière.\nPlus leur lumière est étirée vers le rouge, plus elles sont loin.",
       "count": 1367153
     },
     {
       "id": "galaxy_candidates_with_shape",
-      "label": "Dont la forme est aussi mesurée\nDepuis l'espace, sans le flou de l'atmosphère, Gaia reconstruit leur profil de lumière.",
+      "label": "Dont la forme est aussi mesurée\nGaia balaie chaque galaxie à chaque passage, sous un angle différent, et en déduit sa forme.\nIl n'y parvient que pour celles qu'il a vues assez souvent et assez nettement.",
       "count": 388552
     },
     {

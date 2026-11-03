@@ -60,9 +60,9 @@ const rowEn: Record<string, string> = {
 	galaxy_candidates_total:
 		"Likely galaxies\nThe ones Gaia tells apart from stars.",
 	galaxy_candidates_with_redshift:
-		"With an estimated distance\nTheir light is stretched toward red: the more it stretches, the farther they are.",
+		"With an estimated distance\nGaia can only estimate the distance of galaxies bright enough for their light to be analysed well.\nThe more their light is stretched toward red, the farther they are.",
 	galaxy_candidates_with_shape:
-		"With a measured shape\nFrom space, without the blur of the atmosphere, Gaia reconstructs their light profile.",
+		"With a measured shape\nGaia scans each galaxy on every pass, from a different angle each time, and works out its shape.\nIt only manages this for those it has seen often and clearly enough.",
 	galaxy_candidates_without_redshift: "No known far distance",
 	strict_galaxies_nss: "Nearby: other flagged sources (~58k)",
 	strict_galaxies_nearby_parallax: "With measured distance (parallax, 3D map)",
