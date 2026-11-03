@@ -50,3 +50,12 @@ export function formatField(
 	const text = typeof value === "number" ? formatMeasure(value, loc) : value
 	return unit ? `${label} ${text} ${unit}` : `${label} ${text}`
 }
+
+/**
+ * French puts a space before ? ! : ; that must not break: a lone "?" at the
+ * start of a line reads as an error. English never has a space there, so
+ * this is safe in both languages.
+ */
+export function keepPunctuation(text: string): string {
+	return text.replace(/ ([?!:;])/g, "\u202f$1")
+}

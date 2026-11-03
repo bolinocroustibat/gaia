@@ -13,7 +13,14 @@ const marginLeft = 52
 const marginTop = 28
 
 /** One stacked series: its id in the data file, its colour, its legend. */
-export type PeriodSeries = { id: string; fill: string; labelKey: MessageKey }
+export type PeriodSeries = {
+	id: string
+	fill: string
+	/** Legend: the method's name, then a plain explanation in brackets. */
+	labelKey: MessageKey
+	/** The method's name alone, for tooltips. */
+	nameKey: MessageKey
+}
 
 export type StackedPeriodConfig = {
 	/** Stack and legend order, bottom to top. */
@@ -28,10 +35,30 @@ export type StackedPeriodConfig = {
 // colour blindness.
 const binaryConfig: StackedPeriodConfig = {
 	series: [
-		{ id: "eclipse", fill: theme.violet, labelKey: "binaryEclipse" },
-		{ id: "spectrum", fill: theme.accent, labelKey: "binarySpectrum" },
-		{ id: "position", fill: theme.cyan, labelKey: "binaryPosition" },
-		{ id: "both", fill: theme.pink, labelKey: "binaryBoth" },
+		{
+			id: "eclipse",
+			fill: theme.violet,
+			labelKey: "binaryEclipse",
+			nameKey: "binaryEclipseName",
+		},
+		{
+			id: "spectrum",
+			fill: theme.accent,
+			labelKey: "binarySpectrum",
+			nameKey: "binarySpectrumName",
+		},
+		{
+			id: "position",
+			fill: theme.cyan,
+			labelKey: "binaryPosition",
+			nameKey: "binaryPositionName",
+		},
+		{
+			id: "both",
+			fill: theme.pink,
+			labelKey: "binaryBoth",
+			nameKey: "binaryBothName",
+		},
 	],
 	countAxisKey: "binaryCountAxis",
 	captionKey: "binaryPeriodLegend",
@@ -39,10 +66,30 @@ const binaryConfig: StackedPeriodConfig = {
 
 /** Gaia DR4 planet detection methods: the binary-star signs, colours, order. */
 export const planetSeries: PeriodSeries[] = [
-	{ id: "transit", fill: theme.violet, labelKey: "planetTransit" },
-	{ id: "radial", fill: theme.accent, labelKey: "binarySpectrum" },
-	{ id: "astrometry", fill: theme.cyan, labelKey: "binaryPosition" },
-	{ id: "both", fill: theme.pink, labelKey: "binaryBoth" },
+	{
+		id: "transit",
+		fill: theme.violet,
+		labelKey: "planetTransit",
+		nameKey: "planetTransitName",
+	},
+	{
+		id: "radial",
+		fill: theme.accent,
+		labelKey: "binarySpectrum",
+		nameKey: "binarySpectrumName",
+	},
+	{
+		id: "astrometry",
+		fill: theme.cyan,
+		labelKey: "binaryPosition",
+		nameKey: "binaryPositionName",
+	},
+	{
+		id: "both",
+		fill: theme.pink,
+		labelKey: "binaryBoth",
+		nameKey: "binaryBothName",
+	},
 ]
 
 const planetConfig: StackedPeriodConfig = {
@@ -126,7 +173,7 @@ function stackedMax(bars: Bar[]): number {
 
 function tip(bar: Bar, locale: Locale): string {
 	const count = formatCount(bar.count, locale)
-	const label = t(locale, bar.series.labelKey)
+	const label = t(locale, bar.series.nameKey)
 	const span = `${formatPeriod(bar.p0, locale)} – ${formatPeriod(bar.p1, locale)}`
 	return `${count} · ${label} · ${span}`
 }

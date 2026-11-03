@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { Snippet } from "svelte"
+import { keepPunctuation } from "../format"
 
 let {
 	id,
@@ -27,10 +28,10 @@ const paragraphs = $derived(
 
 <section aria-labelledby="section-{id}">
   <header>
-    <h2 id="section-{id}">{title}</h2>
+    <h2 id="section-{id}">{keepPunctuation(title)}</h2>
     <div class="help">
       {#each paragraphs as paragraph}
-        <p>{paragraph}</p>
+        <p>{keepPunctuation(paragraph)}</p>
       {/each}
     </div>
     {#if caption}

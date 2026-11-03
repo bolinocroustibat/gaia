@@ -210,7 +210,7 @@ def dr4_exoplanet_entries(
                     "En haut, les planètes géantes confirmées par tous les télescopes. "
                     "En dessous, les candidates que Gaia a trouvées seule. "
                     "Gaia repère surtout les planètes qui tournent loin de leur étoile : "
-                    "c’est là que l’étoile zigzague le plus."
+                    "c’est là que l’étoile se déplace le plus dans le ciel."
                 ),
                 "count": distances,
                 "sourceNote": (
@@ -230,8 +230,9 @@ def dr4_exoplanet_entries(
                 "label": "Combien de temps pour faire un tour ?",
                 "helpText": (
                     "La durée d’un tour dit comment Gaia a repéré la planète. "
-                    "Les tours courts se voient quand la planète passe devant son étoile "
-                    "et que la lumière baisse, les tours longs quand l’étoile zigzague "
+                    "Les tours courts se voient par les transits, quand la planète "
+                    "passe devant son étoile et que la lumière baisse ; les tours "
+                    "longs par l’astrométrie, quand l’étoile se déplace de côté "
                     "dans le ciel."
                 ),
                 "count": periods,

@@ -22,8 +22,10 @@ LABEL = "Comment Gaia les voit-elle tourner ?"
 HELP = (
     "Une étoile binaire, ce sont deux étoiles liées par la gravité, qui tournent "
     "l’une autour de l’autre. Gaia les voit tourner de trois façons, selon la "
-    "durée d’un tour : les tours courts quand la lumière baisse, les tours moyens "
-    "quand la vitesse oscille, les tours longs quand l’étoile zigzague dans le ciel."
+    "durée d’un tour : les tours courts par les éclipses, quand la lumière baisse ; "
+    "les tours moyens par la spectroscopie, quand l’étoile s’approche et s’éloigne "
+    "de nous ; les tours longs par l’astrométrie, quand l’étoile se déplace de côté "
+    "dans le ciel."
 )
 
 # Stack order in the chart: short eclipses at the bottom, slow sky wobble above,

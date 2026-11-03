@@ -30,14 +30,14 @@ const datasetEn: Record<
 	planet_distances: {
 		label: "How far from their star?",
 		helpText:
-			"At the top, giant planets confirmed by all telescopes. Below, the candidates Gaia found on its own. Gaia mostly spots planets that orbit far from their star: that is where the star zigzags the most.",
+			"At the top, giant planets confirmed by all telescopes. Below, the candidates Gaia found on its own. Gaia mostly spots planets that orbit far from their star: that is where the star moves the most across the sky.",
 		sourceNote:
 			"nss_two_body_orbit, rvs_two_body_orbit, vari_planetary_transit; distance from Kepler’s third law",
 	},
 	planet_periods: {
 		label: "How long does one orbit take?",
 		helpText:
-			"How long one orbit takes says how Gaia spotted the planet. Short orbits show up when the planet passes in front of its star and the light dips, long ones when the star zigzags across the sky.",
+			"How long one orbit takes says how Gaia spotted the planet. Short orbits show up through transits, when the planet passes in front of its star and the light dips; long ones through astrometry, when the star shifts sideways across the sky.",
 	},
 	transit_sizes: {
 		label: "How big are they?",
@@ -47,7 +47,7 @@ const datasetEn: Record<
 	binary_periods: {
 		label: "How does Gaia see them orbit?",
 		helpText:
-			"A binary star is two stars bound by gravity, orbiting each other. Gaia sees them orbit in three ways, depending on how long one orbit takes: short orbits when the light dips, middle ones when the velocity wobbles, long ones when the star zigzags across the sky.",
+			"A binary star is two stars bound by gravity, orbiting each other. Gaia sees them orbit in three ways, depending on how long one orbit takes: short orbits through eclipses, when the light dips; middle ones through spectroscopy, when the star moves toward and away from us; long ones through astrometry, when the star shifts sideways across the sky.",
 		sourceNote: "gaiadr3.nss_two_body_orbit, orbital period",
 	},
 	hr_diagram_bins: {

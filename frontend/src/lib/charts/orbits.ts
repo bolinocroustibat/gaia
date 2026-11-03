@@ -122,7 +122,7 @@ function candidateTip(candidate: OrbitCandidate, locale: Locale): string {
 			t(locale, "planetMass").replace("{mass}", format.format(candidate.mass)),
 		)
 	}
-	if (method) parts.push(t(locale, method.labelKey))
+	if (method) parts.push(t(locale, method.nameKey))
 	return parts.join(" · ")
 }
 
