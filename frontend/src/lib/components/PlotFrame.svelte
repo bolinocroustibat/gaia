@@ -66,22 +66,25 @@ $effect(() => {
     line-height: 1.45;
   }
 
+  /* One method per line: the labels carry an explanation and run long. */
   .plot-host :global(.binary-legend) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.15rem;
+    display: grid;
+    justify-items: start;
+    gap: 0.5rem;
+    max-width: 40rem;
     margin: 0.85rem 0 0;
     padding: 0;
     list-style: none;
     color: var(--paper);
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    line-height: 1.2;
+    line-height: 1.35;
   }
 
+  /* A wrapped label lines up under its text, not under the swatch. */
   .plot-host :global(.binary-legend li) {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.45rem;
   }
 
@@ -89,6 +92,7 @@ $effect(() => {
     width: 0.7rem;
     height: 0.7rem;
     flex: none;
+    margin-top: 0.2rem;
   }
 
   .plot-host :global(.orbit-credit) {
